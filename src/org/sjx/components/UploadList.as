@@ -11,9 +11,6 @@ package org.sjx.components {
 	
 	public class UploadList extends Sprite {
 		
-		public static const WIDTH: int = 720;
-		public static const HEIGHT: int = 488;
-		
 		private var _lists: Sprite;
 		private var _mask: Shape;
 		private var _scroll: ScrollBar;
@@ -21,6 +18,7 @@ package org.sjx.components {
 		private var _root: SchoolCompete;
 		private var _dialogView: Sprite;
 		private var _dialogLab:  TextField;
+		private var _uploadTip: UploadTip;
 		
 		private var _itmes: Array;
 		private var _scrollHeight: uint;
@@ -35,8 +33,8 @@ package org.sjx.components {
 			_lists.y = 0;
 			addChild(_lists);
 			
-			_scroll = new ScrollBar(12, HEIGHT, 8);
-			_scroll.x = WIDTH - 12;
+			_scroll = new ScrollBar(12, SchoolCompete.UPLOAD_HEIGHT, 8);
+			_scroll.x = SchoolCompete.UPLOAD_WIDTH - 12;
 			_scroll.y = 0;
 			_scroll.addEventListener(ScrollBar.DRAG_MOVE_EVENT, function (evt: Event): void {
 				_lists.y = -_scroll.zoom * _scroll.scrollTop;
@@ -45,21 +43,23 @@ package org.sjx.components {
 			
 			_mask = new Shape();
 			_mask.graphics.beginFill(0xFFFFFF);
-			_mask.graphics.drawRect(0, 0, WIDTH, HEIGHT);
+			_mask.graphics.drawRect(0, 0, SchoolCompete.UPLOAD_WIDTH, SchoolCompete.UPLOAD_HEIGHT);
 			_mask.graphics.endFill();
 			addChild(_mask);
 			mask = _mask;
 			
 			for (var i: int = 0, n: Object; n = Terminal.items[i]; i ++) {
 				var pack: String = n['pack'], item: UploadItem = new UploadItem(pack, n, this);
-				item.x = 0;
-				item.y = _scrollHeight;
+				item.x = UploadItem.PADDING_H + i % SchoolCompete.UPLOAD_ITEM_SIZE * (UploadItem.PADDING_H + UploadItem.WIDTH);
+				item.y = UploadItem.PADDING_V + (i / SchoolCompete.UPLOAD_ITEM_SIZE >> 0) * (UploadItem.PADDING_V + UploadItem.HEIGHT);
+				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
+				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
 				_lists.addChild(item);
 				_itmes.push(item);
 				_root.update(pack, null);
-				_scrollHeight += UploadItem.HEIGHT;
 			}
-			_scroll.update(HEIGHT, _scrollHeight);
+			_scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + UploadItem.HEIGHT + UploadItem.PADDING_V;
+			_scroll.update(SchoolCompete.UPLOAD_HEIGHT, _scrollHeight);
 			
 			// 绘制弹出框
 			_dialogView = new Sprite();
@@ -76,6 +76,10 @@ package org.sjx.components {
 			_dialogLab.mouseEnabled = false;
 			_dialogView.addChild(_dialogLab);
 			
+			_uploadTip = new UploadTip();
+			_uploadTip.visible = false;
+			addChild(_uploadTip);
+			
 			var btn: Button = new Button('确定');
 			btn.x = 164;
 			btn.y = 145;
@@ -83,6 +87,22 @@ package org.sjx.components {
 				_root.close();
 			});
 			_dialogView.addChild(btn);
+		}
+		/** 鼠标移入上传项的提示. */
+		private function doItemOver(evt: MouseEvent): void {
+			var curItem: UploadItem = evt.currentTarget as UploadItem;
+			_uploadTip.y = curItem.y + UploadItem.HEIGHT;
+			_uploadTip.x = curItem.x;
+			_uploadTip.visible = true;
+			_uploadTip.pos();
+		}
+		/** 鼠标移出上传项的提示. */
+		private function doItemOut(evt: MouseEvent): void {
+			_uploadTip.visible = false;
+		}
+		/** 鼠标移入上传项的内容处理. */
+		public function doTip(tip: String): void {
+			_uploadTip.update(tip);
 		}
 		
 		/** 检测上传的数据项. */		

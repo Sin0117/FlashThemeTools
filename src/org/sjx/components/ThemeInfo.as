@@ -8,9 +8,6 @@ package org.sjx.components {
 	
 	public class ThemeInfo extends Sprite {
 		
-		public static const WIDTH: int = 720;
-		public static const HEIGHT: int = 48;
-		
 		private var _themeLabel: TextField;
 		private var _authorLabel: TextField;
 		

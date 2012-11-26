@@ -22,7 +22,7 @@ package com.qihoo.themefactory.sjx.utils {
 		// dockbar上的图标数量
 		private static var dockbarCol: int = 5;
 		// 图表距顶距离
-		public static var _appY: int = 128;
+		public static var _appY: int = 56;
 		// 文字区域高度
 		public static var _label: int = 40;
 		// dockbar上的图标区域(图标会在此区域中居中).

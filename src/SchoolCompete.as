@@ -32,15 +32,33 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="800", height="600")]
+	[SWF(frameRate="25", width="800", height="730")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
 		public static var BuilderSuccess: Class;
 		
 		public static const WIDTH: int = 800;
-		public static const HEIGHT: int = 600;
+		public static const HEIGHT: int = 730;
+		public static const PADDING_V: int = 10;
+		public static const PADDING_H: int = 20;
 		public static const BORDER: int = 2;
+		// 预览区域宽度
+		public static const PEWVIEW_WIDTH: int = 400;
+		public static const PEWVIEW_HEIGHT: int = 640;
+		public static const EDITER_WIDTH: int = 360;
+		public static const EDITER_HEIGHT: int = 600;
+		// 上传区域宽度
+		public static const UPLOAD_WIDTH: int = 360;
+		public static const UPLOAD_HEIGHT: int = 600;
+		// 提示框的尺寸.
+		public static const TIP_WIDTH: int = 200;
+		public static const TIP_HEIGHT: int = 120;
+		// 上传显示列数.
+		public static const UPLOAD_ITEM_SIZE: int = 6;
+		// 主题信息区域的尺寸
+		public static const THEME_INFO_WIDTH: int = 760;
+		public static const THEME_INFO_HEIGHT: int = 64;
 		
 		private var _list: UploadList;
 		private var _info: ThemeInfo;
@@ -207,8 +225,9 @@ trace ('builder: ' + _builderLoader.data);
 			_alert.hide();
 			
 			_preview = new Preview(this);
+			_preview.x = PADDING_H;
+			_preview.y = PADDING_V + THEME_INFO_HEIGHT;
 			addChild(_preview);
-			_preview.visible = false;
 			
 			_builderTimer = new Timer(2000, 1);
 			_builderTimer.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
@@ -323,29 +342,18 @@ trace ('builderStat: ' + _builderStatLoader.data);
 		
 		private function Init(evt: Event): void {
 			_info = new ThemeInfo();
-			_info.x = 40;
-			_info.y = 10;
+			_info.x = PADDING_H;
+			_info.y = PADDING_V;
 			addChild(_info);
 			
 			_list = new UploadList(this);
-			_list.x = 40;
-			_list.y = 72;
+			_list.x = PADDING_H + PEWVIEW_WIDTH;
+			_list.y = PADDING_V + THEME_INFO_HEIGHT;
 			addChild(_list);
 			
-			var btnY: int = HEIGHT - Button.HEIGHT - 12;
-			// 暂时隐藏预览功能.
-			_previewBtn = new Button('预览');
-			_previewBtn.x = WIDTH - Button.WIDTH * 3 - 64 >> 1;
-			_previewBtn.y = btnY;
-			addChild(_previewBtn);
-			_previewBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-				_preview.update(_list.items);
-				preview = true;
-			});
-			
+			var btnY: int = HEIGHT - Button.HEIGHT - 25;
 			_builderBtn = new Button('打包');
-			// _builderBtn.x = WIDTH - Button.WIDTH * 3 - 64 >> 1;
-			_builderBtn.x = _previewBtn.x + Button.WIDTH + 32;
+			_builderBtn.x = _list.x + (UPLOAD_WIDTH - Button.WIDTH * 2 - 32 >> 1);
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
@@ -353,7 +361,7 @@ trace ('builderStat: ' + _builderStatLoader.data);
 			});
 			
 			_clearBtn = new Button('清空');
-			_clearBtn.x = WIDTH - _builderBtn.x - Button.WIDTH;
+			_clearBtn.x = _list.x + WIDTH - _builderBtn.x - Button.WIDTH;
 			_clearBtn.y = btnY;
 			addChild(_clearBtn);
 			_clearBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {

@@ -4,7 +4,7 @@ package org.sjx.data {
 		public static const terminal: Object = {
 			"main":{
 				"status_bar":{"z":9,"x":0,"y":0,"widget":true,"parent":"icon","width":480,"height":36},
-				"weather_widget":{"z":2,"x":1,"y":120,"widget":true,"parent":"icon","width":479,"height":238},
+				// "weather_widget":{"z":2,"x":1,"y":120,"widget":true,"parent":"icon","width":479,"height":238},
 				"widget_quicksettings":{"z":6,"x":0,"y":480,"widget":true,"parent":"icon","width":86,"height":86,"label":"快速设置"},
 				"app_net_qihoo_launcher_theme":{"z":6,"x":120,"y":480,"parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"\u6211\u7684\u4e3b\u9898"},
 				"app_com_android_camera":{"z":6,"x":240,"y":480,"parent":"icon","width":86,"height":86,"label":"\u76f8\u673a"},
@@ -21,7 +21,7 @@ package org.sjx.data {
 				"workspace_indicator_current":{"x":224,"y":668,"z":2,"parent":"navigation","width":20,"height":20}
 			}, "drawer":{
 				"status_bar":{"z":9,"x":0,"y":0,"widget":true,"parent":"icon","width":480,"height":36},
-				"drawer_folder":{"z":2,"x":1,"y":36,"widget":true,"parent":"icon","width":480,"height":68},
+				// "drawer_folder":{"z":2,"x":1,"y":36,"widget":true,"parent":"icon","width":480,"height":68},
 				"app_com_android_settings":{"z":4,"rollable":true,"background":"icon_bg","foreground":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"设置"},
 				"app_com_android_calendar":{"z":4,"rollable":true,"background":"icon_bg","foreground":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"日历"},
 				"app_com_android_deskclock":{"z":4,"rollable":true,"background":"icon_bg","foreground":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"时钟"},

@@ -16,8 +16,8 @@ package org.sjx.components {
 	/** 主题编辑。 */
 	public class Editer extends Sprite {
 		// 区域尺寸
-		public static const WIDTH: int = 240;
-		public static const HEIGHT: int = 400;
+		public static const WIDTH: int = SchoolCompete.EDITER_WIDTH;
+		public static const HEIGHT: int = SchoolCompete.EDITER_HEIGHT;
 		
 		private var _manager: ViewManager;
 		private var _managerInitTimer: Timer;
