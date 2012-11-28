@@ -48,17 +48,18 @@ package org.sjx.components {
 			addChild(_mask);
 			mask = _mask;
 			
+			var beginX: int = SchoolCompete.UPLOAD_ITEM_PADDING_H * 2.5;
 			for (var i: int = 0, n: Object; n = Terminal.items[i]; i ++) {
 				var pack: String = n['pack'], item: UploadItem = new UploadItem(pack, n, this);
-				item.x = UploadItem.PADDING_H + i % SchoolCompete.UPLOAD_ITEM_SIZE * (UploadItem.PADDING_H + UploadItem.WIDTH);
-				item.y = UploadItem.PADDING_V + (i / SchoolCompete.UPLOAD_ITEM_SIZE >> 0) * (UploadItem.PADDING_V + UploadItem.HEIGHT);
+				item.x = beginX + i % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
+				item.y = SchoolCompete.UPLOAD_ITEM_PADDING_V + (i / SchoolCompete.UPLOAD_ITEM_SIZE >> 0) * (SchoolCompete.UPLOAD_ITEM_PADDING_V + SchoolCompete.UPLOAD_ITEM_HEIGHT);
 				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
 				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
 				_lists.addChild(item);
 				_itmes.push(item);
 				_root.update(pack, null);
 			}
-			_scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + UploadItem.HEIGHT + UploadItem.PADDING_V;
+			_scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + SchoolCompete.UPLOAD_ITEM_HEIGHT + SchoolCompete.UPLOAD_ITEM_PADDING_V;
 			_scroll.update(SchoolCompete.UPLOAD_HEIGHT, _scrollHeight);
 			
 			// 绘制弹出框
@@ -74,6 +75,7 @@ package org.sjx.components {
 			_dialogLab.width = 360;
 			_dialogLab.height = 20;
 			_dialogLab.mouseEnabled = false;
+			_dialogLab.wordWrap = true;
 			_dialogView.addChild(_dialogLab);
 			
 			_uploadTip = new UploadTip();
@@ -91,8 +93,8 @@ package org.sjx.components {
 		/** 鼠标移入上传项的提示. */
 		private function doItemOver(evt: MouseEvent): void {
 			var curItem: UploadItem = evt.currentTarget as UploadItem;
-			_uploadTip.y = curItem.y + UploadItem.HEIGHT;
-			_uploadTip.x = curItem.x;
+			_uploadTip.y = curItem.y + SchoolCompete.UPLOAD_ITEM_HEIGHT;
+			_uploadTip.x = curItem.x; // + SchoolCompete.UPLOAD_ITEM_WIDTH * 0.5 >> 0;
 			_uploadTip.visible = true;
 			_uploadTip.pos();
 		}
@@ -103,6 +105,11 @@ package org.sjx.components {
 		/** 鼠标移入上传项的内容处理. */
 		public function doTip(tip: String): void {
 			_uploadTip.update(tip);
+		}
+		
+		/** 获取全部的制作数据. */
+		public function update(pack: String, val: String): void {
+			_root.update(pack, val || null);
 		}
 		
 		/** 检测上传的数据项. */		

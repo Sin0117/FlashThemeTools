@@ -73,17 +73,18 @@ package org.sjx.data {
 			{pack: 'icon_drawer', name: '进入抽屉图标', width: 90, height: 90, format: 'png'}
 		];
 		// 打包进度地址
-		public static const status: String = 'compete/enquirePack'
+		public static const status: String = 'zcool/enquirePack'
 		// 打包地址.
-		public static const builder: String = 'compete/builder';
+		public static const builder: String = 'zcool/builder';
 		// 上传地址
-		public static const upload: String = 'compete/upload';
+		// public static const upload: String = 'compete/upload';
+		public static const upload: String = 'zcool/upload';
 		// 获取用户uuid
-		public static const uuidPath: String = 'compete/uuid';
+		public static const uuidPath: String = 'zcool/uuid';
 		// 清除当前用户上传的数据
-		public static const clear: String = 'compete/clear';
+		public static const clear: String = 'zcool/clear';
 		// 打包后的下载地址.
-		public static const download: String = 'compete/downloadPack?tid=';
+		public static const download: String = 'zcool/downloadPack?tid=';
 		// 上传文件大小.
 		public static const size: uint = 2 * 1024 * 1024;
 		// 上传文件的大小显示。
@@ -91,9 +92,9 @@ package org.sjx.data {
 		// 上传的唯一标识
 		public static var uuid: String = '';
 		// 主机地址.
-		// public static const host: String = 'http://compete.mobile.jx.360.cn/';
-		// public static const host: String = 'http://themeshop.mobile.jx.360.cn/';
+		public static var host: String = 'http://sjx.shop.360.cn:9000/';
+		// public static var host: String = 'http://themeshop.mobile.jx.360.cn/';
 		// public static var host: String = '/';
-		public static var host: String = 'http://zt.mobile.360.cn/';
+		// public static var host: String = 'http://zt.mobile.360.cn/';
 	}
 }

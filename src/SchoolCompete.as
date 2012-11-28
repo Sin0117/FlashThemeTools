@@ -51,11 +51,20 @@ package {
 		// 上传区域宽度
 		public static const UPLOAD_WIDTH: int = 360;
 		public static const UPLOAD_HEIGHT: int = 600;
+		// 上传项的参数
+		public static const UPLOAD_ITEM_WIDTH: int = 56;
+		public static const UPLOAD_ITEM_HEIGHT: int = 68;
+		public static const UPLOAD_ITEM_LABEL_HEIGHT: int = 20;
+		public static const UPLOAD_ITEM_PADDING_V: int = 8;
+		public static const UPLOAD_ITEM_PADDING_H: int = 8;
 		// 提示框的尺寸.
 		public static const TIP_WIDTH: int = 200;
 		public static const TIP_HEIGHT: int = 120;
+		public static const TIP_HEAD_HEIGHT: int = 16;
+		public static const TIP_HEAD_WIDTH: int = 24;
+		public static const TIP_ROUND: int = 8;
 		// 上传显示列数.
-		public static const UPLOAD_ITEM_SIZE: int = 6;
+		public static const UPLOAD_ITEM_SIZE: int = 5;
 		// 主题信息区域的尺寸
 		public static const THEME_INFO_WIDTH: int = 760;
 		public static const THEME_INFO_HEIGHT: int = 64;
@@ -198,7 +207,6 @@ trace (Terminal.host + Terminal.download + _builderId);
 			_userLoader = new URLLoader();
 			_userLoader.addEventListener(Event.COMPLETE, doUuid);
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-trace (Terminal.host + Terminal.uuidPath + '?d=' + new Date().getTime());				
 				_userLoader.load(new URLRequest(Terminal.host + Terminal.uuidPath + '?d=' + new Date().getTime()));
 				doLoading('初始化中...');
 			});
@@ -206,7 +214,6 @@ trace (Terminal.host + Terminal.uuidPath + '?d=' + new Date().getTime());
 			/** 打包请求. */
 			_builderLoader = new URLLoader();
 			_builderLoader.addEventListener(Event.COMPLETE, function (evt: Event): void {
-trace ('builder: ' + _builderLoader.data);				
 				var strs: Array = _builderLoader.data.toString().split('|');
 				if (strs.length > 2) {
 					_builderId = strs[1];
@@ -236,7 +243,6 @@ trace ('builder: ' + _builderLoader.data);
 			
 			_builderStatLoader = new URLLoader();
 			_builderStatLoader.addEventListener(Event.COMPLETE, function (evt: Event): void {
-trace ('builderStat: ' + _builderStatLoader.data);				
 				var strs: Array = _builderStatLoader.data.toString().split('|');
 				switch (strs[1]) {
 					case '0': updateLoading(strs[2], 15); break;
@@ -422,6 +428,7 @@ trace ('builderStat: ' + _builderStatLoader.data);
 		/** 更新数据. */
 		public function update(pack: String, url: String): void {
 			_data[pack] = url;
+			_preview.updateAt(pack, url);
 		}
 		/** 设置是否显示预览. */
 		public function set preview(show: Boolean): void {

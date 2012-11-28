@@ -28,7 +28,7 @@ package org.sjx.components {
 			_label.width = SchoolCompete.TIP_WIDTH - 16;
 			_label.height = SchoolCompete.TIP_HEIGHT - 16;
 			_label.x = 8;
-			_label.y = 8;
+			_label.y = SchoolCompete.TIP_HEAD_HEIGHT + 8;
 			addChild(_label);
 			
 			_centerX = SchoolCompete.TIP_WIDTH >> 1;
@@ -41,25 +41,39 @@ package org.sjx.components {
 		}
 		
 		public function pos(): void {
-			_curX = this.x;
+			_curX = this.x + SchoolCompete.UPLOAD_ITEM_WIDTH * 0.5 >> 0;
 			if (this.x < _centerX) {
-				this.x = UploadItem.PADDING_H;
+				this.x = SchoolCompete.UPLOAD_ITEM_PADDING_H;
 			} else {
-				if (SchoolCompete.UPLOAD_WIDTH - this.x < UploadItem.PADDING_H) {
-					this.x = SchoolCompete.UPLOAD_WIDTH - UploadItem.PADDING_H - SchoolCompete.TIP_WIDTH;
+				if (SchoolCompete.UPLOAD_WIDTH - this.x < SchoolCompete.TIP_WIDTH * 0.5) {
+					this.x = SchoolCompete.UPLOAD_WIDTH - SchoolCompete.UPLOAD_ITEM_PADDING_H * 2 - SchoolCompete.TIP_WIDTH;
 				} else {
-					this.x -= SchoolCompete.TIP_WIDTH - UploadItem.WIDTH >> 1;
+					this.x -= SchoolCompete.TIP_WIDTH - SchoolCompete.UPLOAD_ITEM_WIDTH >> 1;
 				}
 			}
+			_curX -= this.x;
 			draw();
 		}
 		
 		private function draw(): void {
-			var g: Graphics = this.graphics;
+			var g: Graphics = this.graphics, r: int = SchoolCompete.TIP_ROUND,
+				headW: int = SchoolCompete.TIP_HEAD_WIDTH >> 1, headH: int = SchoolCompete.TIP_HEAD_HEIGHT, 
+				w: int = SchoolCompete.TIP_WIDTH, h: int = SchoolCompete.TIP_HEIGHT;
 			g.clear();
 			g.beginFill(0xFFFFFF, 1);
 			g.lineStyle(2, 0xc7df99, 1);
-			g.drawRoundRect(0, 0, SchoolCompete.TIP_WIDTH, SchoolCompete.TIP_HEIGHT, 8);
+			g.moveTo(_curX, 0);
+			g.lineTo(_curX + headW, headH);
+			g.lineTo(w - r, headH);
+			g.curveTo(w, headH, w, headH + r);
+			g.lineTo(w, h - r);
+			g.curveTo(w, h, w - r, h);
+			g.lineTo(r, h);
+			g.curveTo(0, h, 0, h - r);
+			g.lineTo(0, headH + r);
+			g.curveTo(0, headH, r, headH);
+			g.lineTo(_curX - headW, headH);
+			g.lineTo(_curX, 0);
 			g.endFill();
 		}
 	}

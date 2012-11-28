@@ -15,8 +15,10 @@ package org.sjx.components {
 	import flash.net.FileReference;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.text.TextField;
 	
 	import org.sjx.data.Terminal;
+	import org.sjx.utils.TextFormats;
 	
 	public class UploadItem extends Sprite {
 		
@@ -25,10 +27,6 @@ package org.sjx.components {
 		
 		public static const WIDTH: int = 40;
 		public static const HEIGHT: int = 40;
-		public static const LABEL_HEIGHT: int = 24;
-		// 边距离
-		public static const PADDING_V: int = 16;
-		public static const PADDING_H: int = 16;
 		
 		// 包名
 		public var pack: String;
@@ -46,6 +44,10 @@ package org.sjx.components {
 		private var _cur: BitmapData;
 		// 遮罩层
 		private var _mask: Shape;
+		// 点击的图标
+		private var _btn: Sprite;
+		// 图标文字
+		private var _label: TextField;
 		
 		private var _loadAnimate: Shape;
 		
@@ -65,18 +67,43 @@ package org.sjx.components {
 			_list = list;
 			
 			_bg = Bitmap(new BG()).bitmapData;
+			_btn = new Sprite();
+			_btn.x = SchoolCompete.UPLOAD_ITEM_WIDTH - WIDTH >> 1;
+			_btn.y = SchoolCompete.UPLOAD_ITEM_HEIGHT - SchoolCompete.UPLOAD_ITEM_LABEL_HEIGHT - HEIGHT >> 1;
+			addChild(_btn);
+			
+			_label = new TextField();
+			_label.x = 0;
+			_label.y = _btn.y + HEIGHT; //SchoolCompete.UPLOAD_IEEM_LABEL_MARGIN - SchoolCompete.UPLOAD_ITEM_LABEL_HEIGHT;
+			_label.width = SchoolCompete.UPLOAD_ITEM_WIDTH;
+			_label.height = SchoolCompete.UPLOAD_ITEM_HEIGHT;
+			_label.text = terminal.name;
+			_label.setTextFormat(TextFormats.ALERT_FORMAT);
+			_label.mouseEnabled = false;
+			addChild(_label);
+			
 			_mask = new Shape();
 			_mask.graphics.beginFill(0xFFFFFF);
 			_mask.graphics.drawRoundRect(0, 0, WIDTH, HEIGHT, 4, 4);
 			_mask.graphics.endFill();
-			addChild(_mask);
-			this.mask = _mask;
+			_btn.addChild(_mask);
+			_btn.mask = _mask;
 			
+			/*
+			graphics.lineStyle(1, 0xFF0000);
+			graphics.drawRect(0, 0, SchoolCompete.UPLOAD_ITEM_WIDTH, SchoolCompete.UPLOAD_ITEM_HEIGHT);
+			graphics.endFill();
+			*/
+			
+			var loadAnimateWidth: int = WIDTH >> 1, loadAnimateHeight: int = HEIGHT >> 1;
 			_loadAnimate = new Shape();
-			_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, 0, -120), false, true);
-			_loadAnimate.graphics.drawRect(0, 0, WIDTH, HEIGHT);
+			_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, -20, -140), false, true);
+			_loadAnimate.graphics.drawRect(-loadAnimateWidth, -loadAnimateHeight, WIDTH, HEIGHT);
 			_loadAnimate.graphics.endFill();
+			_loadAnimate.x = _btn.x + loadAnimateWidth;
+			_loadAnimate.y = _btn.y + loadAnimateHeight;
 			_loadAnimate.visible = false;
+			addChild(_loadAnimate);
 			
 			_filter = [];
 			var filters: Array = terminal.format.split(',');
@@ -90,11 +117,12 @@ package org.sjx.components {
 				} else {
 					try {
 						var request: URLRequest = new URLRequest(Terminal.host + Terminal.upload + '?d=' + new Date().getTime() + 
-									'&uuid=' + Terminal.uuid + '&pack=' + pack + '&w=' + terminal.width + 
+									'&userId=' + Terminal.uuid + '&item=' + pack + '&w=' + terminal.width + 
 									'&h=' + terminal.height + '&f=' + terminal.format);
 						request.method = URLRequestMethod.POST;
-						_fr.upload(request, 'Filedata', false);
+						_fr.upload(request, 'resource', false);
 						_uploading = true;
+						draw(2);
 					} catch(e: Error) {
 						_list.alert('文件上传失败，请重试。');
 						_uploading = false;
@@ -109,14 +137,15 @@ package org.sjx.components {
 			_tip = '<span class="item"><b>' + terminal.name + '</b>\n图片尺寸：' + terminal.width + 'x' + terminal.height + '像素\n图片格式：' + terminal.format + '\n图片大小：' + Terminal.sizeLab + '</span>';
 			
 			this.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
-				if (!value) draw(1);
+				if (!value && !_uploading) draw(1);
 				_list.doTip(_tip);
 			});
 			this.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
-				if (!value) draw(0);
+				if (!value && !_uploading) draw(0);
 			});
-			this.addEventListener(MouseEvent.CLICK, function (): void {
-				_fr.browse(_filter);
+			_btn.addEventListener(MouseEvent.CLICK, function (): void {
+				if (!_uploading)
+					_fr.browse(_filter);
 			});
 
 			_previewLoader = new Loader();
@@ -137,32 +166,35 @@ package org.sjx.components {
 		}
 		
 		private function doSuccess(evt: Event): void {
-			_uploading = false;
 			draw(0);
 		}
 		
 		/** 更新预览图. */
 		private function update(url: String = null): void {
-			if (!!url)
+			_list.update(pack, value = url);
+			if (!!url) {
 				_previewLoader.load(new URLRequest(url));
-			else
+			} else {
+				_uploading = false;
 				draw(0);
+			}
 		}
 		
 		private function doPreviewLoaded(evt: Event): void {
 			var bmp: Bitmap = Bitmap(_previewLoader.content);
 			_cur = bmp.bitmapData;
-			draw(4);
+			draw(3);
+			_uploading = false;
 		}
 		
 		/** 上传成功. */
 		private function doComplete(event: DataEvent): void {
 			var strs: Array = event.data.split('|');
-			if (!!strs[1]) {
-				value = strs[1];
-				update(strs[1] || null);
+			if (!!strs[2]) {
+				update(strs[2] || null);
 			} else {
-				this._list.alert(strs[2]);
+				_uploading = false;
+				this._list.alert(strs[3]);
 				draw(0);
 			}
 		}
@@ -183,13 +215,13 @@ package org.sjx.components {
 		
 		/** 界面变更. */
 		private function draw(type: int = 0): void {
-			var g: Graphics = this.graphics;
+			var g: Graphics = _btn.graphics;
 			g.clear();
 			g.beginFill(0xFFFFFF);
 			g.drawRect(0, 0, WIDTH, HEIGHT);
 			var matr: Matrix = new Matrix(1, 0, 0, 1, 0, 0);
-			this.buttonMode = true;
-			if (type == 4) {
+			if (type == 3) {
+				matr.createBox(WIDTH / _cur.width, HEIGHT / _cur.height, 0, 0, 0);
 				g.beginBitmapFill(_cur, matr, false, true);
 				_loadAnimate.visible = false;
 				removeEventListener(Event.ENTER_FRAME, doEnterFrame);
@@ -206,8 +238,7 @@ package org.sjx.components {
 				removeEventListener(Event.ENTER_FRAME, doEnterFrame);
 			}
 			if (type == 2) {
-				this.buttonMode = true;
-				matr.createBox(1, 1, 0, 0, 80);
+				matr.createBox(1, 1, 0, 0, -80);
 				g.beginBitmapFill(_bg, matr, false, true);
 				_loadAnimate.visible = true;
 				addEventListener(Event.ENTER_FRAME, doEnterFrame);
@@ -217,7 +248,7 @@ package org.sjx.components {
 		}
 		
 		private function doEnterFrame(evt: Event): void {
-			_loadAnimate.rotation += 2
+			_loadAnimate.rotation += 30
 		}
 	}
 }

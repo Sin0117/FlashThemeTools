@@ -20,6 +20,8 @@ package com.qihoo.themefactory.sjx.ctrl {
 
 		/** 获取图片，如果内存中已经存在，就直接从内存中读取. */
 		public function getImage(src: String, time: uint, callback: Function, data: BitmapData = null): void {
+			if (!src) return;
+			
 			if (data && data.width != 1 && data.height != 1) {
 				var img: Image = new Image(data, src, _zoom)
 				_queue[src] = img
@@ -53,6 +55,7 @@ package com.qihoo.themefactory.sjx.ctrl {
 			
 			/** 图片缓存处理. */
 			function _cache(url: String): String {
+				if (url == null || url == "") return null;
 				// 如果有缓存处理, 就先清除掉.
 				var cacheIndex: int = url.indexOf('QIHOO_D_CACHE='), d: uint = new Date().getTime();
 				if (cacheIndex != -1) {

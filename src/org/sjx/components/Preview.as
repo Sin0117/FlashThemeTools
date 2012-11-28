@@ -66,7 +66,7 @@ package org.sjx.components {
 			
 			_main = new Button('主屏');
 			_main.x = SchoolCompete.PEWVIEW_WIDTH - Button.WIDTH * 2 - 32 >> 1;
-			_main.y = SchoolCompete.EDITER_HEIGHT + 8;
+			_main.y = SchoolCompete.EDITER_HEIGHT + 12;
 			_space.addChild(_main);
 			_main.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_prev.view = 'main';
@@ -85,6 +85,10 @@ package org.sjx.components {
 			for (var pack: String in items) {
 				_prev.change(pack, Terminal.host + items[pack]);
 			}
+		}
+		
+		public function updateAt(pack: String, url: String): void {
+			_prev.change(pack, url);
 		}
 		
 		public function doLoad(): void {
