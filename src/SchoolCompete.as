@@ -32,14 +32,14 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="800", height="730")]
+	[SWF(frameRate="25", width="800", height="834")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
 		public static var BuilderSuccess: Class;
 		
 		public static const WIDTH: int = 800;
-		public static const HEIGHT: int = 730;
+		public static const HEIGHT: int = 834;
 		public static const PADDING_V: int = 10;
 		public static const PADDING_H: int = 20;
 		public static const BORDER: int = 2;
@@ -67,7 +67,7 @@ package {
 		public static const UPLOAD_ITEM_SIZE: int = 5;
 		// 主题信息区域的尺寸
 		public static const THEME_INFO_WIDTH: int = 760;
-		public static const THEME_INFO_HEIGHT: int = 64;
+		public static const THEME_INFO_HEIGHT: int = 168;
 		
 		private var _list: UploadList;
 		private var _info: ThemeInfo;
@@ -129,6 +129,10 @@ package {
 			if (root.loaderInfo && root.loaderInfo.parameters) {
 				if (root.loaderInfo.parameters['path'])
 					Terminal.host = root.loaderInfo.parameters['path'];
+				if (root.loaderInfo.parameters['categorys'])
+					Terminal.categorys = root.loaderInfo.parameters['categorys'];
+				if (root.loaderInfo.parameters['prices'])
+					Terminal.prices = root.loaderInfo.parameters['prices'];
 				if (root.loaderInfo.parameters['download'])
 					_downloadCallback = root.loaderInfo.parameters['download'];
 			}
@@ -407,9 +411,9 @@ trace (Terminal.host + Terminal.download + _builderId);
 			g.lineStyle(BORDER, 0x333333, 1);
 			g.beginFill(0xEEEEEE, .9);
 			g.drawRoundRect(BORDER >> 1, BORDER >> 1, WIDTH - BORDER * 2, HEIGHT - BORDER * 2, BORDER * 4);
-			g.moveTo(BORDER << 2, 68);
+			g.moveTo(BORDER << 2, THEME_INFO_HEIGHT);
 			g.lineStyle(BORDER, 0x777777, 1);
-			g.lineTo(WIDTH - BORDER * 5, 68);
+			g.lineTo(WIDTH - BORDER * 5, THEME_INFO_HEIGHT);
 			g.endFill();
 		}
 		

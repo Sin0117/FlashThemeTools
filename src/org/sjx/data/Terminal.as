@@ -72,6 +72,11 @@ package org.sjx.data {
 			{pack: 'widget_recentlyinstalled', name: '最近安装图标', width: 90, height: 90, format: 'png'},
 			{pack: 'icon_drawer', name: '进入抽屉图标', width: 90, height: 90, format: 'png'}
 		];
+		
+		// 分类
+		public static var categorys: String = '风景,人物,生活,工作,感情';
+		// 价格
+		public static var prices: String = '0.99,1.99'; 
 		// 打包进度地址
 		public static const status: String = 'zcool/enquirePack'
 		// 打包地址.

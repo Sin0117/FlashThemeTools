@@ -1,18 +1,28 @@
 package org.sjx.components {
 	import flash.display.Sprite;
 	import flash.events.FocusEvent;
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	
+	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
 	public class ThemeInfo extends Sprite {
 		
 		private var _themeLabel: TextField;
 		private var _authorLabel: TextField;
+		private var _descLabel: TextField;
+		private var _priceLabel: TextField;
+		private var _ceteLabel: TextField;
 		
 		private var _themeField: TextField;
 		private var _authorField: TextField;
+		private var _descField: TextField;
+		private var _priceFields: Array;
+		private var _ceteField: Select;
+		
+		private var _price: String;
 		
 		/** 主题相关信息. */
 		public function ThemeInfo() {
@@ -25,6 +35,7 @@ package org.sjx.components {
 			_themeLabel.height = 20;
 			_themeLabel.mouseEnabled = false;
 			addChild(_themeLabel);
+			
 			_authorLabel = new TextField();
 			_authorLabel.text = '作者名称：';
 			_authorLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
@@ -34,6 +45,36 @@ package org.sjx.components {
 			_authorLabel.height = 20;
 			_authorLabel.mouseEnabled = false;
 			addChild(_authorLabel);
+			
+			_priceLabel = new TextField();
+			_priceLabel.text = '作品价格：';
+			_priceLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_priceLabel.x = 0;
+			_priceLabel.y = 48;
+			_priceLabel.width = 60;
+			_priceLabel.height = 20;
+			_priceLabel.mouseEnabled = false;
+			addChild(_priceLabel);
+			
+			_descLabel = new TextField();
+			_descLabel.text = '描述信息：';
+			_descLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_descLabel.x = 0;
+			_descLabel.y = 72;
+			_descLabel.width = 60;
+			_descLabel.height = 20;
+			_descLabel.mouseEnabled = false;
+			addChild(_descLabel);
+			
+			_ceteLabel = new TextField();
+			_ceteLabel.text = '作品分类：';
+			_ceteLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_ceteLabel.x = 0;
+			_ceteLabel.y = 128;
+			_ceteLabel.width = 60;
+			_ceteLabel.height = 20;
+			_ceteLabel.mouseEnabled = false;
+			addChild(_ceteLabel);
 			
 			_themeField = new TextField();
 			_themeField.x = 64;
@@ -67,6 +108,46 @@ package org.sjx.components {
 				if (!!_authorField.text && _authorField.text.length > 0)
 					_authorLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
 			});
+			
+			var prices: Array = Terminal.prices.split(",");
+			_priceFields = [];
+			for (var i: int = 0, price: String; price = prices[i]; i ++) {
+				var priceItem: Radio = new Radio(72, 15, price, price);
+				priceItem.x = 64 + i * 76;
+				priceItem.y = 50;
+				addChild(priceItem);
+				priceItem.addEventListener(MouseEvent.CLICK, doRadioChanged);
+				_priceFields.push(priceItem);
+			}
+			if (!!_priceFields.length)
+				_priceFields[0].selected = true;
+			
+			_descField = new TextField();
+			_descField.x = 64;
+			_descField.y = 72;
+			_descField.width = 640;
+			_descField.height = 48;
+			_descField.setTextFormat(TextFormats.THEME_INPUT_FORMAT);
+			// _descField.maxChars = 40;
+			_descField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_descField.border = true;
+			_descField.type = TextFieldType.INPUT;
+			_descField.borderColor = 0x777777;
+			addChild(_descField);
+			
+			_ceteField = new Select(221, 16, Terminal.categorys.split(","));
+			_ceteField.x = 64;
+			_ceteField.y = 128;
+			addChild(_ceteField);
+		}
+		
+		/** 价格变更时的处理. */
+		private function doRadioChanged(evt: MouseEvent): void {
+			var priceItem: Radio = evt.currentTarget as Radio;
+			for (var i: int = 0, price: Radio; price = _priceFields[i]; i ++) {
+				if (priceItem != price)
+					price.selected = false;
+			}
 		}
 		
 		/** 检测信息是否完整. */
@@ -113,6 +194,12 @@ package org.sjx.components {
 		}
 		public function get author(): String {
 			return _authorField.text;
+		}
+		public function get price(): String {
+			return _price;
+		}
+		public function get category(): String {
+			return _ceteField.value;
 		}
 	}
 }

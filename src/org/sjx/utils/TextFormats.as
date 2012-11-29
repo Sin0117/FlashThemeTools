@@ -17,5 +17,7 @@ package org.sjx.utils {
 		public static const ALERT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.CENTER);
 		// 上传界面
 		public static const UPLOAD_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT);
+		// 普通文字
+		public static const TEXT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT);
 	}
 }
