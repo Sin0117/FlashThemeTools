@@ -210,10 +210,13 @@ trace (Terminal.host + Terminal.download + _builderId);
 			// 用户相关请求对象初始化.
 			_userLoader = new URLLoader();
 			_userLoader.addEventListener(Event.COMPLETE, doUuid);
+			/*
+			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
 				_userLoader.load(new URLRequest(Terminal.host + Terminal.uuidPath + '?d=' + new Date().getTime()));
 				doLoading('初始化中...');
 			});
+			*/
 			
 			/** 打包请求. */
 			_builderLoader = new URLLoader();
