@@ -32,7 +32,7 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="800", height="834")]
+	[SWF(frameRate="25", width="800", height="850")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
@@ -49,7 +49,7 @@ package {
 		public static const EDITER_WIDTH: int = 360;
 		public static const EDITER_HEIGHT: int = 600;
 		// 上传区域宽度
-		public static const UPLOAD_WIDTH: int = 360;
+		public static const UPLOAD_WIDTH: int = 350;
 		public static const UPLOAD_HEIGHT: int = 600;
 		// 上传项的参数
 		public static const UPLOAD_ITEM_WIDTH: int = 56;
@@ -240,7 +240,7 @@ trace (Terminal.host + Terminal.download + _builderId);
 			
 			_preview = new Preview(this);
 			_preview.x = PADDING_H;
-			_preview.y = PADDING_V + THEME_INFO_HEIGHT;
+			_preview.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			addChild(_preview);
 			
 			_builderTimer = new Timer(2000, 1);
@@ -361,7 +361,7 @@ trace (Terminal.host + Terminal.download + _builderId);
 			
 			_list = new UploadList(this);
 			_list.x = PADDING_H + PEWVIEW_WIDTH;
-			_list.y = PADDING_V + THEME_INFO_HEIGHT;
+			_list.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			addChild(_list);
 			
 			var btnY: int = HEIGHT - Button.HEIGHT - 25;
@@ -411,11 +411,14 @@ trace (Terminal.host + Terminal.download + _builderId);
 		
 		private function draw(): void {
 			var g: Graphics = this.graphics;
-			g.lineStyle(BORDER, 0x333333, 1);
-			g.beginFill(0xEEEEEE, .9);
-			g.drawRoundRect(BORDER >> 1, BORDER >> 1, WIDTH - BORDER * 2, HEIGHT - BORDER * 2, BORDER * 4);
+			g.beginFill(0xffffff, 1);
+			g.drawRect(0, 0, WIDTH, HEIGHT);
+			g.lineStyle(1, 0xf0f0f0, 1);
+			g.beginFill(0xfafafa, 1);
+			g.drawRoundRect(PADDING_H, PADDING_V + THEME_INFO_HEIGHT, 
+				WIDTH - PADDING_H * 2, HEIGHT - PADDING_V * 2 - THEME_INFO_HEIGHT, BORDER * 4);
 			g.moveTo(BORDER << 2, THEME_INFO_HEIGHT);
-			g.lineStyle(BORDER, 0x777777, 1);
+			g.lineStyle(BORDER, 0xe6e6e6, 1);
 			g.lineTo(WIDTH - BORDER * 5, THEME_INFO_HEIGHT);
 			g.endFill();
 		}

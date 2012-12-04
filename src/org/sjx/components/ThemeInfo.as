@@ -86,7 +86,7 @@ package org.sjx.components {
 			_themeField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_themeField.border = true;
 			_themeField.type = TextFieldType.INPUT;
-			_themeField.borderColor = 0x777777;
+			_themeField.borderColor = 0xcccccc;
 			addChild(_themeField);
 			_themeField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
 				if (!!_themeField.text && _themeField.text.length > 0)
@@ -102,7 +102,7 @@ package org.sjx.components {
 			_authorField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_authorField.border = true;
 			_authorField.type = TextFieldType.INPUT;
-			_authorField.borderColor = 0x777777;
+			_authorField.borderColor = 0xcccccc;
 			addChild(_authorField);
 			_authorField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
 				if (!!_authorField.text && _authorField.text.length > 0)
@@ -132,7 +132,7 @@ package org.sjx.components {
 			_descField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_descField.border = true;
 			_descField.type = TextFieldType.INPUT;
-			_descField.borderColor = 0x777777;
+			_descField.borderColor = 0xcccccc;
 			addChild(_descField);
 			
 			_ceteField = new Select(221, 16, Terminal.categorys.split(","));

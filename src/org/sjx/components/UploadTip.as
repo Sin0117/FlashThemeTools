@@ -61,7 +61,7 @@ package org.sjx.components {
 				w: int = SchoolCompete.TIP_WIDTH, h: int = SchoolCompete.TIP_HEIGHT;
 			g.clear();
 			g.beginFill(0xFFFFFF, 1);
-			g.lineStyle(2, 0xc7df99, 1);
+			g.lineStyle(3, 0x000000, 0.17);
 			g.moveTo(_curX, 0);
 			g.lineTo(_curX + headW, headH);
 			g.lineTo(w - r, headH);

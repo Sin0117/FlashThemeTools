@@ -33,10 +33,6 @@ package org.sjx.components {
 		public function Preview(r: SchoolCompete) {
 			_root = r;
 			_space = new Sprite();
-			_space.graphics.lineStyle(2, 0x777777, .4);
-			_space.graphics.beginFill(0xFAFAFA, 1);
-			_space.graphics.drawRoundRect(0, 0, SchoolCompete.PEWVIEW_WIDTH, SchoolCompete.PEWVIEW_HEIGHT, 8);
-			_space.graphics.endFill();
 			_space.x = 0;
 			_space.y = 0;
 			addChild(_space);
@@ -57,12 +53,6 @@ package org.sjx.components {
 				_prev.render(Terminal.terminal);
 				_prev.update(Terminal.data);
 			});
-			
-			var g: Graphics = this.graphics;
-			g.lineStyle(1, 0, 0);
-			g.beginFill(0x333333, .4);
-			g.drawRect(0, 0, SchoolCompete.PEWVIEW_WIDTH, SchoolCompete.PEWVIEW_HEIGHT);
-			g.endFill();
 			
 			_main = new Button('主屏');
 			_main.x = SchoolCompete.PEWVIEW_WIDTH - Button.WIDTH * 2 - 32 >> 1;

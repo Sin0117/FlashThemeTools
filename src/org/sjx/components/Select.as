@@ -37,7 +37,6 @@ package org.sjx.components {
 			
 			_bg = Bitmap(new BG()).bitmapData;
 			
-			
 			_border = new Shape();
 			_border.x = 0;
 			_border.y = 0;
@@ -141,7 +140,7 @@ package org.sjx.components {
 			var matr: Matrix = new Matrix(1, 0, 0, 1, 0, 0);
 			if (type == 0) {
 				_icon.graphics.beginBitmapFill(_bg, matr, false, true);
-				_border.graphics.lineStyle(1, 0x000000);
+				_border.graphics.lineStyle(1, 0xcccccc);
 				_isOpen = false;
 			}
 			if (type == 1) {
