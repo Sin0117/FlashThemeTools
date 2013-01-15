@@ -88,6 +88,11 @@ package com.qihoo.themefactory.sjx.ctrl {
 		
 		/** 设置图片. */
 		public function setImage(key: String, src: String, data: BitmapData = null): void {
+			if (!src || !src.length) {
+				for (var v: String in _views)
+					_views[v].setImage(key, null, null);
+				return;
+			}
 			_imageLoad = false;
 			var time: uint = new Date().getTime();
 			_keyVersion[key] = time;

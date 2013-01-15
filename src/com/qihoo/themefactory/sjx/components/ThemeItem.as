@@ -190,6 +190,11 @@ package com.qihoo.themefactory.sjx.components {
 		
 		/** 绘制. */
 		private function draw(): void {
+			if (!_img) {
+				for (var i: int = 0, n: Shape; n = _icons[i]; i ++)
+					n.graphics.clear();
+				return;
+			}
 			var zx: Number = _width / _img.width, zy: Number = _height / _img.height;
 			for (var i: int = 0, n: Shape; n = _icons[i]; i ++) {
 				var g: Graphics = n.graphics;
@@ -220,11 +225,20 @@ package com.qihoo.themefactory.sjx.components {
 		public function set foreground(data: BitmapData): void {
 			drawGround(_foreground.graphics, ThemeView(this.parent).foregroundWidth, ThemeView(this.parent).foregroundHeight, data);
 		}
+		/** 设置图标蒙板. */
+		public function set iconMask(data: BitmapData): void {
+			
+		}
+		/** 设置图标阴影. */
+		public function set iconShadow(data: BitmapData): void {
+			
+		}
 		private function drawGround(g: Graphics, w: Number, h: Number, data: BitmapData): void {
 			var x: Number = (Utils._size - w) * _zoom + 2 >> 1,
 				y: Number = (Utils._size - h) * _zoom + 1>> 1,
 				dw: Number = w * _zoom, dh: Number = h * _zoom;
 			g.clear();
+			if (!data) return;
 			g.beginBitmapFill(data, new Matrix(dw / data.width, 0, 0, dh / data.height, x, y), false, true);
 			g.drawRect(x, y, dw, dh);
 			g.endFill();

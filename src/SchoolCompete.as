@@ -8,6 +8,8 @@ package {
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.HTTPStatusEvent;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
@@ -23,34 +25,42 @@ package {
 	
 	import mx.events.Request;
 	
-	import org.sjx.components.Button;
+	import org.sjx.components.BuildButton;
+	import org.sjx.components.CheckBox;
 	import org.sjx.components.Confirm;
 	import org.sjx.components.Dialog;
+	import org.sjx.components.Input;
 	import org.sjx.components.Preview;
 	import org.sjx.components.ThemeInfo;
 	import org.sjx.components.UploadList;
+	import org.sjx.components.ViewButton;
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="800", height="850")]
+	[SWF(frameRate="25", width="900", height="1080")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
 		public static var BuilderSuccess: Class;
+		[Embed(source="images/018.png")]
+		public static var BuilderError: Class;
+		[Embed(source="images/016.png")]
+		public static var LoginIcon: Class;
 		
-		public static const WIDTH: int = 800;
-		public static const HEIGHT: int = 834;
+		public static const WIDTH: int = 900;
+		public static const HEIGHT: int = 1080;
 		public static const PADDING_V: int = 10;
-		public static const PADDING_H: int = 20;
+		public static const PADDING_H: int = 10;
 		public static const BORDER: int = 2;
 		// 预览区域宽度
-		public static const PEWVIEW_WIDTH: int = 400;
-		public static const PEWVIEW_HEIGHT: int = 640;
+		public static const PEWVIEW_WIDTH: int = 380;
+		public static const PEWVIEW_HEIGHT: int = 680;
 		public static const EDITER_WIDTH: int = 360;
 		public static const EDITER_HEIGHT: int = 600;
 		// 上传区域宽度
-		public static const UPLOAD_WIDTH: int = 350;
-		public static const UPLOAD_HEIGHT: int = 600;
+		public static const UPLOAD_WIDTH: int = 320;
+		public static const UPLOAD_HEIGHT: int = 520;
+		public static const DEV_UPLOAD_HEIGHT: int = 580;
 		// 上传项的参数
 		public static const UPLOAD_ITEM_WIDTH: int = 56;
 		public static const UPLOAD_ITEM_HEIGHT: int = 68;
@@ -59,23 +69,33 @@ package {
 		public static const UPLOAD_ITEM_PADDING_H: int = 8;
 		// 提示框的尺寸.
 		public static const TIP_WIDTH: int = 200;
-		public static const TIP_HEIGHT: int = 120;
+		public static const TIP_HEIGHT: int = 160;
 		public static const TIP_HEAD_HEIGHT: int = 16;
 		public static const TIP_HEAD_WIDTH: int = 24;
-		public static const TIP_ROUND: int = 8;
+		public static const TIP_ROUND: int = 4;
 		// 上传显示列数.
 		public static const UPLOAD_ITEM_SIZE: int = 5;
 		// 主题信息区域的尺寸
 		public static const THEME_INFO_WIDTH: int = 760;
-		public static const THEME_INFO_HEIGHT: int = 168;
+		public static const THEME_INFO_HEIGHT: int = 328;
 		
 		private var _list: UploadList;
 		private var _info: ThemeInfo;
 		
-		private var _previewBtn: Button;
-		private var _builderBtn: Button;
-		private var _clearBtn: Button;
+		private var _checkbox: CheckBox;
+		private var _agreement: Input;
+		private var _builderBtn: BuildButton;
 		private var _alert: Dialog;
+		// 上传是否准备完毕
+		private var _uploadReady: Boolean;
+		// 内容填写完毕.
+		private var _infoReady: Boolean;
+		// 版权标签
+		private var _copyLab: TextField;
+		// 打包的当前进度.
+		private var _builderStatus: int;
+		// 打包的模拟效果。
+		private var _builderAnimate: Timer;
 		
 		// 所有打包数据.
 		private var _data: Object;
@@ -90,6 +110,8 @@ package {
 		private var _loading: Sprite;
 		private var _loadEffect: Sprite;
 		private var _builderSuccess: Bitmap;
+		private var _builderError: Bitmap;
+		private var _loginBg: Bitmap;
 		private var _loadLabel: TextField;
 		private var _loadProg: TextField;
 		
@@ -101,12 +123,20 @@ package {
 		private var _builderTimer: Timer;
 		// 打包ID;
 		private var _builderId: String;
-		// 打包后的包名.
-		private var _builderPack: String;
-		// 打包完成后的下载按钮.
-		private var _builderDownloadBtn: Button;
+		// 打包主题ID
+		private var _diyId: String;
+		// 完善个人信息
+		private var _userInfoBtn: ViewButton;
+		// 我的收益
+		private var _myProfitsBtn: ViewButton;
+		// 我的作品
+		private var _myWorksBtn: ViewButton;
+		// 打包失败重新打包。
+		private var _builderRebuilderBtn: ViewButton;
+		// 登录按钮.
+		private var _loginBtn: ViewButton;
 		// 打包完成后的关闭按钮.
-		private var _builderCloseBtn: Button;
+		private var _builderCloseBtn: ViewButton;
 		// 清空的提示.
 		private var _clearConfirm: Confirm;
 		
@@ -122,7 +152,6 @@ package {
 			Security.loadPolicyFile("http://p7.qhimg.com/crossdomain.xml");
 			Security.loadPolicyFile("http://p8.qhimg.com/crossdomain.xml");
 			Security.loadPolicyFile("http://p9.qhimg.com/crossdomain.xml");
-			// Security.loadPolicyFile("http://10.16.15.45:8989/crossdomain.xml");
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align  = StageAlign.TOP_LEFT;
 			
@@ -135,6 +164,32 @@ package {
 					Terminal.prices = root.loaderInfo.parameters['prices'];
 				if (root.loaderInfo.parameters['download'])
 					_downloadCallback = root.loaderInfo.parameters['download'];
+				if (root.loaderInfo.parameters['proxy'])
+					Terminal.proxy = root.loaderInfo.parameters['proxy'];
+				if (root.loaderInfo.parameters['uuid'])
+					Terminal.uuid = root.loaderInfo.parameters['uuid'];
+				if (root.loaderInfo.parameters['doLogin'])
+					Terminal.loginCallback = root.loaderInfo.parameters['doLogin'];
+				if (root.loaderInfo.parameters['dev'])
+					Terminal.dev = root.loaderInfo.parameters['dev'];
+				if (root.loaderInfo.parameters['pkg'])
+					Terminal.pkg = root.loaderInfo.parameters['pkg'];
+				if (root.loaderInfo.parameters['source'])
+					Terminal.source = root.loaderInfo.parameters['source'];
+				if (root.loaderInfo.parameters['pid'])
+					Terminal.pid = root.loaderInfo.parameters['pid'];
+				if (root.loaderInfo.parameters['userInfo'])
+					Terminal.userInfo = root.loaderInfo.parameters['userInfo'];
+				if (root.loaderInfo.parameters['userInfoCk'])
+					Terminal.userInfoCk = root.loaderInfo.parameters['userInfoCk'];
+				if (root.loaderInfo.parameters['profitsCk'])
+					Terminal.profitsCk = root.loaderInfo.parameters['profitsCk'];
+				if (root.loaderInfo.parameters['worksCk'])
+					Terminal.worksCk = root.loaderInfo.parameters['worksCk'];
+				if (root.loaderInfo.parameters['userName'])
+					Terminal.userName = root.loaderInfo.parameters['userName'];
+				if (root.loaderInfo.parameters['finish'])
+					Terminal.finish = root.loaderInfo.parameters['finish'];
 			}
 			
 			// 绘制加载效果
@@ -160,10 +215,22 @@ package {
 			_loading.addChild(_loadEffect);
 			
 			_builderSuccess = new BuilderSuccess();
-			_builderSuccess.x = 150;
-			_builderSuccess.y = 52;
+			_builderSuccess.x = 100;
+			_builderSuccess.y = 8;
 			_builderSuccess.visible = false;
 			_loading.addChild(_builderSuccess);
+			
+			_builderError = new BuilderError();
+			_builderError.x = 100;
+			_builderError.y = 8;
+			_builderError.visible = false;
+			_loading.addChild(_builderError);
+			
+			_loginBg = new LoginIcon();
+			_loginBg.x = 100;
+			_loginBg.y = 8;
+			_loginBg.visible = false;
+			_loading.addChild(_loginBg);
 			
 			_loadProg = new TextField();
 			_loadProg.x = 180;
@@ -181,24 +248,45 @@ package {
 			_loadLabel.mouseEnabled = false;
 			_loading.addChild(_loadLabel);
 			
-			_builderDownloadBtn = new Button('下载');
-			_builderDownloadBtn.x = 400 - 36 - Button.WIDTH * 2 >> 1;
-			_builderDownloadBtn.y = 200;
-			_loading.addChild(_builderDownloadBtn);
-			_builderDownloadBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-trace (Terminal.host + Terminal.download + _builderId);
-				if (_downloadCallback) {
-					ExternalInterface.call('doDownload', Terminal.host + Terminal.download + _builderId + '&packname=' + _builderPack);
-				} else {
-					var fr: FileReference = new FileReference();
-					fr.download(new URLRequest(Terminal.host + Terminal.download + _builderId), _info.theme + '.zip');
-				}				
+			_userInfoBtn = new ViewButton('完善个人信息');
+			_userInfoBtn.x = 400 - 36 - ViewButton.WIDTH * 2 >> 1;
+			_userInfoBtn.y = 196;
+			_loading.addChild(_userInfoBtn);
+			_userInfoBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				ExternalInterface.call(Terminal.userInfoCk);
 			});
-			_builderDownloadBtn.visible = false;
+			_userInfoBtn.visible = false;
+
+			_myProfitsBtn = new ViewButton('我的收益');
+			_myProfitsBtn.x = 400 - 36 - ViewButton.WIDTH * 2 >> 1;
+			_myProfitsBtn.y = 196;
+			_loading.addChild(_myProfitsBtn);
+			_myProfitsBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				ExternalInterface.call(Terminal.profitsCk);		
+			});
+			_myProfitsBtn.visible = false;
+
+			_myWorksBtn = new ViewButton('我的作品');
+			_myWorksBtn.x = 400 - _userInfoBtn.x - ViewButton.WIDTH;
+			_myWorksBtn.y = 196;
+			_loading.addChild(_myWorksBtn);
+			_myWorksBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				ExternalInterface.call(Terminal.worksCk);	
+			});
+			_myWorksBtn.visible = false;
 			
-			_builderCloseBtn = new Button('关闭');
-			_builderCloseBtn.x = 400 - _builderDownloadBtn.x - Button.WIDTH;
-			_builderCloseBtn.y = 200;
+			_builderRebuilderBtn = new ViewButton('重新打包');
+			_builderRebuilderBtn.x = 400 - 36 - ViewButton.WIDTH * 2 >> 1;
+			_builderRebuilderBtn.y = 196;
+			_loading.addChild(_builderRebuilderBtn);
+			_builderRebuilderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				doBuilder();			
+			});
+			_builderRebuilderBtn.visible = false;
+			
+			_builderCloseBtn = new ViewButton('关闭');
+			_builderCloseBtn.x = 400 - _userInfoBtn.x - ViewButton.WIDTH;
+			_builderCloseBtn.y = 196;
 			_loading.addChild(_builderCloseBtn);
 			_builderCloseBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
 				hideLoading();
@@ -209,26 +297,49 @@ trace (Terminal.host + Terminal.download + _builderId);
 			
 			// 用户相关请求对象初始化.
 			_userLoader = new URLLoader();
-			_userLoader.addEventListener(Event.COMPLETE, doUuid);
-			/*
+			_userLoader.addEventListener(Event.COMPLETE, doClear);
+			
+			_loginBtn = new ViewButton("登录");
+			_loginBtn.x = 400 - ViewButton.WIDTH >> 1;
+			_loginBtn.y = 196;
+			_loading.addChild(_loginBtn);
+			_loginBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				ExternalInterface.call(Terminal.loginCallback, "login");
+			});
+			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-				_userLoader.load(new URLRequest(Terminal.host + Terminal.uuidPath + '?d=' + new Date().getTime()));
-				doLoading('初始化中...');
+				/*
+trace ('uuid : ' + Terminal.uuid);
+				if (Terminal.uuid == null || Terminal.uuid == '') {
+					updateLoading(-3);
+				} else {
+					_loginBtn.visible = false;
+					_loginBg.visible = false;
+				}
+				*/
 			});
-			*/
 			
 			/** 打包请求. */
 			_builderLoader = new URLLoader();
+			_builderLoader.addEventListener(IOErrorEvent.IO_ERROR, function (evt: IOErrorEvent): void {
+				updateLoading(-1);
+			});
+			_builderLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function (evt: HTTPStatusEvent): void {
+trace ('_builderLoader : ' + evt.status);
+			});
 			_builderLoader.addEventListener(Event.COMPLETE, function (evt: Event): void {
+trace ('_builderLoader : ' + _builderLoader.data.toString());
 				var strs: Array = _builderLoader.data.toString().split('|');
+				// uid|taskId|diyId
 				if (strs.length > 2) {
 					_builderId = strs[1];
-					_builderPack = strs[2];
+					_diyId = strs[2];
 					_builderTimer.reset();
 					_builderTimer.start();
 				} else {
 					_list.alert(strs[1]);
+					_builderAnimate.running && _builderAnimate.stop();
 				}
 			});
 			
@@ -243,32 +354,37 @@ trace (Terminal.host + Terminal.download + _builderId);
 			_preview.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			addChild(_preview);
 			
-			_builderTimer = new Timer(2000, 1);
+			_builderTimer = new Timer(1000, 1);
 			_builderTimer.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
-				_builderStatLoader.load(new URLRequest(Terminal.host + Terminal.status + '?tid=' + _builderId + '&d=' + new Date().getTime()));
+trace (Terminal.host + Terminal.status + '?taskId=' + _builderId + '&diyId=' + _diyId + 
+	'&progress=' + _builderStatus + '&d=' + new Date().getTime());
+				_builderStatLoader.load(new URLRequest(Terminal.host + Terminal.status + 
+					'?taskId=' + _builderId + '&diyId=' + _diyId + '&tpid=' + Terminal.pid +
+					'&source=' + Terminal.source + '&pid=' + Terminal.pid +
+					'&progress=' + _builderStatus + '&d=' + new Date().getTime()));
 			});
 			
 			_builderStatLoader = new URLLoader();
+			_builderStatLoader.addEventListener(IOErrorEvent.IO_ERROR, function (evt: IOErrorEvent): void {
+				updateLoading(-1);
+			});
+			_builderStatLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function (evt: HTTPStatusEvent): void {
+trace ('_builderStatLoader : ' + evt.status);
+			});
 			_builderStatLoader.addEventListener(Event.COMPLETE, function (evt: Event): void {
 				var strs: Array = _builderStatLoader.data.toString().split('|');
-				switch (strs[1]) {
-					case '0': updateLoading(strs[2], 15); break;
-					case '1': updateLoading(strs[2], 30); break;
-					case '2': updateLoading(strs[2], 45); break;
-					case '3': updateLoading(strs[2], 60); break;
-					case '4': updateLoading(strs[2], 75); break;
-					case '5': updateLoading(strs[2], 90); break;
-					case '6': updateLoading(strs[2]); break;
-				}
-				if (strs[1] == 6) {
+trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
+				if (strs[1] >= 100) {
+					updateLoading(strs[1]);
 					_builderId = strs[0];
-					_builderDownloadBtn.visible = true;
-					_builderCloseBtn.visible = true;
-					_builderSuccess.visible = true;
-					_loadEffect.visible = false;
 				} else {
-					_builderTimer.reset();
-					_builderTimer.start();
+					if (strs[1] < 0) {
+						updateLoading(strs[1]);
+					} else {
+						doLoading(strs[1]);
+						_builderTimer.reset();
+						_builderTimer.start();
+					}
 				}
 			});
 			
@@ -276,11 +392,21 @@ trace (Terminal.host + Terminal.download + _builderId);
 				_userLoader.load(new URLRequest(Terminal.host + Terminal.clear + '?d=' + new Date().getTime()));
 				_info.clear();
 				_list.clear();
+				_preview.clear();
 				_data = {};
 				hideClearConfirm();
 			}, function (): void {
 				hideClearConfirm();
 			}, 300, 180);
+			
+			_builderAnimate = new Timer(1000, 1);
+			_builderAnimate.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
+				if (_builderStatus < 70 && _builderStatus > 0) {
+					doLoading(_builderStatus + 15);
+					_builderAnimate.reset();
+					_builderAnimate.start();
+				}
+			});
 			_data = {};
 			Init(null);
 		}
@@ -294,10 +420,9 @@ trace (Terminal.host + Terminal.download + _builderId);
 		}
 		
 		/** 显示加载界面. */
-		public function doLoading(lab: String, prog: int = -1): void {
+		public function doLoading(prog: int = -1): void {
 			_info.enable = false;
-			updateLoading(lab, prog);
-			alert(_loading);
+			updateLoading(prog);
 			addEventListener(Event.ENTER_FRAME, loadAnimation);
 		}
 		/** 隐藏加载界面. */
@@ -305,21 +430,76 @@ trace (Terminal.host + Terminal.download + _builderId);
 			_info.enable = true;
 			removeEventListener(Event.ENTER_FRAME, loadAnimation);
 			_builderCloseBtn.visible = false;
-			_builderDownloadBtn.visible = false;
+			_userInfoBtn.visible = false;
+			_myProfitsBtn.visible = false;
+			_myWorksBtn.visible = false;
 			_builderSuccess.visible = false;
 			_loadEffect.visible = true;
 			close();
 		}
 		/** 更新加载界面文字. */
-		public function updateLoading(lab: String, prog: int = -1): void {
-			_loadLabel.text = lab;
-			_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
-			if (prog >= 0) {
+		public function updateLoading(prog: int = -1): void {
+			_builderStatus = prog;
+			if (prog >= 0 && prog < 100) {
 				_loadProg.text = prog + '%';
 				_loadProg.setTextFormat(TextFormats.ALERT_FORMAT);
+				_loadLabel.text = "打包中，请稍候...";
+				_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+				_builderRebuilderBtn.visible = false;
+				_userInfoBtn.visible = false;
+				_myProfitsBtn.visible = false;
+				_myWorksBtn.visible = false;
+				_builderCloseBtn.visible = false;
+				_builderSuccess.visible = false;
+				_builderError.visible = false;
+				_loadEffect.visible = true;
 			} else {
+				if (prog >= 100) {
+					_loadLabel.text = "打包完成。";
+					_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+					_builderSuccess.visible = true;
+					_builderRebuilderBtn.visible = false;
+					_builderError.visible = false;
+					_loadEffect.visible = false;
+					_builderAnimate.running && _builderAnimate.stop();
+					if (Terminal.finish) {
+						ExternalInterface.call(Terminal.finish);
+					} else {
+						if (Terminal.userInfo == 0) {
+							_userInfoBtn.visible = true;
+							_myProfitsBtn.visible = false;
+						} else {
+							_userInfoBtn.visible = false;
+							_myProfitsBtn.visible = true;
+						}
+						_myWorksBtn.visible = true;
+						_builderCloseBtn.visible = true;
+					}
+				} else {
+					if (prog == -1) {
+						_loadLabel.text = "打包失败，请重新打包。";
+						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+						_builderError.visible = true;
+						_builderCloseBtn.visible = true;
+						_builderRebuilderBtn.visible = true;
+						_builderSuccess.visible = false;
+						_loadEffect.visible = false;
+						_builderAnimate.running && _builderAnimate.stop();
+					}
+					if (prog == -2) {
+						_loadLabel.text = '初始化中...';
+						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+					}
+					if (prog == -3) {
+						_loadLabel.text = '您还未登录哟~';
+						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+						_loginBtn.visible = true;
+						_loginBg.visible = true;
+					}
+				}
 				_loadProg.text = '';
 			}
+			alert(_loading);
 		}
 		
 		/** 绘制一个旋转效果. */
@@ -334,15 +514,6 @@ trace (Terminal.host + Terminal.download + _builderId);
 			return shape;
 		}
 		
-		/** 加载到uuid后的处理. */
-		private function doUuid(evt: Event): void {
-			Terminal.uuid = _userLoader.data;
-			hideLoading();
-			
-			_userLoader.removeEventListener(Event.COMPLETE, doUuid);
-			_userLoader.addEventListener(Event.COMPLETE, doClear);
-		}
-		
 		/** 清理用户数据后的回调. */
 		private function doClear(evt: Event): void {
 			
@@ -354,59 +525,82 @@ trace (Terminal.host + Terminal.download + _builderId);
 		}
 		
 		private function Init(evt: Event): void {
-			_info = new ThemeInfo();
+			_info = new ThemeInfo(this);
 			_info.x = PADDING_H;
 			_info.y = PADDING_V;
-			addChild(_info);
 			
 			_list = new UploadList(this);
 			_list.x = PADDING_H + PEWVIEW_WIDTH;
 			_list.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
-			addChild(_list);
 			
-			var btnY: int = HEIGHT - Button.HEIGHT - 25;
-			_builderBtn = new Button('打包');
-			_builderBtn.x = _list.x + (UPLOAD_WIDTH - Button.WIDTH * 2 - 32 >> 1);
+			var btnY: int = HEIGHT - ViewButton.HEIGHT - 80;
+			_builderBtn = new BuildButton();
+			_builderBtn.x = _list.x + (UPLOAD_WIDTH - ViewButton.WIDTH - 32 >> 1);
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-				doBuilder();
+				if (_builderBtn.enable)
+					doBuilder();
+			});
+			_builderBtn.enable = false;
+			
+			_checkbox = new CheckBox(20, 19);
+			_checkbox.x = _list.x + 60;
+			_checkbox.y = btnY - 36;
+			addChild(_checkbox);
+			_checkbox.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
+				readyBuild();
 			});
 			
-			_clearBtn = new Button('清空');
-			_clearBtn.x = _list.x + WIDTH - _builderBtn.x - Button.WIDTH;
-			_clearBtn.y = btnY;
-			addChild(_clearBtn);
-			_clearBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-				doClearConfirm();
+			_agreement = new Input(240, 20);
+			_agreement.x = _checkbox.x + 23;
+			_agreement.y = _checkbox.y;
+			_agreement.border = false
+			_agreement.setFormat(TextFormats.AGREEMENT_FORMAT);
+			_agreement.text = "同意360主题达人联盟设计师协议"
+			addChild(_agreement);
+			
+			_copyLab = new TextField();
+			_copyLab.htmlText = "360手机桌面主题美化工具(v1.0)";
+			_copyLab.setTextFormat(TextFormats.COPY_LABEL_FORMAT);
+			_copyLab.width = 180;
+			_copyLab.height = 18;
+			_copyLab.x = WIDTH - 196;
+			_copyLab.y = HEIGHT - 34;
+			_copyLab.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+				_copyLab.setTextFormat(TextFormats.COPY_LABEL_HOVER_FORMAT);
 			});
+			_copyLab.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+				_copyLab.setTextFormat(TextFormats.COPY_LABEL_FORMAT);
+			});
+			addChild(_copyLab);
+			addChild(_info);
+			addChild(_list);
 			
 			draw();
 		}
 		
 		/** 打包操作. */
 		public function doBuilder(): void {
-			if (_info.checkThemeName()) {
-				if (_info.checkAuthor()) {
-					if (_list.check()) {
-						doLoading('打包中，请稍候...', 0);
-						var request: URLRequest = new URLRequest(Terminal.host + Terminal.builder);
-						var variables:URLVariables = new URLVariables();
-						variables['uuid'] = Terminal.uuid;
-						variables['name'] = _info.author;
-						variables['theme'] = _info.theme;
-						request.method = URLRequestMethod.GET;
-						request.data = variables;
-						_builderLoader.load(request);
-					} else {
-						_list.alert('还有未上传的图标');
-					}
-				} else {
-					_list.alert('英雄! 请留下你的名字!');
-				}
-			} else {
-				_list.alert('亲~ 主题名称要填哦!');
-			}
+			var request: URLRequest = new URLRequest(Terminal.host + Terminal.builder);
+			var variables:URLVariables = new URLVariables();
+			variables['source'] = Terminal.source || '';
+			variables['pid'] = Terminal.pid || '';
+			variables['uid'] = Terminal.uuid || '';
+			variables['name'] = _info.author || '';
+			variables['theme'] = _info.theme || '';
+			variables['desc'] = _info.desc || '';
+			variables['pkg'] = _info.pkg || '';
+			variables['price'] = _info.price || '';
+			variables['cate'] = _info.category || '';
+			variables['data'] = _list.toString() || '';
+			variables['dev'] = Terminal.dev;
+			request.method = URLRequestMethod.POST;
+			request.data = variables;
+			_builderLoader.load(request);
+			doLoading(5);
+			_builderAnimate.reset();
+			_builderAnimate.start();
 		}
 		
 		private function draw(): void {
@@ -416,11 +610,33 @@ trace (Terminal.host + Terminal.download + _builderId);
 			g.lineStyle(1, 0xf0f0f0, 1);
 			g.beginFill(0xfafafa, 1);
 			g.drawRoundRect(PADDING_H, PADDING_V + THEME_INFO_HEIGHT, 
-				WIDTH - PADDING_H * 2, HEIGHT - PADDING_V * 2 - THEME_INFO_HEIGHT, BORDER * 4);
+				WIDTH - PADDING_H * 2, HEIGHT - PADDING_V * 2 - THEME_INFO_HEIGHT, BORDER << 2);
 			g.moveTo(BORDER << 2, THEME_INFO_HEIGHT);
 			g.lineStyle(BORDER, 0xe6e6e6, 1);
 			g.lineTo(WIDTH - BORDER * 5, THEME_INFO_HEIGHT);
 			g.endFill();
+		}
+		
+		/** 内容上传完毕，准备打包. */
+		public function readyBuild(): void {
+			if (Terminal.dev) {
+				_builderBtn.enable = true;
+			} else {			
+				if (_uploadReady && _infoReady && _checkbox.selected)
+					_builderBtn.enable = true;
+				else
+					_builderBtn.enable = false;
+			}
+		}
+		/** 内容上传完毕. */
+		public function  set readyUpload(b: Boolean): void {
+			_uploadReady = b;
+			readyBuild();
+		}
+		/** 主题信息填写完毕. */
+		public function set readyInfo(b: Boolean): void {
+			_infoReady = b;
+			readyBuild();
 		}
 		
 		/** 显示提示框. */
@@ -439,11 +655,6 @@ trace (Terminal.host + Terminal.download + _builderId);
 		public function update(pack: String, url: String): void {
 			_data[pack] = url;
 			_preview.updateAt(pack, url);
-		}
-		/** 设置是否显示预览. */
-		public function set preview(show: Boolean): void {
-			_preview.parent.setChildIndex(_preview, _preview.parent.numChildren - 1);
-			_preview.visible = show;
 		}
 	}
 }

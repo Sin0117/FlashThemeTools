@@ -16,19 +16,19 @@ package org.sjx.components {
 		public function UploadTip() {
 			_htmlFormat = new StyleSheet();
 			_htmlFormat.setStyle(".item", {
-				color: '#333333',
-				fontSize: '12px',
+				color: '#000000',
+				fontSize: '13px',
 				fontFamily: '微软雅黑',
-				leading: '4px'
+				leading: '2px'
 			});
 			
 			_label = new TextField();
 			_label.wordWrap = true;
 			_label.styleSheet = _htmlFormat;
-			_label.width = SchoolCompete.TIP_WIDTH - 16;
-			_label.height = SchoolCompete.TIP_HEIGHT - 16;
-			_label.x = 8;
-			_label.y = SchoolCompete.TIP_HEAD_HEIGHT + 8;
+			_label.width = SchoolCompete.TIP_WIDTH - 24;
+			_label.height = SchoolCompete.TIP_HEIGHT - 32;
+			_label.x = 12;
+			_label.y = SchoolCompete.TIP_HEAD_HEIGHT + 12;
 			addChild(_label);
 			
 			_centerX = SchoolCompete.TIP_WIDTH >> 1;
@@ -69,9 +69,9 @@ package org.sjx.components {
 			g.lineTo(w, h - r);
 			g.curveTo(w, h, w - r, h);
 			g.lineTo(r, h);
-			g.curveTo(0, h, 0, h - r);
-			g.lineTo(0, headH + r);
-			g.curveTo(0, headH, r, headH);
+			g.curveTo(0.2, h, 0, h - r);
+			g.lineTo(-0.2, headH + r);
+			g.curveTo(0.2, headH, r, headH);
 			g.lineTo(_curX - headW, headH);
 			g.lineTo(_curX, 0);
 			g.endFill();

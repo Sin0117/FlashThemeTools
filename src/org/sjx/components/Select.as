@@ -12,7 +12,7 @@ package org.sjx.components {
 	/** 下拉列表. */
 	public class Select extends Sprite {
 		
-		[Embed(source="images/select-icon.png")]
+		[Embed(source="images/select-btn.png")]
 		public static var BG: Class;
 		
 		private var _bg: BitmapData;
@@ -27,15 +27,24 @@ package org.sjx.components {
 		private var _list: Sprite;
 		private var _items: Array;
 		
+		private var _color: uint;
+		private var _focusColor: uint;
+		
 		private var _isOpen: Boolean;
 		
 		/** 下拉列表组件, 注： border为1，中线是0.5所以高度和宽度要额外加1。 */
-		public function Select(width: int, height: int, d: Array) {
+		public function Select(width: int, height: int, d: Array, color: uint = 0xcccccc, focusColor: uint = 0x333333) {
 			_data = d;
 			_w = width;
 			_h = height;
+			_color = color;
+			_focusColor = focusColor;
 			
 			_bg = Bitmap(new BG()).bitmapData;
+			
+			graphics.beginFill(0xFFFFFF, 0.05);
+			graphics.drawRect(0, 0, _w, _h);
+			graphics.endFill();
 			
 			_border = new Shape();
 			_border.x = 0;
@@ -44,7 +53,7 @@ package org.sjx.components {
 			
 			_icon = new Sprite();
 			_icon.x = _w - 15;
-			_icon.y = 1;
+			_icon.y = _h - 5 >> 1;
 			addChild(_icon);
 			addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				if (_isOpen) {
@@ -67,9 +76,9 @@ package org.sjx.components {
 			if (_data.length)
 				_iptLabel.text = _data[0];
 			_iptLabel.setTextFormat(TextFormats.TEXT_FORMAT);
-			_iptLabel.x = 1;
-			_iptLabel.y = -2;
-			_iptLabel.width = _w - 17;
+			_iptLabel.x = 7;
+			_iptLabel.y = _h - 20 >> 1;
+			_iptLabel.width = _w - 24;
 			_iptLabel.height = 18;
 			_iptLabel.mouseEnabled = false;
 			addChild(_iptLabel);
@@ -90,25 +99,21 @@ package org.sjx.components {
 		public function set value(t: String): void {
 			_iptLabel.text = t;
 		}
-		
+
 		private function update(): void {
 			_list.graphics.clear();
-			_list.graphics.lineStyle(1, 0x333333);
+			_list.graphics.lineStyle(1, _color);
 			_list.graphics.beginFill(0xEEEEEE, .9);
 			_list.graphics.drawRect(0, 0, _w, _h * _data.length);
 			_list.graphics.endFill();
 			for (var i: int = 0, val: String; val = _data[i]; i ++) {
-				var item: TextField = new TextField();
+				var item: Input = new Input(_w - 2, _h + 2, false, 0xFFFFFF, 0xCCCCCC, _color, _focusColor);
+				item.mouseEnable = false;
+				item.buttonMode = true;
 				item.text = val;
 				item.x = 1;
 				item.y = -1 + _h * i;
-				item.width = _w - 2;
-				item.height = _h + 2;
-				item.borderColor = 0x777777;
-				item.backgroundColor = 0xCCCCCC
 				item.addEventListener(MouseEvent.CLICK, doItemClick);
-				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
-				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
 				_list.addChild(item);
 			}
 		}
@@ -118,20 +123,17 @@ package org.sjx.components {
 		}
 		
 		private function doItemOver(evt: MouseEvent): void {
-			var item: TextField = evt.currentTarget as TextField;
+			var item: Input = evt.currentTarget as Input;
 			item.border = true;
-			item.background = true;
 		}
 		private function doItemOut(evt: MouseEvent): void {
-			var item: TextField = evt.currentTarget as TextField;
+			var item: Input = evt.currentTarget as Input;
 			item.border = false;
-			item.background = false;
 		}
 		private function doItemClick(evt: MouseEvent): void {
-			var item: TextField = evt.currentTarget as TextField;
+			var item: Input = evt.currentTarget as Input;
 			value = item.text;
 			item.border = false;
-			item.background = false;
 		}
 		
 		private function draw(type: int): void {
@@ -140,21 +142,21 @@ package org.sjx.components {
 			var matr: Matrix = new Matrix(1, 0, 0, 1, 0, 0);
 			if (type == 0) {
 				_icon.graphics.beginBitmapFill(_bg, matr, false, true);
-				_border.graphics.lineStyle(1, 0xcccccc);
+				_border.graphics.lineStyle(1, _color);
 				_isOpen = false;
 			}
 			if (type == 1) {
-				matr.createBox(1, 1, 0, 0, -15);
+				matr.createBox(1, 1, 0, 0, -5);
 				_icon.graphics.beginBitmapFill(_bg, matr, false, true);
-				_border.graphics.lineStyle(1, 0x777777);
+				_border.graphics.lineStyle(1, _focusColor);
 				_isOpen = false;
 			}
 			if (type == 2) {
-				matr.createBox(1, 1, 0, 0, -30);
+				matr.createBox(1, 1, 0, 0, -10);
 				_icon.graphics.beginBitmapFill(_bg, matr, false, true);
-				_border.graphics.lineStyle(1, 0x333333);
+				_border.graphics.lineStyle(1, _focusColor);
 			}
-			_icon.graphics.drawRect(0, 0, 15, 15);
+			_icon.graphics.drawRect(0, 0, 10, 5);
 			_icon.graphics.endFill();
 			
 			_border.graphics.drawRect(0, 0, _w, _h);

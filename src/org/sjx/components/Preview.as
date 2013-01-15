@@ -16,8 +16,8 @@ package org.sjx.components {
 		
 		private var _prev: Editer;
 		private var _lock: LoaderSprite;
-		private var _main: Button;
-		private var _drawer: Button;
+		private var _main: ViewButton;
+		private var _drawer: ViewButton;
 		
 		// 当前显示的视图.
 		public var view: String = 'main';
@@ -43,8 +43,8 @@ package org.sjx.components {
 			addChild(_prev);
 			
 			_lock = new LoaderSprite('http://p4.qhimg.com/t0144c59deccdcb1dc7.gif', Editer.WIDTH, Editer.HEIGHT);
-			_lock.x = 0;
-			_lock.y = 0;
+			_lock.x = previewX;
+			_lock.y = previewY;
 			_lock.hide();
 			addChild(_lock);
 			_lock.text = '加载图片中...';
@@ -54,16 +54,16 @@ package org.sjx.components {
 				_prev.update(Terminal.data);
 			});
 			
-			_main = new Button('主屏');
-			_main.x = SchoolCompete.PEWVIEW_WIDTH - Button.WIDTH * 2 - 32 >> 1;
-			_main.y = SchoolCompete.EDITER_HEIGHT + 12;
+			_main = new ViewButton('主屏预览');
+			_main.x = SchoolCompete.PEWVIEW_WIDTH - ViewButton.WIDTH * 2 - 32 >> 1;
+			_main.y = SchoolCompete.EDITER_HEIGHT + 36;
 			_space.addChild(_main);
 			_main.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_prev.view = 'main';
 			});
 			
-			_drawer = new Button('抽屉');
-			_drawer.x = SchoolCompete.PEWVIEW_WIDTH - _main.x - Button.WIDTH;
+			_drawer = new ViewButton('图标预览');
+			_drawer.x = SchoolCompete.PEWVIEW_WIDTH - _main.x - ViewButton.WIDTH;
 			_drawer.y = _main.y;
 			_space.addChild(_drawer);
 			_drawer.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
@@ -72,9 +72,13 @@ package org.sjx.components {
 		}
 		
 		public function update(items: Object): void {
-			for (var pack: String in items) {
+			for (var pack: String in items)
 				_prev.change(pack, Terminal.host + items[pack]);
-			}
+		}
+		
+		public function clear(): void {
+			for (var i: int = 0, item: Object; item = Terminal.items[i]; i ++)
+				_prev.change(item.pack, null);
 		}
 		
 		public function updateAt(pack: String, url: String): void {

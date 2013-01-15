@@ -8,6 +8,8 @@ package com.qihoo.themefactory.sjx.ctrl {
 	import flash.external.ExternalInterface;
 	import flash.net.URLRequest;
 	
+	import org.sjx.data.Terminal;
+	
 	public class ImageManager {
 		
 		private var _queue: Object;
@@ -55,7 +57,6 @@ package com.qihoo.themefactory.sjx.ctrl {
 			
 			/** 图片缓存处理. */
 			function _cache(url: String): String {
-				if (url == null || url == "") return null;
 				// 如果有缓存处理, 就先清除掉.
 				var cacheIndex: int = url.indexOf('QIHOO_D_CACHE='), d: uint = new Date().getTime();
 				if (cacheIndex != -1) {
@@ -64,7 +65,11 @@ package com.qihoo.themefactory.sjx.ctrl {
 						arr[1] = arr[1].substring(end + 1);
 					url = arr.join('');
 				}
-				return url + (url.indexOf('?') != -1 ? '&QIHOO_D_CACHE=' : '?QIHOO_D_CACHE=') + d;
+				url += (url.indexOf('?') != -1 ? '&QIHOO_D_CACHE=' : '?QIHOO_D_CACHE=') + d;
+				if (Terminal.proxy) {
+					return ExternalInterface.call(Terminal.proxy, url);
+				}
+				return url;
 			}
 		}
 	}

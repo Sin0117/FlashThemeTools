@@ -8,10 +8,10 @@ package org.sjx.components {
 	
 	import org.sjx.utils.TextFormats;
 	
-	/** 单选组件. */
-	public class Radio extends Sprite {
+	/** 复选框组件. */
+	public class CheckBox extends Sprite {
 		
-		[Embed(source="images/radio-icon2.png")]
+		[Embed(source="images/checkbox-icon.png")]
 		public static var BG: Class;
 		
 		private var _bg: BitmapData;
@@ -25,7 +25,7 @@ package org.sjx.components {
 		
 		private var _val: String;
 		
-		public function Radio(w: int, h: int, lab: String, val: String) {
+		public function CheckBox(w: int, h: int, lab: String = "", val: String = "") {
 			_w = w;
 			_h = h;
 			_val = val;
@@ -48,8 +48,8 @@ package org.sjx.components {
 			addChild(_icon);
 			
 			addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
-				_selected = true;
-				draw(2);
+				_selected = !_selected;
+				draw(_selected ? 2 : 0);
 			});
 			addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
 				if (_selected) {

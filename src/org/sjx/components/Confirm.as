@@ -7,8 +7,8 @@ package org.sjx.components {
 	
 	public class Confirm extends Sprite {
 		
-		private var _okBtn: Button;
-		private var _cancelBtn: Button;
+		private var _okBtn: ViewButton;
+		private var _cancelBtn: ViewButton;
 		private var _label: TextField;
 		
 		public function Confirm(t: String, ok: Function, cancel: Function, w: int = 400, h: int = 240) {
@@ -27,16 +27,16 @@ package org.sjx.components {
 			_label.mouseEnabled = false;
 			addChild(_label);
 			
-			_okBtn = new Button('确定');
-			_okBtn.x = w - 36 - Button.WIDTH * 2 >> 1;
-			_okBtn.y = h - Button.HEIGHT - 28;
+			_okBtn = new ViewButton('确定');
+			_okBtn.x = w - 36 - ViewButton.WIDTH * 2 >> 1;
+			_okBtn.y = h - ViewButton.HEIGHT - 28;
 			addChild(_okBtn);
 			_okBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
 				ok && ok();
 			});
 			
-			_cancelBtn = new Button('取消');
-			_cancelBtn.x = w - _okBtn.x - Button.WIDTH;
+			_cancelBtn = new ViewButton('取消');
+			_cancelBtn.x = w - _okBtn.x - ViewButton.WIDTH;
 			_cancelBtn.y = _okBtn.y;
 			addChild(_cancelBtn);
 			_cancelBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {

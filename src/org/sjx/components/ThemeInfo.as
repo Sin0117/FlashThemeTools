@@ -10,135 +10,204 @@ package org.sjx.components {
 	
 	public class ThemeInfo extends Sprite {
 		
+		public static const LABEL_WIDTH: int = 68;
+		
 		private var _themeLabel: TextField;
 		private var _authorLabel: TextField;
 		private var _descLabel: TextField;
 		private var _priceLabel: TextField;
 		private var _ceteLabel: TextField;
+		private var _pkgLabel: TextField;
 		
-		private var _themeField: TextField;
-		private var _authorField: TextField;
+		private var _themeField: Input;
+		private var _authorField: Input;
 		private var _descField: TextField;
 		private var _priceFields: Array;
 		private var _ceteField: Select;
+		private var _pkgField: Input;
 		
 		private var _price: String;
+		private var _root: SchoolCompete;
 		
 		/** 主题相关信息. */
-		public function ThemeInfo() {
+		public function ThemeInfo(r: SchoolCompete) {
+			_root = r;
 			_themeLabel = new TextField();
 			_themeLabel.text = '主题名称：';
-			_themeLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_themeLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+//			_themeLabel.border = true;
 			_themeLabel.x = 0;
-			_themeLabel.y = 0;
-			_themeLabel.width = 60;
+			_themeLabel.y = 20;
+			_themeLabel.width = LABEL_WIDTH;
 			_themeLabel.height = 20;
 			_themeLabel.mouseEnabled = false;
 			addChild(_themeLabel);
-			
-			_authorLabel = new TextField();
-			_authorLabel.text = '作者名称：';
-			_authorLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
-			_authorLabel.x = 0;
-			_authorLabel.y = 24;
-			_authorLabel.width = 60;
-			_authorLabel.height = 20;
-			_authorLabel.mouseEnabled = false;
-			addChild(_authorLabel);
-			
-			_priceLabel = new TextField();
-			_priceLabel.text = '作品价格：';
-			_priceLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
-			_priceLabel.x = 0;
-			_priceLabel.y = 48;
-			_priceLabel.width = 60;
-			_priceLabel.height = 20;
-			_priceLabel.mouseEnabled = false;
-			addChild(_priceLabel);
-			
-			_descLabel = new TextField();
-			_descLabel.text = '描述信息：';
-			_descLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
-			_descLabel.x = 0;
-			_descLabel.y = 72;
-			_descLabel.width = 60;
-			_descLabel.height = 20;
-			_descLabel.mouseEnabled = false;
-			addChild(_descLabel);
-			
-			_ceteLabel = new TextField();
-			_ceteLabel.text = '作品分类：';
-			_ceteLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
-			_ceteLabel.x = 0;
-			_ceteLabel.y = 128;
-			_ceteLabel.width = 60;
-			_ceteLabel.height = 20;
-			_ceteLabel.mouseEnabled = false;
-			addChild(_ceteLabel);
-			
-			_themeField = new TextField();
-			_themeField.x = 64;
-			_themeField.y = 0;
-			_themeField.width = 640;
-			_themeField.height = 20;
-			_themeField.setTextFormat(TextFormats.THEME_INPUT_FORMAT);
+			// 主题名称输入框
+			_themeField = new Input(294, 38, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
+			_themeField.x = 72;
+			_themeField.y = 12;
+			_themeField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_themeField.maxChars = 40;
-			_themeField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			// _themeField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_themeField.border = true;
-			_themeField.type = TextFieldType.INPUT;
-			_themeField.borderColor = 0xcccccc;
 			addChild(_themeField);
 			_themeField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
 				if (!!_themeField.text && _themeField.text.length > 0)
 					_themeLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+				checkValue();
 			});
-			_authorField = new TextField();
-			_authorField.x = 64;
-			_authorField.y = 24;
-			_authorField.width = 640;
-			_authorField.height = 20;
-			_authorField.setTextFormat(TextFormats.THEME_INPUT_FORMAT);
+			
+			_authorLabel = new TextField();
+			_authorLabel.text = '主题作者：';
+			_authorLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+//			_authorLabel.border = true;
+			_authorLabel.x = 0;
+			_authorLabel.y = 76;
+			_authorLabel.width = LABEL_WIDTH;
+			_authorLabel.height = 20;
+			_authorLabel.mouseEnabled = false;
+			addChild(_authorLabel);
+			// 作者输入框
+			_authorField = new Input(294, 38, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
+			_authorField.x = 72;
+			_authorField.y = 68;
+			if (Terminal.userName) {
+				_authorField.text = Terminal.userName;
+				_authorField.type = false;
+			}
+			_authorField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_authorField.maxChars = 40;
-			_authorField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			// _authorField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_authorField.border = true;
-			_authorField.type = TextFieldType.INPUT;
-			_authorField.borderColor = 0xcccccc;
 			addChild(_authorField);
 			_authorField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
 				if (!!_authorField.text && _authorField.text.length > 0)
 					_authorLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+				checkValue();
 			});
 			
+			_priceLabel = new TextField();
+			_priceLabel.text = '作品价格：';
+			_priceLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+//			_priceLabel.border = true;
+			_priceLabel.x = 0;
+			_priceLabel.y = 117;
+			_priceLabel.width = LABEL_WIDTH;
+			_priceLabel.height = 20;
+			_priceLabel.mouseEnabled = false;
+			addChild(_priceLabel);
+			// 价格选择区域
 			var prices: Array = Terminal.prices.split(",");
 			_priceFields = [];
 			for (var i: int = 0, price: String; price = prices[i]; i ++) {
-				var priceItem: Radio = new Radio(72, 15, price, price);
-				priceItem.x = 64 + i * 76;
-				priceItem.y = 50;
+				var priceItem: Radio = new Radio(48, 15, price, price);
+				priceItem.x = 72 + i * 48;
+				priceItem.y = 120;
 				addChild(priceItem);
 				priceItem.addEventListener(MouseEvent.CLICK, doRadioChanged);
 				_priceFields.push(priceItem);
 			}
-			if (!!_priceFields.length)
+			if (_priceFields.length) {
 				_priceFields[0].selected = true;
+				_price = _priceFields[0].value;
+			}
 			
+			_descLabel = new TextField();
+			_descLabel.text = '描述信息：';
+			_descLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+//			_descLabel.border = true;
+			_descLabel.x = 0;
+			_descLabel.y = 156;
+			_descLabel.width = LABEL_WIDTH;
+			_descLabel.height = 20;
+			_descLabel.mouseEnabled = false;
+			addChild(_descLabel);
+			// 描述输入框
 			_descField = new TextField();
-			_descField.x = 64;
-			_descField.y = 72;
-			_descField.width = 640;
-			_descField.height = 48;
-			_descField.setTextFormat(TextFormats.THEME_INPUT_FORMAT);
-			// _descField.maxChars = 40;
-			_descField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_descField.x = 72;
+			_descField.y = 148;
+			_descField.width = 404;
+			_descField.height = 104;
+			_descField.setTextFormat(TextFormats.THEME_TEXTAREA_FORMAT);
+			// _descField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_descField.multiline = true;
+			_descField.wordWrap = true;
 			_descField.border = true;
 			_descField.type = TextFieldType.INPUT;
 			_descField.borderColor = 0xcccccc;
+			_descField.addEventListener(FocusEvent.FOCUS_IN, doInputFocusIn);
+			_descField.addEventListener(FocusEvent.FOCUS_OUT, doInputFocusOut);
 			addChild(_descField);
 			
-			_ceteField = new Select(221, 16, Terminal.categorys.split(","));
-			_ceteField.x = 64;
-			_ceteField.y = 128;
+			_ceteLabel = new TextField();
+			_ceteLabel.text = '作品分类：';
+			_ceteLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+//			_ceteLabel.border = true;
+			_ceteLabel.x = 0;
+			_ceteLabel.y = 274;
+			_ceteLabel.width = LABEL_WIDTH;
+			_ceteLabel.height = 20;
+			_ceteLabel.mouseEnabled = false;
+			addChild(_ceteLabel);
+			// 分类的下拉列表
+			_ceteField = new Select(160, 28, Terminal.categorys.split(","), 0xcccccc, 0xa7cf72);
+			_ceteField.x = 72;
+			_ceteField.y = 270;
 			addChild(_ceteField);
+			
+			_pkgLabel = new TextField();
+			_pkgLabel.text = '包名：';
+			_pkgLabel.setTextFormat(TextFormats.THEME_INFO_LABEL_FORMAT);
+			_pkgLabel.x = 270;
+			_pkgLabel.y = 274;
+			_pkgLabel.width = 32;
+			_pkgLabel.height = 20;
+			_pkgLabel.mouseEnabled = false;
+			addChild(_pkgLabel);
+			// 作者输入框
+			_pkgField = new Input(294, 28, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
+			_pkgField.x = 306;
+			_pkgField.y = 270
+			_pkgField.setFormat(TextFormats.THEME_INPUT_FORMAT);
+			// _pkgField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_pkgField.border = true;
+			addChild(_pkgField);
+			_pkgField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
+				if (!!_pkgField.text && _pkgField.text.length > 0)
+					_pkgLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+				checkValue();
+			});
+			if (!Terminal.pkg) {
+				_pkgLabel.visible = false;
+				_pkgField.visible = false;
+			}
+		}
+		
+		/** 输入框的焦点事件. */
+		private function doInputFocusIn(evt: FocusEvent): void {
+			evt.currentTarget.borderColor = 0xa7cf72;
+		}
+		private function doInputFocusOut(evt: FocusEvent): void {
+			evt.currentTarget.borderColor = 0xcccccc;
+			checkValue();
+		}
+		
+		/** 检测是否内容填写完毕. */
+		public function checkValue(evt: Object = null): void {
+			if (_themeField.text != null && _themeField.text.length &&
+				_authorField.text != null && _authorField.text.length &&
+				_descField.text != null && _descField.text.length) {
+				if (!Terminal.pkg) {
+					_root.readyInfo = true;
+				} else {
+					if (_pkgField.text != null && _pkgField.text.length)
+						_root.readyInfo = true;
+					else
+						_root.readyInfo = false;
+				}
+			} else {
+				_root.readyInfo = false;
+			}
 		}
 		
 		/** 价格变更时的处理. */
@@ -148,6 +217,7 @@ package org.sjx.components {
 				if (priceItem != price)
 					price.selected = false;
 			}
+			_price = priceItem.value;
 		}
 		
 		/** 检测信息是否完整. */
@@ -166,27 +236,23 @@ package org.sjx.components {
 				return false;
 			}
 			_themeLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
-			_themeLabel.setSelection(0, 0);
+			_themeField.setSelection(0, 0);
 			return true;
 		}
 		
 		/** 设置是否可以编辑. */
 		public function set enable(e: Boolean): void {
-			if (e) {
-				_themeField.type = TextFieldType.INPUT;
-				_authorField.type = TextFieldType.INPUT;
-			} else {
-				_themeField.type = TextFieldType.DYNAMIC;
-				_authorField.type = TextFieldType.DYNAMIC;
-			}
+			_themeField.type = e;
 		}
 		
 		/** 清空. */
 		public function clear(): void {
 			_themeField.text = '';
-			_authorField.text = '';
 			_themeLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_authorField.text = '';
 			_authorLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
+			_descField.text = '';
+			_descLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
 		}
 		
 		public function get theme(): String {
@@ -195,11 +261,20 @@ package org.sjx.components {
 		public function get author(): String {
 			return _authorField.text;
 		}
+		public function set author(name: String): void {
+			_authorField.text = name;
+		}
 		public function get price(): String {
 			return _price;
 		}
+		public function get desc(): String {
+			return _descField.text;
+		}
 		public function get category(): String {
 			return _ceteField.value;
+		}
+		public function get pkg(): String {
+			return _pkgField.text;
 		}
 	}
 }

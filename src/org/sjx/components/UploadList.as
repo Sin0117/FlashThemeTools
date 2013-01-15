@@ -3,8 +3,10 @@ package org.sjx.components {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
@@ -12,27 +14,52 @@ package org.sjx.components {
 	public class UploadList extends Sprite {
 		
 		private var _lists: Sprite;
-		private var _mask: Shape;
-		private var _scroll: ScrollBar;
+//		private var _mask: Shape;
+		// private var _scroll: ScrollBar;
 		
 		private var _root: SchoolCompete;
+		private var _uploadLab: TextField;
 		private var _dialogView: Sprite;
-		private var _dialogLab:  TextField;
+		private var _dialogLab: TextField;
 		private var _uploadTip: UploadTip;
 		
+		private var _clearBtn: ClearButton;
+		
 		private var _itmes: Array;
-		private var _scrollHeight: uint;
+		// private var _scrollHeight: uint;
+		private var _tipTimer: Timer;
 		
 		public function UploadList(r: SchoolCompete) {
 			_root = r;
 			
 			_itmes = [];
-			_scrollHeight = 0;
+			// _scrollHeight = 0;
 			_lists = new Sprite();
 			_lists.x = 0;
 			_lists.y = 0;
 			addChild(_lists);
 			
+			
+			var uploadLabY: int = (Terminal.dev ? SchoolCompete.DEV_UPLOAD_HEIGHT : SchoolCompete.UPLOAD_HEIGHT) - 32;
+			graphics.beginFill(0xececec, 1);
+			graphics.drawRect(20, uploadLabY, 220, 27);
+			graphics.endFill();
+			_uploadLab = new TextField();
+			_uploadLab.width = 220;
+			_uploadLab.height = 20;
+			_uploadLab.x = 28;
+			_uploadLab.y = uploadLabY + 3;
+			addChild(_uploadLab);
+			
+			_clearBtn = new ClearButton('清空');
+			_clearBtn.x = 240;
+			_clearBtn.y = uploadLabY;
+			addChild(_clearBtn);
+			_clearBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				_root.doClearConfirm();
+			});
+			
+			/*
 			_scroll = new ScrollBar(12, SchoolCompete.UPLOAD_HEIGHT, 8);
 			_scroll.x = SchoolCompete.UPLOAD_WIDTH - 12;
 			_scroll.y = 0;
@@ -40,16 +67,18 @@ package org.sjx.components {
 				_lists.y = -_scroll.zoom * _scroll.scrollTop;
 			});
 			addChild(_scroll);
+			*/
 			
-			_mask = new Shape();
-			_mask.graphics.beginFill(0xFFFFFF);
-			_mask.graphics.drawRect(0, 0, SchoolCompete.UPLOAD_WIDTH, SchoolCompete.UPLOAD_HEIGHT);
-			_mask.graphics.endFill();
-			addChild(_mask);
-			mask = _mask;
+			// _mask = new Shape();
+			// _mask.graphics.beginFill(0xFFFFFF);
+			// _mask.graphics.drawRect(0, 0, SchoolCompete.UPLOAD_WIDTH, SchoolCompete.UPLOAD_HEIGHT);
+			// _mask.graphics.endFill();
+			// addChild(_mask);
+			// mask = _mask;
 			
-			var beginX: int = SchoolCompete.UPLOAD_ITEM_PADDING_H * 2.5;
+			var beginX: int = 0; //SchoolCompete.UPLOAD_ITEM_PADDING_H * 2.5;
 			for (var i: int = 0, n: Object; n = Terminal.items[i]; i ++) {
+				if (n.dev && !Terminal.dev) continue;
 				var pack: String = n['pack'], item: UploadItem = new UploadItem(pack, n, this);
 				item.x = beginX + i % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
 				item.y = SchoolCompete.UPLOAD_ITEM_PADDING_V + (i / SchoolCompete.UPLOAD_ITEM_SIZE >> 0) * (SchoolCompete.UPLOAD_ITEM_PADDING_V + SchoolCompete.UPLOAD_ITEM_HEIGHT);
@@ -59,8 +88,8 @@ package org.sjx.components {
 				_itmes.push(item);
 				_root.update(pack, null);
 			}
-			_scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + SchoolCompete.UPLOAD_ITEM_HEIGHT + SchoolCompete.UPLOAD_ITEM_PADDING_V;
-			_scroll.update(SchoolCompete.UPLOAD_HEIGHT, _scrollHeight);
+			// _scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + SchoolCompete.UPLOAD_ITEM_HEIGHT + SchoolCompete.UPLOAD_ITEM_PADDING_V;
+			// _scroll.update(SchoolCompete.UPLOAD_HEIGHT, _scrollHeight);
 			
 			// 绘制弹出框
 			_dialogView = new Sprite();
@@ -78,29 +107,43 @@ package org.sjx.components {
 			_dialogLab.wordWrap = true;
 			_dialogView.addChild(_dialogLab);
 			
+			_tipTimer = new Timer(200, 0);
+			_tipTimer.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
+				_uploadTip.visible = false;
+			});
+			
 			_uploadTip = new UploadTip();
 			_uploadTip.visible = false;
+			_uploadTip.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+				_tipTimer.stop();
+			});_uploadTip.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+				doItemOut(null);
+			});
 			addChild(_uploadTip);
 			
-			var btn: Button = new Button('确定');
+			var btn: ViewButton = new ViewButton('确定');
 			btn.x = 164;
 			btn.y = 145;
 			btn.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_root.close();
 			});
 			_dialogView.addChild(btn);
+			
+			updateUploads();
 		}
 		/** 鼠标移入上传项的提示. */
 		private function doItemOver(evt: MouseEvent): void {
 			var curItem: UploadItem = evt.currentTarget as UploadItem;
 			_uploadTip.y = curItem.y + SchoolCompete.UPLOAD_ITEM_HEIGHT;
 			_uploadTip.x = curItem.x; // + SchoolCompete.UPLOAD_ITEM_WIDTH * 0.5 >> 0;
+			_tipTimer.stop();
 			_uploadTip.visible = true;
 			_uploadTip.pos();
 		}
 		/** 鼠标移出上传项的提示. */
 		private function doItemOut(evt: MouseEvent): void {
-			_uploadTip.visible = false;
+			_tipTimer.reset();
+			_tipTimer.start();
 		}
 		/** 鼠标移入上传项的内容处理. */
 		public function doTip(tip: String): void {
@@ -126,7 +169,7 @@ package org.sjx.components {
 		override public function toString(): String {
 			var items: Array = [];
 			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++)
-				items.push('"' + n.pack + '":"' + n.value + '"');
+				items.push('"' + n.pack + '":"' + (n.value || '') + '"');
 			return '{' + items.join(',') + '}';
 		}
 		/** 获取全部的上传项. */
@@ -137,6 +180,26 @@ package org.sjx.components {
 			return items;
 		}
 		
+		/** 更新上传数量. */
+		public function updateUploads(): void {
+			var size: int = 0, max: int = 0, cur: int = 0, optional: int = 0;
+			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++) {
+				if (n.optional) {
+					optional ++;
+					if (n.value)
+						cur ++;
+				}
+				if (n.value)
+					size ++;
+				max ++;
+			}
+			_uploadLab.text = '共' + max + '个元素，已上传' + size + '个';
+			_uploadLab.setTextFormat(TextFormats.TEXT_UPLOAD_LABEL);
+			
+			if (optional == cur)
+				_root.readyUpload = true;
+		}
+		
 		/** 上传错误的提示框. */
 		public function alert(txt: String): void {
 			_dialogLab.text = txt;
@@ -145,9 +208,9 @@ package org.sjx.components {
 		}
 		/** 清空上传的数据列表. */
 		public function clear(): void {
-			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++) {
+			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++)
 				n.clear();
-			}
+			updateUploads();
 		}
 	}
 }
