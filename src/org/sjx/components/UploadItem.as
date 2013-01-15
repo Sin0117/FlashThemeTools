@@ -53,6 +53,10 @@ package org.sjx.components {
 		private var _label: TextField;
 		
 		private var _loadAnimate: Shape;
+		private var _clearBg: Sprite;
+		private var _clearLab: TextField;
+		private var _clearHeight: int;
+		private var _clearWidth: int;
 		
 		// 是否上传中
 		private var _uploading: Boolean;
@@ -107,6 +111,35 @@ package org.sjx.components {
 			graphics.endFill();
 			*/
 			
+			// 绘制删除操作
+			_clearHeight = HEIGHT * .4 >> 0;
+			_clearWidth = WIDTH - 1;
+			_clearBg = new Sprite();
+			drawClearBg(0.4);
+			_clearBg.y = HEIGHT - _clearHeight + 1;
+			_clearBg.buttonMode = true;
+			_btn.addChild(_clearBg);
+			_clearBg.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+				drawClearBg(0.9);
+			});
+			_clearBg.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+				drawClearBg(0.4);
+			});
+			_clearBg.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
+				clear();
+				evt.stopPropagation();
+			});
+			_clearLab = new TextField();
+			_clearLab.width = WIDTH;
+			_clearLab.height = 20;
+			_clearLab.mouseEnabled = false;
+			_clearLab.x = 0;
+			_clearLab.y = 1;
+			_clearLab.text = '清除';
+			_clearLab.setTextFormat(TextFormats.CLEAR_BUTTON_FORMAT);
+			_clearBg.addChild(_clearLab);
+			_clearBg.visible = false;
+			
 			var loadAnimateWidth: int = WIDTH >> 1, loadAnimateHeight: int = HEIGHT >> 1;
 			_loadAnimate = new Shape();
 			_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
@@ -129,7 +162,7 @@ package org.sjx.components {
 				} else {
 					try {
 						var request: URLRequest = new URLRequest(Terminal.host + Terminal.upload + 
-									'?d=' + new Date().getTime() + '&userId=' + Terminal.uuid + '&item=' + pack + 
+									'?d=' + new Date().time + '&userId=' + Terminal.uuid + '&item=' + pack + 
 									'&f=' + terminal.format + '&dev=' + Terminal.dev + 
 									'&maxw=' + terminal.max_width + '&maxh=' + terminal.max_height +
 									'&minw=' + terminal.min_width + '&minh=' + terminal.min_height);
@@ -186,15 +219,29 @@ package org.sjx.components {
 		private function doSuccess(evt: Event): void {
 			draw(0);
 		}
-		
+		/** 清除按钮的背景绘制. */
+		private function drawClearBg(alpha: Number): void {
+			var g: Graphics = _clearBg.graphics, r: int = 8;
+			g.clear();
+			g.beginFill(0xCCCCCC, alpha);
+			g.moveTo(0.5, 0);
+			g.lineTo(_clearWidth, 0);
+			g.lineTo(_clearWidth, _clearHeight - r);
+			g.curveTo(_clearWidth, _clearHeight, _clearWidth - r, _clearHeight);
+			g.lineTo(r, _clearHeight);
+			g.curveTo(0.5, _clearHeight, 0.5, _clearHeight - r);
+			g.lineTo(0.5, 0);
+			g.endFill();
+		}
 		/** 更新预览图. */
 		private function update(url: String = null): void {
 			_list.update(pack, value = url);
-			if (!!url) {
+			if (url) {
 				draw(3);
 				_uploading = false;
 				_list.updateUploads();
 				// _previewLoader.load(new URLRequest(url));
+				_clearBg.visible = true;
 			} else {
 				_uploading = false;
 				draw(0);
@@ -213,7 +260,7 @@ package org.sjx.components {
 		/** 上传成功. */
 		private function doComplete(event: DataEvent): void {
 			var strs: Array = event.data.split('|');
-			if (!!strs[2]) {
+			if (strs[2]) {
 				update(strs[2] || null);
 			} else {
 				_uploading = false;
@@ -224,7 +271,7 @@ package org.sjx.components {
 		
 		/** 检测当前是否有上传内容. */
 		public function check(): Boolean {
-			if (!!this.value) {
+			if (this.value) {
 				return true;
 			} else {
 				return false;
@@ -233,6 +280,7 @@ package org.sjx.components {
 		/** 清除内容. */
 		public function clear(): void {
 			this.value = null;
+			_clearBg.visible = false;
 			draw(0);
 		}
 		

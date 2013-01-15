@@ -37,7 +37,7 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="900", height="1080")]
+	[SWF(frameRate="25", width="800", height="1080")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
@@ -47,7 +47,7 @@ package {
 		[Embed(source="images/016.png")]
 		public static var LoginIcon: Class;
 		
-		public static const WIDTH: int = 900;
+		public static const WIDTH: int = 800;
 		public static const HEIGHT: int = 1080;
 		public static const PADDING_V: int = 10;
 		public static const PADDING_H: int = 10;
@@ -58,9 +58,10 @@ package {
 		public static const EDITER_WIDTH: int = 360;
 		public static const EDITER_HEIGHT: int = 600;
 		// 上传区域宽度
-		public static const UPLOAD_WIDTH: int = 320;
+		public static const UPLOAD_WIDTH: int = 400;
 		public static const UPLOAD_HEIGHT: int = 520;
 		public static const DEV_UPLOAD_HEIGHT: int = 580;
+		public static const UPLOAD_ITEM_SIZE: int = 6;
 		// 上传项的参数
 		public static const UPLOAD_ITEM_WIDTH: int = 56;
 		public static const UPLOAD_ITEM_HEIGHT: int = 68;
@@ -74,7 +75,6 @@ package {
 		public static const TIP_HEAD_WIDTH: int = 24;
 		public static const TIP_ROUND: int = 4;
 		// 上传显示列数.
-		public static const UPLOAD_ITEM_SIZE: int = 5;
 		// 主题信息区域的尺寸
 		public static const THEME_INFO_WIDTH: int = 760;
 		public static const THEME_INFO_HEIGHT: int = 328;
