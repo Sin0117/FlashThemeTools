@@ -1,3 +1,6 @@
+/*
+ * 原来喜欢不可以伪装，原来快乐不可以假装，原来永远和瞬间一样。
+ */
 package {
 	
 	import flash.display.Bitmap;
