@@ -354,7 +354,6 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -362,7 +361,6 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
-				*/
 			});
 			
 			/** 打包请求. */
@@ -595,8 +593,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 					updateLoading(-4);					
 			});
 			_builderBtn.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
-trace (_builderTipTxts.length);
-				if (_builderTipTxts.length) {
+				if (_builderTipTxts && _builderTipTxts.length) {
 					_builderTip.update(_builderTipTxts);
 					_builderTip.visible = true;
 				}

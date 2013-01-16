@@ -56,9 +56,9 @@ package org.sjx.components {
 			
 			var label: TextField = new TextField();
 			label.x = 0;
-			label.y = 8;
+			label.y = 7.5;
 			label.width = WIDTH;
-			label.height = 20;
+			label.height = 18;
 			label.text = _txt;
 			
 			label.setTextFormat(TextFormats.BUTTON_FORMAT);

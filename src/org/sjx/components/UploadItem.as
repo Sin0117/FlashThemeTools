@@ -121,6 +121,7 @@ package org.sjx.components {
 			_btn.addChild(_clearBg);
 			_clearBg.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
 				drawClearBg(0.9);
+				_clearBg.visible = true;
 			});
 			_clearBg.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
 				drawClearBg(0.4);
@@ -131,10 +132,10 @@ package org.sjx.components {
 			});
 			_clearLab = new TextField();
 			_clearLab.width = WIDTH;
-			_clearLab.height = 20;
+			_clearLab.height = 18;
 			_clearLab.mouseEnabled = false;
 			_clearLab.x = 0;
-			_clearLab.y = 1;
+			_clearLab.y = 0;
 			_clearLab.text = '清除';
 			_clearLab.setTextFormat(TextFormats.CLEAR_BUTTON_FORMAT);
 			_clearBg.addChild(_clearLab);
@@ -190,9 +191,13 @@ package org.sjx.components {
 			this.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
 				if (!value && !_uploading) draw(1);
 				_list.doTip(_tip);
+				if (value)
+					_clearBg.visible = true;
 			});
 			this.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
 				if (!value && !_uploading) draw(0);
+				if (value)
+					_clearBg.visible = false;
 			});
 			_btn.addEventListener(MouseEvent.CLICK, function (): void {
 				if (!_uploading)
@@ -241,7 +246,6 @@ package org.sjx.components {
 				_uploading = false;
 				_list.updateUploads();
 				// _previewLoader.load(new URLRequest(url));
-				_clearBg.visible = true;
 			} else {
 				_uploading = false;
 				draw(0);

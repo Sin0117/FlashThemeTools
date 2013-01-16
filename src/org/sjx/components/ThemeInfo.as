@@ -49,6 +49,7 @@ package org.sjx.components {
 			_themeField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_themeField.maxChars = 40;
 			// _themeField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_themeField.restrict = "^\\<\\&";
 			_themeField.border = true;
 			addChild(_themeField);
 			_themeField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {

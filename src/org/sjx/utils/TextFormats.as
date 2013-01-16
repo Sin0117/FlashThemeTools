@@ -19,7 +19,7 @@ package org.sjx.utils {
 		// 操作按钮
 		public static const BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFFFFFF, true, false, false, null, null, TextFormatAlign.CENTER);
 		// 清除操作按钮
-		public static const CLEAR_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, true, false, false, null, null, TextFormatAlign.CENTER);
+		public static const CLEAR_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, false, false, false, null, null, TextFormatAlign.CENTER);
 		// 打包异常信息文字
 		public static const BUILDER_ERROR_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, true, false, false, null, null, TextFormatAlign.LEFT);
 		// 提示框文字
