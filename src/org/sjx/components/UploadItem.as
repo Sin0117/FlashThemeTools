@@ -158,6 +158,8 @@ package org.sjx.components {
 			}
 			_fr = new FileReference();
 			_fr.addEventListener(Event.SELECT, function (evt: Event): void {
+				_fr.type;
+				_fr.name;
 				if(Terminal.size < _fr.size) {
 					_list.alert('文件大小超过限制!');
 				} else {
