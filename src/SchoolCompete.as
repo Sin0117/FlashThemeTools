@@ -151,6 +151,10 @@ package {
 		private var _loginBtn: ViewButton;
 		// 打包完成后的关闭按钮.
 		private var _builderCloseBtn: ViewButton;
+		// 开始制作的确认按钮
+		private var _submitBtn: ViewButton;
+		// 开始做作的取消按钮
+		private var _cancelSubmitBtn: ViewButton;
 		// 清空的提示.
 		private var _clearConfirm: Confirm;
 		
@@ -247,6 +251,10 @@ package {
 			_loading.addChild(_loginBg);
 			
 			_confirmBg = new ConfirmIcon();
+			_confirmBg.x = 100;
+			_confirmBg.y = 8;
+			_confirmBg.visible = false;
+			_loading.addChild(_confirmBg);
 			
 			_loadProg = new TextField();
 			_loadProg.x = 180;
@@ -309,6 +317,24 @@ package {
 			});
 			_builderCloseBtn.visible = false;
 			
+			_submitBtn = new ViewButton('提交制作');
+			_submitBtn.x = 400 - 36 - ViewButton.WIDTH * 2 >> 1;
+			_submitBtn.y = 196;
+			_loading.addChild(_submitBtn);
+			_submitBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				doBuilder();
+			});
+			_submitBtn.visible = false;
+			
+			_cancelSubmitBtn = new ViewButton('稍后提交');
+			_cancelSubmitBtn.x = 400 - _userInfoBtn.x - ViewButton.WIDTH;
+			_cancelSubmitBtn.y = 196;
+			_loading.addChild(_cancelSubmitBtn);
+			_cancelSubmitBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				hideLoading();
+			});
+			_cancelSubmitBtn.visible = false;
+			
 			_alert = new Dialog(new Rectangle(0, 0, WIDTH, HEIGHT));
 			
 			// 用户相关请求对象初始化.
@@ -325,6 +351,7 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
+				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -332,6 +359,7 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
+				*/
 			});
 			
 			/** 打包请求. */
@@ -371,11 +399,11 @@ trace ('_builderLoader : ' + _builderLoader.data.toString());
 			_builderTimer = new Timer(1000, 1);
 			_builderTimer.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
 trace (Terminal.host + Terminal.status + '?taskId=' + _builderId + '&diyId=' + _diyId + 
-	'&progress=' + _builderStatus + '&d=' + new Date().getTime());
+	'&progress=' + _builderStatus + '&d=' + new Date().time);
 				_builderStatLoader.load(new URLRequest(Terminal.host + Terminal.status + 
 					'?taskId=' + _builderId + '&diyId=' + _diyId + '&tpid=' + Terminal.pid +
 					'&source=' + Terminal.source + '&pid=' + Terminal.pid +
-					'&progress=' + _builderStatus + '&d=' + new Date().getTime()));
+					'&progress=' + _builderStatus + '&d=' + new Date().time));
 			});
 			
 			_builderStatLoader = new URLLoader();
@@ -403,7 +431,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			});
 			
 			_clearConfirm = new Confirm('是否确认清空?', function (): void {
-				_userLoader.load(new URLRequest(Terminal.host + Terminal.clear + '?d=' + new Date().getTime()));
+				_userLoader.load(new URLRequest(Terminal.host + Terminal.clear + '?d=' + new Date().time));
 				_info.clear();
 				_list.clear();
 				_preview.clear();
@@ -449,41 +477,42 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_myWorksBtn.visible = false;
 			_builderSuccess.visible = false;
 			_loadEffect.visible = true;
+			_submitBtn.visible = false;
+			_cancelSubmitBtn.visible = false;
 			close();
 		}
 		/** 更新加载界面文字. */
 		public function updateLoading(prog: int = -1): void {
 			_builderStatus = prog;
+			_confirmBg.visible = false;
+			_builderError.visible = false;
+			_builderSuccess.visible = false;
+			_loadEffect.visible = false;
+			_builderRebuilderBtn.visible = false;
+			_userInfoBtn.visible = false;
+			_myProfitsBtn.visible = false;
+			_myWorksBtn.visible = false;
+			_builderCloseBtn.visible = false;
+			_submitBtn.visible = false;
+			_cancelSubmitBtn.visible = false;
 			if (prog >= 0 && prog < 100) {
 				_loadProg.text = prog + '%';
 				_loadProg.setTextFormat(TextFormats.ALERT_FORMAT);
 				_loadLabel.text = "打包中，请稍候...";
 				_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
-				_builderRebuilderBtn.visible = false;
-				_userInfoBtn.visible = false;
-				_myProfitsBtn.visible = false;
-				_myWorksBtn.visible = false;
-				_builderCloseBtn.visible = false;
-				_builderSuccess.visible = false;
-				_builderError.visible = false;
 				_loadEffect.visible = true;
 			} else {
 				if (prog >= 100) {
 					_loadLabel.text = "打包完成。";
 					_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
 					_builderSuccess.visible = true;
-					_builderRebuilderBtn.visible = false;
-					_builderError.visible = false;
-					_loadEffect.visible = false;
 					_builderAnimate.running && _builderAnimate.stop();
 					if (Terminal.finish) {
 						ExternalInterface.call(Terminal.finish);
 					} else {
 						if (Terminal.userInfo == 0) {
 							_userInfoBtn.visible = true;
-							_myProfitsBtn.visible = false;
 						} else {
-							_userInfoBtn.visible = false;
 							_myProfitsBtn.visible = true;
 						}
 						_myWorksBtn.visible = true;
@@ -496,19 +525,25 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						_builderError.visible = true;
 						_builderCloseBtn.visible = true;
 						_builderRebuilderBtn.visible = true;
-						_builderSuccess.visible = false;
-						_loadEffect.visible = false;
 						_builderAnimate.running && _builderAnimate.stop();
 					}
 					if (prog == -2) {
 						_loadLabel.text = '初始化中...';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+						_loadEffect.visible = true;
 					}
 					if (prog == -3) {
 						_loadLabel.text = '您还未登录哟~';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
 						_loginBtn.visible = true;
 						_loginBg.visible = true;
+					}
+					if (prog == -4) {
+						_confirmBg.visible = true;
+						_loadLabel.text = '您的主题提交制作审核后，主题将不能进行修改。';
+						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+						_submitBtn.visible = true;
+						_cancelSubmitBtn.visible = true;
 					}
 				}
 				_loadProg.text = '';
@@ -553,10 +588,8 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-				if (_builderBtn.enable) {
-					_list.alert("您的主题开始制作后我们会进行审核，主题将不能进行修改。");					
-					doBuilder();
-				}
+				if (_builderBtn.enable)
+					updateLoading(-4);					
 			});
 			_builderBtn.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
 trace (_builderTipTxts.length);

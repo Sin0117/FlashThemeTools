@@ -119,7 +119,7 @@ package org.sjx.data {
 		// 上传的唯一标识
 		public static var uuid: String = '';
 		// 是否是开发模式，不对图片数量进行校验.
-		public static var dev: Boolean = false;
+		public static var dev: Boolean = true;
 		// 是否显示包名.
 		public static var pkg: Boolean = false;
 		// 查询打包状态用的

@@ -56,7 +56,7 @@ package org.sjx.components {
 			
 			var label: TextField = new TextField();
 			label.x = 0;
-			label.y = 6;
+			label.y = 8;
 			label.width = WIDTH;
 			label.height = 20;
 			label.text = _txt;
