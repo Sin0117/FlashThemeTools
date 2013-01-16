@@ -282,6 +282,7 @@ package org.sjx.components {
 			this.value = null;
 			_clearBg.visible = false;
 			draw(0);
+			_list.updateUploads();
 		}
 		
 		/** 界面变更. */

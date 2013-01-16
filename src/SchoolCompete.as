@@ -26,6 +26,7 @@ package {
 	import mx.events.Request;
 	
 	import org.sjx.components.BuildButton;
+	import org.sjx.components.BuilderTip;
 	import org.sjx.components.CheckBox;
 	import org.sjx.components.Confirm;
 	import org.sjx.components.Dialog;
@@ -37,7 +38,7 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="800", height="1080")]
+	[SWF(frameRate="25", width="850", height="1080")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
@@ -46,8 +47,10 @@ package {
 		public static var BuilderError: Class;
 		[Embed(source="images/016.png")]
 		public static var LoginIcon: Class;
+		[Embed(source="images/015.png")]
+		public static var ConfirmIcon: Class;
 		
-		public static const WIDTH: int = 800;
+		public static const WIDTH: int = 850;
 		public static const HEIGHT: int = 1080;
 		public static const PADDING_V: int = 10;
 		public static const PADDING_H: int = 10;
@@ -58,10 +61,11 @@ package {
 		public static const EDITER_WIDTH: int = 360;
 		public static const EDITER_HEIGHT: int = 600;
 		// 上传区域宽度
-		public static const UPLOAD_WIDTH: int = 400;
-		public static const UPLOAD_HEIGHT: int = 520;
-		public static const DEV_UPLOAD_HEIGHT: int = 580;
-		public static const UPLOAD_ITEM_SIZE: int = 6;
+		public static const UPLOAD_WIDTH: int = 450;
+		public static const UPLOAD_HEIGHT: int = 500;
+		public static const DEV_UPLOAD_HEIGHT: int = 540;
+		// 上传显示列数.
+		public static const UPLOAD_ITEM_SIZE: int = 7;
 		// 上传项的参数
 		public static const UPLOAD_ITEM_WIDTH: int = 56;
 		public static const UPLOAD_ITEM_HEIGHT: int = 68;
@@ -74,10 +78,15 @@ package {
 		public static const TIP_HEAD_HEIGHT: int = 16;
 		public static const TIP_HEAD_WIDTH: int = 24;
 		public static const TIP_ROUND: int = 4;
-		// 上传显示列数.
 		// 主题信息区域的尺寸
 		public static const THEME_INFO_WIDTH: int = 760;
 		public static const THEME_INFO_HEIGHT: int = 328;
+		// 主题打包的提示信息.
+		public static const BUILDER_TIP_WIDTH: int = 360;
+		public static const BUILDER_TIP_HEAD_HEIGHT: int = 16;
+		public static const BUILDER_TIP_HEAD_WIDTH: int = 24;
+		public static const BUILDER_TIP_ROUND: int = 8;
+		public static const BUILDER_TIP_ROW_HEIGHT: int = 24;
 		
 		private var _list: UploadList;
 		private var _info: ThemeInfo;
@@ -96,6 +105,10 @@ package {
 		private var _builderStatus: int;
 		// 打包的模拟效果。
 		private var _builderAnimate: Timer;
+		// 开始制作的提示.
+		private var _builderTip: BuilderTip;
+		// 开始制作的提示信息.
+		private var _builderTipTxts: Array;
 		
 		// 所有打包数据.
 		private var _data: Object;
@@ -112,6 +125,7 @@ package {
 		private var _builderSuccess: Bitmap;
 		private var _builderError: Bitmap;
 		private var _loginBg: Bitmap;
+		private var _confirmBg: Bitmap;
 		private var _loadLabel: TextField;
 		private var _loadProg: TextField;
 		
@@ -232,6 +246,8 @@ package {
 			_loginBg.visible = false;
 			_loading.addChild(_loginBg);
 			
+			_confirmBg = new ConfirmIcon();
+			
 			_loadProg = new TextField();
 			_loadProg.x = 180;
 			_loadProg.y = 86;
@@ -309,7 +325,6 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -317,7 +332,6 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
-				*/
 			});
 			
 			/** 打包请求. */
@@ -525,6 +539,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 		}
 		
 		private function Init(evt: Event): void {
+			_builderBtn = new BuildButton();
 			_info = new ThemeInfo(this);
 			_info.x = PADDING_H;
 			_info.y = PADDING_V;
@@ -534,15 +549,28 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_list.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			
 			var btnY: int = HEIGHT - ViewButton.HEIGHT - 80;
-			_builderBtn = new BuildButton();
 			_builderBtn.x = _list.x + (UPLOAD_WIDTH - ViewButton.WIDTH - 32 >> 1);
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
-				if (_builderBtn.enable)
+				if (_builderBtn.enable) {
+					_list.alert("您的主题开始制作后我们会进行审核，主题将不能进行修改。");					
 					doBuilder();
+				}
 			});
-			_builderBtn.enable = false;
+			_builderBtn.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+trace (_builderTipTxts.length);
+				if (_builderTipTxts.length) {
+					_builderTip.update(_builderTipTxts);
+					_builderTip.visible = true;
+				}
+			});
+			_builderBtn.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+				_builderTip.visible = false;
+			});
+			_builderTip = new BuilderTip();
+			_builderTip.x = _builderBtn.x + (BuildButton.WIDTH >> 1);
+			_builderTip.y = _builderBtn.y;
 			
 			_checkbox = new CheckBox(20, 19);
 			_checkbox.x = _list.x + 60;
@@ -576,8 +604,10 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			addChild(_copyLab);
 			addChild(_info);
 			addChild(_list);
+			addChild(_builderTip);
 			
 			draw();
+			_list.updateUploads();
 		}
 		
 		/** 打包操作. */
@@ -620,12 +650,22 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 		/** 内容上传完毕，准备打包. */
 		public function readyBuild(): void {
 			if (Terminal.dev) {
-				_builderBtn.enable = true;
-			} else {			
-				if (_uploadReady && _infoReady && _checkbox.selected)
-					_builderBtn.enable = true;
-				else
-					_builderBtn.enable = false;
+				_builderBtn.buttonMode = _builderBtn.enable = true;
+			} else {
+				_builderTipTxts = [];
+				if (_uploadReady && _infoReady && _checkbox.selected) {
+					_builderBtn.buttonMode = _builderBtn.enable = true;
+				}
+				else {
+					_builderBtn.buttonMode = _builderBtn.enable = false;
+					_builderTipTxts.push('还不能开始制作，原因：');
+					if (!_uploadReady)
+						_builderTipTxts.push(' * 必选主题图标项还有未上传的图标');
+					if (!_infoReady)
+						_builderTipTxts.push(' * 主题基本信息不完整（名称、作者、描述都要填写）');
+					if (!_checkbox.selected)
+						_builderTipTxts.push(' * 未接受360主题达人联盟设计师协议');
+				}
 			}
 		}
 		/** 内容上传完毕. */

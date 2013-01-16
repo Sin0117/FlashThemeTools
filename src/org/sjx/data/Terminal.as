@@ -56,7 +56,7 @@ package org.sjx.data {
 			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
 			
 			{pack: 'icon', name: 'Logo', type: 'other', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'jpg,jpeg,png'},
-			{pack: 'cover', name: '封面图', type: 'other', max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg,jpeg,png'},
+			{pack: 'cover', name: '主题宣传图', type: 'other', max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg,jpeg,png'},
 			{pack: 'preview1', name: '预览图1', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},
 			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},
 			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},

@@ -1,4 +1,5 @@
 package org.sjx.components {
+	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -23,6 +24,9 @@ package org.sjx.components {
 		private var _dialogLab: TextField;
 		private var _uploadTip: UploadTip;
 		
+		private var _optionalSpace: Sprite;
+		private var _requiredSpace: Sprite;
+		
 		private var _clearBtn: ClearButton;
 		
 		private var _itmes: Array;
@@ -39,8 +43,7 @@ package org.sjx.components {
 			_lists.y = 0;
 			addChild(_lists);
 			
-			
-			var uploadLabY: int = (Terminal.dev ? SchoolCompete.DEV_UPLOAD_HEIGHT : SchoolCompete.UPLOAD_HEIGHT) - 32;
+			var uploadLabY: int = (Terminal.dev ? SchoolCompete.DEV_UPLOAD_HEIGHT : SchoolCompete.UPLOAD_HEIGHT);
 			graphics.beginFill(0xececec, 1);
 			graphics.drawRect(20, uploadLabY, 220, 27);
 			graphics.endFill();
@@ -76,18 +79,56 @@ package org.sjx.components {
 			// addChild(_mask);
 			// mask = _mask;
 			
-			var beginX: int = 0; //SchoolCompete.UPLOAD_ITEM_PADDING_H * 2.5;
+			var beginX: int = 0, beginY: int = 0, rowIndex: int = 0, itemIndex: int = 0,
+				itemHeight: int = SchoolCompete.UPLOAD_ITEM_PADDING_V + SchoolCompete.UPLOAD_ITEM_HEIGHT;
+			_requiredSpace = new Sprite();
+			_drawLine('必选上传项：', _requiredSpace);
+			_requiredSpace.y = beginY;
+			beginY += 24 + SchoolCompete.UPLOAD_ITEM_PADDING_V;
+			_lists.addChild(_requiredSpace);
 			for (var i: int = 0, n: Object; n = Terminal.items[i]; i ++) {
-				if (n.dev && !Terminal.dev) continue;
+				if (n.optional || (n.dev && !Terminal.dev)) continue;
 				var pack: String = n['pack'], item: UploadItem = new UploadItem(pack, n, this);
-				item.x = beginX + i % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
-				item.y = SchoolCompete.UPLOAD_ITEM_PADDING_V + (i / SchoolCompete.UPLOAD_ITEM_SIZE >> 0) * (SchoolCompete.UPLOAD_ITEM_PADDING_V + SchoolCompete.UPLOAD_ITEM_HEIGHT);
+				item.x = beginX + itemIndex % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
+				item.y = beginY;
 				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
 				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
 				_lists.addChild(item);
 				_itmes.push(item);
 				_root.update(pack, null);
+				itemIndex ++;
+				var index: int = itemIndex / SchoolCompete.UPLOAD_ITEM_SIZE >> 0;
+				if (rowIndex < index) {
+					beginY += itemHeight;
+					rowIndex = index;
+				}
 			}
+			beginY += itemHeight;
+			
+			_optionalSpace = new Sprite();
+			_drawLine('可选上传项：', _optionalSpace);
+			_optionalSpace.y = beginY;
+			beginY += 24 + SchoolCompete.UPLOAD_ITEM_PADDING_V;
+			_lists.addChild(_optionalSpace);
+			beginX = 0, itemIndex = 0, rowIndex = 0;
+			for (i = 0, n = null; n = Terminal.items[i]; i ++) {
+				if (!n.optional || (n.dev && !Terminal.dev)) continue;
+				pack = n['pack'], item = new UploadItem(pack, n, this);
+				item.x = beginX + itemIndex % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
+				item.y = beginY;
+				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
+				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
+				_lists.addChild(item);
+				_itmes.push(item);
+				_root.update(pack, null);
+				itemIndex ++;
+				index = itemIndex / SchoolCompete.UPLOAD_ITEM_SIZE >> 0;
+				if (rowIndex < index) {
+					beginY += itemHeight;
+					rowIndex = index;
+				}
+			}
+			
 			// _scrollHeight = Math.ceil(Terminal.items.length / SchoolCompete.UPLOAD_ITEM_SIZE) + SchoolCompete.UPLOAD_ITEM_HEIGHT + SchoolCompete.UPLOAD_ITEM_PADDING_V;
 			// _scroll.update(SchoolCompete.UPLOAD_HEIGHT, _scrollHeight);
 			
@@ -128,8 +169,6 @@ package org.sjx.components {
 				_root.close();
 			});
 			_dialogView.addChild(btn);
-			
-			updateUploads();
 		}
 		/** 鼠标移入上传项的提示. */
 		private function doItemOver(evt: MouseEvent): void {
@@ -165,6 +204,21 @@ package org.sjx.components {
 			return true;
 		}
 		
+		/** 绘制横线. */
+		private function _drawLine(txt: String, space: Sprite): void {
+			var g: Graphics = space.graphics, lab: TextField = new TextField();
+			g.lineStyle(1, 0x666666);
+			g.moveTo(0, 22);
+			g.lineTo(SchoolCompete.UPLOAD_WIDTH - 8, 22);
+			g.endFill();
+			lab.text = txt;
+			lab.width = SchoolCompete.UPLOAD_WIDTH;
+			lab.height = 20;
+			lab.x = 4;
+			lab.y = 0;
+			space.addChild(lab);
+		}
+		
 		/** 获取全部的上传项. */
 		override public function toString(): String {
 			var items: Array = [];
@@ -182,10 +236,10 @@ package org.sjx.components {
 		
 		/** 更新上传数量. */
 		public function updateUploads(): void {
-			var size: int = 0, max: int = 0, cur: int = 0, optional: int = 0;
+			var size: int = 0, max: int = 0, cur: int = 0, required: int = 0;
 			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++) {
-				if (n.optional) {
-					optional ++;
+				if (!n.optional) {
+					required ++;
 					if (n.value)
 						cur ++;
 				}
@@ -196,8 +250,10 @@ package org.sjx.components {
 			_uploadLab.text = '共' + max + '个元素，已上传' + size + '个';
 			_uploadLab.setTextFormat(TextFormats.TEXT_UPLOAD_LABEL);
 			
-			if (optional == cur)
+			if (required == cur)
 				_root.readyUpload = true;
+			else
+				_root.readyUpload = false;
 		}
 		
 		/** 上传错误的提示框. */
