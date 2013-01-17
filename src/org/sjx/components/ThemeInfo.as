@@ -202,7 +202,7 @@ package org.sjx.components {
 			specification.y = 16;
 			specification.multiline = true;
 			specification.width = 268;
-			specification.height = 208;
+			specification.height = 228;
 			specification.text = '主题制作注意事项：\n1.主题名称、作者名称只能包含：\n   ' +
 				'中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~；\n2.图片格式，请按照主题规范' +
 				'内图片格式与尺\n   寸要求进行上传；\n3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名。';

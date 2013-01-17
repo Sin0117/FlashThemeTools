@@ -98,6 +98,8 @@ package {
 		public static const BUILDER_TIP_HEAD_WIDTH: int = 24;
 		public static const BUILDER_TIP_ROUND: int = 8;
 		public static const BUILDER_TIP_ROW_HEIGHT: int = 24;
+		// 打包进度请求次数
+		public static const BUILDER_STATUS_SIZE: int = 3;
 		
 		private var _list: UploadList;
 		private var _info: ThemeInfo;
@@ -140,6 +142,8 @@ package {
 		private var _confirmBg: Bitmap;
 		private var _loadLabel: TextField;
 		private var _loadProg: TextField;
+		// 打包进度请求次数.
+		private var _builderStatusIndex: int;
 		
 		private var _downloadCallback: String;
 		// 预览
@@ -220,12 +224,14 @@ package {
 					Terminal.userName = root.loaderInfo.parameters['userName'];
 				if (root.loaderInfo.parameters['finish'])
 					Terminal.finish = root.loaderInfo.parameters['finish'];
+				if (root.loaderInfo.parameters['builderError'])
+					Terminal.builderErrorCallback = root.loaderInfo.parameters['builderError'];
 			}
 			
 			// 绘制加载效果
 			_loading = new Sprite();
 			_loading.graphics.lineStyle(2, 0x777777);
-			_loading.graphics.beginFill(0xFAFAFA, 0.8);
+			_loading.graphics.beginFill(0xFFFFFF, 0.9);
 			_loading.graphics.drawRoundRect(0, 0, 400, 240, 8);
 			_loading.graphics.endFill();
 			
@@ -257,17 +263,18 @@ package {
 			_loading.addChild(_builderError);
 			
 			_builderErrorLabel = new TextField();
-			_builderErrorLabel.text = '您制作失败的可能原因有以下几种：' +
+			_builderErrorLabel.text = '制作失败\n您制作失败的可能原因有以下几种：' +
 				'\n1.图片格式不符合主题规范要求；' +
-				'\n2.修改图片后缀名（如将icon.jpg 的图片直接修改为\n   icon.png），图片格式必须是PS软件直接存储的格\n   式。' +
-				'\n3.网络超时。';
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 20);
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 20, 24);
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 24, _builderErrorLabel.text.length);
-			_builderErrorLabel.x = 48;
-			_builderErrorLabel.y = 18;
-			_builderErrorLabel.width = 304;
-			_builderErrorLabel.height = 144;
+				'\n2.修改图片后缀名（如将icon.jpg 的图片直接修改为\n   icon.png），图片格式必须是PS软件直接存储的格式；' +
+				'\n3.网络超时；';
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_TITLE, 0, 5);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 5, 25);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 25, 29);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 29, _builderErrorLabel.text.length);
+			_builderErrorLabel.x = 42;
+			_builderErrorLabel.y = 24;
+			_builderErrorLabel.width = 316;
+			_builderErrorLabel.height = 184;
 			_builderErrorLabel.visible = false;
 			_loading.addChild(_builderErrorLabel);
 			
@@ -398,6 +405,7 @@ trace ('_builderLoader : ' + evt.status);
 			_builderLoader.addEventListener(Event.COMPLETE, function (evt: Event): void {
 trace ('_builderLoader : ' + _builderLoader.data.toString());
 				var strs: Array = _builderLoader.data.toString().split('|');
+				_builderStatusIndex = 0;
 				// uid|taskId|diyId
 				if (strs.length > 2) {
 					_builderId = strs[1];
@@ -421,6 +429,7 @@ trace ('_builderLoader : ' + _builderLoader.data.toString());
 			_preview.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			addChild(_preview);
 			
+			// 打包进度的请求.
 			_builderTimer = new Timer(1000, 1);
 			_builderTimer.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
 trace (Terminal.host + Terminal.status + '?taskId=' + _builderId + '&diyId=' + _diyId + 
@@ -433,7 +442,14 @@ trace (Terminal.host + Terminal.status + '?taskId=' + _builderId + '&diyId=' + _
 			
 			_builderStatLoader = new URLLoader();
 			_builderStatLoader.addEventListener(IOErrorEvent.IO_ERROR, function (evt: IOErrorEvent): void {
-				updateLoading(-1);
+				if (_builderStatusIndex < BUILDER_STATUS_SIZE) {
+					_builderTimer.reset();
+					_builderTimer.start();
+					ExternalInterface.call(Terminal.builderErrorCallback, evt.type, evt.text);
+					_builderStatusIndex ++;
+				} else {
+					updateLoading(-1);
+				}
 			});
 			_builderStatLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, function (evt: HTTPStatusEvent): void {
 trace ('_builderStatLoader : ' + evt.status);
@@ -466,6 +482,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 				hideClearConfirm();
 			}, 300, 180);
 			
+			// 打包进度条动画
 			_builderAnimate = new Timer(1000, 1);
 			_builderAnimate.addEventListener(TimerEvent.TIMER, function (evt: TimerEvent): void {
 				if (_builderStatus < 80 && _builderStatus > 0) {
@@ -520,6 +537,9 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_builderCloseBtn.visible = false;
 			_submitBtn.visible = false;
 			_cancelSubmitBtn.visible = false;
+			_loginBg.visible = false;
+			_loginBtn.visible = false;
+			_builderErrorLabel.visible = false;
 			if (prog >= 0 && prog < 100) {
 				_loadProg.text = prog + '%';
 				_loadProg.setTextFormat(TextFormats.ALERT_FORMAT);
@@ -545,26 +565,23 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 					}
 				} else {
 					if (prog == -1) {
-						_loadLabel.text = "打包失败，请重新打包。";
+						_loadLabel.text = "";
 						_loadLabel.setTextFormat(TextFormats.ALERT_ERROR_FORMAT);
 						// _builderError.visible = true;
 						_builderErrorLabel.visible = true;
 						_builderCloseBtn.visible = true;
 						_builderRebuilderBtn.visible = true;
 						_builderAnimate.running && _builderAnimate.stop();
-					}
-					if (prog == -2) {
+					} else if (prog == -2) {
 						_loadLabel.text = '初始化中...';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
 						_loadEffect.visible = true;
-					}
-					if (prog == -3) {
+					} else if (prog == -3) {
 						_loadLabel.text = '您还未登录哟~';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
 						_loginBtn.visible = true;
 						_loginBg.visible = true;
-					}
-					if (prog == -4) {
+					} else if (prog == -4) {
 						_confirmBg.visible = true;
 						_loadLabel.text = '您的主题提交制作审核后，主题将不能进行修改。';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
@@ -725,8 +742,8 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						_builderTipTxts.push(' * 未接受360主题达人联盟设计师协议');
 				}
 			}
-			
-			updateLoading(-1);
+			// 测试界面用
+			// updateLoading(-1);
 		}
 		/** 内容上传完毕. */
 		public function  set readyUpload(b: Boolean): void {

@@ -112,6 +112,8 @@ package org.sjx.data {
 		public static const download: String = 'platform/md/downloadPack?tid=';
 		// 未登录的跳转处理.
 		public static var loginCallback: String = 'alert';
+		// 打包进度获取异常的处理
+		public static var builderErrorCallback: String = 'alert';
 		// 上传的唯一标识
 		public static var uuid: String = '';
 		// 是否是开发模式，不对图片数量进行校验.
@@ -134,9 +136,9 @@ package org.sjx.data {
 		// 打包成功后的页面回调
 		public static var finish: String;
 		// 主机地址.
-		// public static var host: String = 'http://sjx.shop.360.cn:9000/';
+		public static var host: String = 'http://designer.sjx.mobile.360.cn:9000/';
 		// public static var host: String = 'http://themeshop.mobile.jx.360.cn/';
-		public static var host: String = '/';
+		// public static var host: String = '/';
 		// public static var host: String = 'http://zt.mobile.360.cn/';
 	}
 }
