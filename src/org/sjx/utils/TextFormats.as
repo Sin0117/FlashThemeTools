@@ -20,6 +20,8 @@ package org.sjx.utils {
 		public static const BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFFFFFF, true, false, false, null, null, TextFormatAlign.CENTER);
 		// 清除操作按钮
 		public static const CLEAR_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, false, false, false, null, null, TextFormatAlign.CENTER);
+		// 主题信息的规范文字样式.
+		public static const THEME_INFO_SPECIFICATION: TextFormat = new TextFormat('微软雅黑', 14, 0x444444, false, false, false, null, null, TextFormatAlign.LEFT, null, null, null, 16);
 		// 打包异常信息文字
 		public static const BUILDER_ERROR_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, true, false, false, null, null, TextFormatAlign.LEFT);
 		// 提示框文字

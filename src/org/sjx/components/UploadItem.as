@@ -158,10 +158,10 @@ package org.sjx.components {
 			}
 			_fr = new FileReference();
 			_fr.addEventListener(Event.SELECT, function (evt: Event): void {
-				_fr.type;
-				_fr.name;
-				if(Terminal.size < _fr.size) {
-					_list.alert('文件大小超过限制!');
+				if (terminal.format.indexOf(_fr.type.substring(1)) != -1) {
+					_list.alert('您需要上传' + terminal.format + '）格式的图片！');
+				} else if(terminal.size < _fr.size) {
+					_list.alert('您需要上传' + terminal.size_lab + '到图片！');
 				} else {
 					try {
 						var request: URLRequest = new URLRequest(Terminal.host + Terminal.upload + 
@@ -187,7 +187,7 @@ package org.sjx.components {
 			_tip = '<span class="item"><b>' + terminal.name + (terminal.optional ? '(可选)' : '(必选)') + '</b>\n' + 
 				'最小尺寸：' + terminal.min_width + 'x' + terminal.min_height + 'px\n' + 
 				'最大尺寸：' + terminal.max_width + 'x' + terminal.max_height + 'px\n' + 
-				'图片格式：' + terminal.format + '\n图片大小：' + Terminal.sizeLab + 
+				'图片格式：' + terminal.format + '\n图片大小：' + terminal.size_lab + 
 				(terminal.tip ? '\n' + terminal.tip : '') + '</span>';
 			
 			this.addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {

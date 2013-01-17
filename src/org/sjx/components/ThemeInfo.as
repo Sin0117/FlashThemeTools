@@ -1,4 +1,5 @@
 package org.sjx.components {
+	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
@@ -11,6 +12,8 @@ package org.sjx.components {
 	public class ThemeInfo extends Sprite {
 		
 		public static const LABEL_WIDTH: int = 68;
+		// “中文字符”、“半角环境下英文字符”、“阿拉伯数字”、下划线“_”、分割线“-”
+		public static const INPUT_RESTRICT: String = 'A-Za-z0-9\u4e00-\u9fa5_\\-';
 		
 		private var _themeLabel: TextField;
 		private var _authorLabel: TextField;
@@ -18,6 +21,8 @@ package org.sjx.components {
 		private var _priceLabel: TextField;
 		private var _ceteLabel: TextField;
 		private var _pkgLabel: TextField;
+		
+		private var _specificationSpace: Sprite;
 		
 		private var _themeField: Input;
 		private var _authorField: Input;
@@ -48,8 +53,7 @@ package org.sjx.components {
 			_themeField.y = 12;
 			_themeField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_themeField.maxChars = 40;
-			// _themeField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
-			_themeField.restrict = "^\\<\\&";
+			_themeField.restrict = INPUT_RESTRICT;
 			_themeField.border = true;
 			addChild(_themeField);
 			_themeField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
@@ -78,7 +82,7 @@ package org.sjx.components {
 			}
 			_authorField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_authorField.maxChars = 40;
-			// _authorField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_authorField.restrict = INPUT_RESTRICT;
 			_authorField.border = true;
 			addChild(_authorField);
 			_authorField.addEventListener(FocusEvent.FOCUS_OUT, function (): void {
@@ -182,6 +186,26 @@ package org.sjx.components {
 				_pkgLabel.visible = false;
 				_pkgField.visible = false;
 			}
+			
+			_specificationSpace = new Sprite();
+			_specificationSpace.x = 506;
+			_specificationSpace.y = 12;
+			var g: Graphics = _specificationSpace.graphics;
+			g.lineStyle(8, 0xEEEEEE, .8);
+			g.beginFill(0xFFFFFF);
+			g.drawRoundRect(0, 0, 300, 240, 16);
+			g.endFill();
+			addChild(_specificationSpace);
+			
+			var specification: TextField = new TextField();
+			specification.x = 32;
+			specification.y = 32;
+			specification.multiline = true;
+			specification.width = 236;
+			specification.height = 176;
+			specification.text = '主题名称只允许填写：\n * “中文字符”；\n * “半角环境下英文字符”；\n * “阿拉伯数字”；\n * 下划线“_”；\n * 分割线“-”。';
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION);
+			_specificationSpace.addChild(specification);
 		}
 		
 		/** 输入框的焦点事件. */

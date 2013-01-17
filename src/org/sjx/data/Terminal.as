@@ -50,45 +50,45 @@ package org.sjx.data {
 		}
 		// 所有编辑项
 		public static const items: Object = [
-			{pack: 'workspace_bg', name: '壁纸', type: 'other', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg,jpeg,png'},
-			{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
-			{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
-			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+			{pack: 'workspace_bg', name: '壁纸', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg'},
+			{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
+			{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
 			
-			{pack: 'icon', name: 'Logo', type: 'other', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'cover', name: '主题宣传图', type: 'other', max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg,jpeg,png'},
-			{pack: 'preview1', name: '预览图1', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},
-			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},
-			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg,jpeg,png'},
+			{pack: 'icon', name: 'Logo', type: 'other', size: 204800, size_lab: '200K以内',max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'cover', name: '主题宣传图', type: 'other', size: 204800, size_lab: '200K以内',max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg'},
+			{pack: 'preview1', name: '预览图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
 			
-			{pack: 'app_com_android_contacts2', name: '电话', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_mms', name: '短信', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_browser', name: '浏览器', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_contacts', name: '联系人', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_email', name: '电子邮件', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_deskclock', name: '时钟', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_vending', name: '应用市场', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_net_qihoo_launcher_theme', name: '主题市场', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_camera', name: '相机', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_calculator2', name: '计算器', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_cooliris_media', name: '图库', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_google_android_apps_maps', name: '地图', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_music', name: '音乐', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_settings', name: '系统设置', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_calendar', name: '日历', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_folder', name: '文件夹', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_contacts2', name: '电话', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_mms', name: '短信', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_browser', name: '浏览器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_contacts', name: '联系人', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_email', name: '电子邮件', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_deskclock', name: '时钟', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_vending', name: '应用市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_net_qihoo_launcher_theme', name: '主题市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_camera', name: '相机', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_calculator2', name: '计算器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_cooliris_media', name: '图库', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_google_android_apps_maps', name: '地图', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_music', name: '音乐', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_settings', name: '系统设置', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'app_com_android_calendar', name: '日历', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_folder', name: '文件夹', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			// {pack: 'icon_home', name: '进入主屏', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			
-			{pack: 'icon_fg', name: '图标前板', type: 'other', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_bg', name: '图标背板', type: 'other', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_fg', name: '图标前板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_bg', name: '图标背板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			// {pack: 'icon_shadow', name: '图标阴影', type: 'other', optional: true, max_width: 151, max_height: 148, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_mask', name: '图标蒙板', type: 'other', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_mask', name: '图标蒙板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			
-			{pack: 'widget_screenlock_widget', name: '一键锁屏', type: 'other', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
-			{pack: 'widget_feedback', name: '意见反馈', type: 'other', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
-			{pack: 'widget_quickaccess', name: '快速打开', type: 'other', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
-			{pack: 'widget_quicksettings', name: '快速设置', type: 'other', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'}
+			{pack: 'widget_screenlock_widget', name: '一键锁屏', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
+			{pack: 'widget_feedback', name: '意见反馈', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
+			{pack: 'widget_quickaccess', name: '快速打开', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
+			{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'}
 		];
 		
 		// 分类
@@ -110,12 +110,8 @@ package org.sjx.data {
 		public static const clear: String = 'platform/md/clear';
 		// 打包后的下载地址.
 		public static const download: String = 'platform/md/downloadPack?tid=';
-		// 上传文件大小.
-		public static const size: uint = 2 * 1024 * 1024;
 		// 未登录的跳转处理.
 		public static var loginCallback: String = 'alert';
-		// 上传文件的大小显示。
-		public static const sizeLab: String = '2M以内';
 		// 上传的唯一标识
 		public static var uuid: String = '';
 		// 是否是开发模式，不对图片数量进行校验.
