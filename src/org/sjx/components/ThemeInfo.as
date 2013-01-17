@@ -12,8 +12,8 @@ package org.sjx.components {
 	public class ThemeInfo extends Sprite {
 		
 		public static const LABEL_WIDTH: int = 68;
-		// “中文字符”、“半角环境下英文字符”、“阿拉伯数字”、下划线“_”、分割线“-”
-		public static const INPUT_RESTRICT: String = 'A-Za-z0-9\u4e00-\u9fa5_\\-';
+		// “中文字符、半角环境下英文字符、阿拉伯数字以及如下特殊字符_ - — . · ( )  （） ~
+		public static const INPUT_RESTRICT: String = 'A-Za-z0-9\u4e00-\u9fa5_\\-\\(\\)\\~\\—\\.\\·';
 		
 		private var _themeLabel: TextField;
 		private var _authorLabel: TextField;
@@ -198,13 +198,17 @@ package org.sjx.components {
 			addChild(_specificationSpace);
 			
 			var specification: TextField = new TextField();
-			specification.x = 32;
-			specification.y = 32;
+			specification.x = 16;
+			specification.y = 16;
 			specification.multiline = true;
-			specification.width = 236;
-			specification.height = 176;
-			specification.text = '主题名称只允许填写：\n * “中文字符”；\n * “半角环境下英文字符”；\n * “阿拉伯数字”；\n * 下划线“_”；\n * 分割线“-”。';
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION);
+			specification.width = 268;
+			specification.height = 208;
+			specification.text = '主题制作注意事项：\n1.主题名称、作者名称只能包含：\n   ' +
+				'中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~；\n2.图片格式，请按照主题规范' +
+				'内图片格式与尺\n   寸要求进行上传；\n3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名。';
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 98);
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 98, 102);
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 102, specification.text.length);
 			_specificationSpace.addChild(specification);
 		}
 		

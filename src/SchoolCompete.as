@@ -6,51 +6,6 @@
  * 原来喜欢不可以伪装，原来快乐不可以假装，原来永远和瞬间一样。
  */
 package {
-	/*
-	(1). 将Logo格式更改为PNG ：
-	如果设计师在Logo上传入口上传了PNG格式以外的图片，则在该上传入口处弹出文案提示：您需要上传png格式的图片（必须是PS软件直接存储为png格式的图片）
-	当在设计师上传图片的时候，本地只检测png格式图片。
-	
-	(2). 将壁纸、预览图1、预览图2、预览图3、主题宣传图格式更改为jpg
-	：如果设计师在上述上传入口上传了jpg格式以外的图片，则在该上传入口处弹出文案提示：您需要上传jpg格式的图片（必须是PS软件直接存储为jpg格式的图片）
-	当在设计师上传图片的时候，本地只检测jpg格式图片。
-	
-	
-	(3).预览图1、预览图2、预览图3、主题宣传图的大小限制在200K以内
-	：如果设计师在上述上传入口上传了大于200k的图片，则在该上传入口处弹出文案提示：您需要上传小于200K的图片.
-	
-	(4). 主题名称只允许填写如下字符，包括不确定？需要QA进行测试，限定出可输入的字符：
-	“中文字符”、“半角环境下英文字符”、“阿拉伯数字”、下划线“_”、分割线“-”   此文案加在 主题名称输入框的右侧
-	：如果设计师在主题名称内填写了非上述特殊字符，则文案提示有变色（例如：文案变为红色）：主题名称只允许填写： “中文字符”、“半角环境下英文字符”、“阿拉伯数字”、下划线“_”、分割线“-”  
-	
-	(5). ”背板“由可选项变更为必选项
-	”背板“由可选项变更为必选项
-	
-	(6)在主题名称右侧空白部分添加文案框，具体文案：
-	主题制作注意事项：
-	a.主题名称、作者名称、主题描述只能包含：？
-	b.图片格式，请按照主题规范（主题规范链接在新窗口打开）内图片格式与尺寸要求进行上传
-	c.图片格式必须是PS软件直接存储的格式，请不要修改图片后缀名。
-	
-	(7)主题制作失败时，弹出框加入以下文案：
-	您制作失败的可能原因有以下几种：
-	1.图片格式不符合主题规范要求。（主题规范链接在新窗口打开）
-	2.修改图片后缀名（如将icon.jpg 的图片直接修改为icon.png），图片格式必须是PS软件直接存储的格式。
-	3.网络超时。
-	
-	(8)在打包工具左侧 主题预览区，加一个手机背景框。
-	
-	[验收准则/测试条件]:
-	(1). logo图片只能上传png格式图片，文件选择框默认只显示png格式的文件。
-	如果用户选择非png格式图片，弹出提示："您需要上传png格式的图片（必须是PS软件直接存储为png格式的图片）"
-	(2). 壁纸、预览图1、预览图2、预览图3、主题宣传图只能上传jpg格式图片,文件选择框默认只显示jpg格式的文件。
-	如果用户选择非jpg格式图片，弹出提示："您需要上传jpg格式的图片（必须是PS软件直接存储为jpg格式的图片）"
-	(3). 预览图1、预览图2、预览图3、主题宣传图的大小限制在200K以内
-	如果用户上传大于200K图片，弹出提示："您需要上传小于200K的图片."
-	(4). 主题名称只允许填写： “中英文”、“数字”、下划线“_”、分割线“-”   此文案加在 主题名称输入框的右侧
-	如果用户在主题名称内填写了非上述特殊字符，则文案提示有变色（例如：文案变为红色）
-	(5). ”背板“由可选项变更为必选项
-	*/
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
@@ -89,7 +44,7 @@ package {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	[SWF(frameRate="25", width="850", height="1080")]
+	[SWF(frameRate="25", width="840", height="1267")]
 	public class SchoolCompete extends Sprite {
 		
 		[Embed(source="images/017.png")]
@@ -101,22 +56,27 @@ package {
 		[Embed(source="images/015.png")]
 		public static var ConfirmIcon: Class;
 		
-		public static const WIDTH: int = 850;
-		public static const HEIGHT: int = 1080;
+		public static const WIDTH: int = 840;
+		public static const HEIGHT: int = 1267;
 		public static const PADDING_V: int = 10;
 		public static const PADDING_H: int = 10;
 		public static const BORDER: int = 2;
 		// 预览区域宽度
-		public static const PEWVIEW_WIDTH: int = 380;
-		public static const PEWVIEW_HEIGHT: int = 680;
+		public static const PEWVIEW_WIDTH: int = 428;
+		// public static const PEWVIEW_HEIGHT: int = 680;
+		public static const PEWVIEW_HEIGHT: int = 867;
+		public static const PREVIEW_BG_WIDTH: int = 412;
+		public static const PREVIEW_BG_HEIGHT: int = 787;
+		public static const EDITER_X: int = 27;
+		public static const EDITER_Y: int = 88;
 		public static const EDITER_WIDTH: int = 360;
 		public static const EDITER_HEIGHT: int = 600;
 		// 上传区域宽度
-		public static const UPLOAD_WIDTH: int = 450;
-		public static const UPLOAD_HEIGHT: int = 500;
-		public static const DEV_UPLOAD_HEIGHT: int = 540;
+		public static const UPLOAD_WIDTH: int = 390;
+		public static const UPLOAD_HEIGHT: int = 640;
+		public static const DEV_UPLOAD_HEIGHT: int = 680;
 		// 上传显示列数.
-		public static const UPLOAD_ITEM_SIZE: int = 7;
+		public static const UPLOAD_ITEM_SIZE: int = 6;
 		// 上传项的参数
 		public static const UPLOAD_ITEM_WIDTH: int = 56;
 		public static const UPLOAD_ITEM_HEIGHT: int = 68;
@@ -175,6 +135,7 @@ package {
 		private var _loadEffect: Sprite;
 		private var _builderSuccess: Bitmap;
 		private var _builderError: Bitmap;
+		private var _builderErrorLabel: TextField;
 		private var _loginBg: Bitmap;
 		private var _confirmBg: Bitmap;
 		private var _loadLabel: TextField;
@@ -295,6 +256,21 @@ package {
 			_builderError.visible = false;
 			_loading.addChild(_builderError);
 			
+			_builderErrorLabel = new TextField();
+			_builderErrorLabel.text = '您制作失败的可能原因有以下几种：' +
+				'\n1.图片格式不符合主题规范要求；' +
+				'\n2.修改图片后缀名（如将icon.jpg 的图片直接修改为\n   icon.png），图片格式必须是PS软件直接存储的格\n   式。' +
+				'\n3.网络超时。';
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 20);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 20, 24);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 24, _builderErrorLabel.text.length);
+			_builderErrorLabel.x = 48;
+			_builderErrorLabel.y = 18;
+			_builderErrorLabel.width = 304;
+			_builderErrorLabel.height = 144;
+			_builderErrorLabel.visible = false;
+			_loading.addChild(_builderErrorLabel);
+			
 			_loginBg = new LoginIcon();
 			_loginBg.x = 100;
 			_loginBg.y = 8;
@@ -402,7 +378,6 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -410,7 +385,6 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
-				*/
 			});
 			
 			/** 打包请求. */
@@ -572,8 +546,9 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 				} else {
 					if (prog == -1) {
 						_loadLabel.text = "打包失败，请重新打包。";
-						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
-						_builderError.visible = true;
+						_loadLabel.setTextFormat(TextFormats.ALERT_ERROR_FORMAT);
+						// _builderError.visible = true;
+						_builderErrorLabel.visible = true;
 						_builderCloseBtn.visible = true;
 						_builderRebuilderBtn.visible = true;
 						_builderAnimate.running && _builderAnimate.stop();
@@ -750,6 +725,8 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						_builderTipTxts.push(' * 未接受360主题达人联盟设计师协议');
 				}
 			}
+			
+			updateLoading(-1);
 		}
 		/** 内容上传完毕. */
 		public function  set readyUpload(b: Boolean): void {

@@ -158,10 +158,10 @@ package org.sjx.components {
 			}
 			_fr = new FileReference();
 			_fr.addEventListener(Event.SELECT, function (evt: Event): void {
-				if (terminal.format.indexOf(_fr.type.substring(1)) != -1) {
-					_list.alert('您需要上传' + terminal.format + '）格式的图片！');
+				if (terminal.format.indexOf(_fr.type.substring(1)) == -1) {
+					_list.alert('您需要上传' + terminal.format + '格式的图片（必须是PS软件直接存储为' + terminal.format + '格式的图片）！');
 				} else if(terminal.size < _fr.size) {
-					_list.alert('您需要上传' + terminal.size_lab + '到图片！');
+					_list.alert('您需要上传' + terminal.size_lab + '的图片！');
 				} else {
 					try {
 						var request: URLRequest = new URLRequest(Terminal.host + Terminal.upload + 

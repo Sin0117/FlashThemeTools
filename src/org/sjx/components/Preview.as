@@ -1,15 +1,21 @@
 package org.sjx.components {
 	import com.qihoo.themefactory.sjx.components.LoaderSprite;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
 	import org.sjx.data.Terminal;
 
 	public class Preview extends Sprite{
+		
+		[Embed(source="images/phone_bg.png")]
+		public static var PreviewBg: Class;
 		
 		// 预览的整体界面
 		private var _space: Sprite;
@@ -28,6 +34,8 @@ package org.sjx.components {
 		public var previewX: int;
 		public var previewY: int;
 		
+		private var _bg: BitmapData;
+		
 		private var _root: SchoolCompete;
 		
 		public function Preview(r: SchoolCompete) {
@@ -37,9 +45,14 @@ package org.sjx.components {
 			_space.y = 0;
 			addChild(_space);
 			
+			_bg = Bitmap(new PreviewBg()).bitmapData;
+			graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, 0, 0), false, true);
+			graphics.drawRect(0, 0, SchoolCompete.PREVIEW_BG_WIDTH, SchoolCompete.PREVIEW_BG_HEIGHT);
+			graphics.endFill();
+			
 			_prev = new Editer(this);
-			previewX = SchoolCompete.PEWVIEW_WIDTH - SchoolCompete.EDITER_WIDTH >> 1;
-			previewY = 10;
+			previewX = SchoolCompete.EDITER_X;
+			previewY = SchoolCompete.EDITER_Y;
 			addChild(_prev);
 			
 			_lock = new LoaderSprite('http://p4.qhimg.com/t0144c59deccdcb1dc7.gif', Editer.WIDTH, Editer.HEIGHT);
@@ -56,7 +69,7 @@ package org.sjx.components {
 			
 			_main = new ViewButton('主屏预览');
 			_main.x = SchoolCompete.PEWVIEW_WIDTH - ViewButton.WIDTH * 2 - 32 >> 1;
-			_main.y = SchoolCompete.EDITER_HEIGHT + 36;
+			_main.y = SchoolCompete.PREVIEW_BG_HEIGHT + 36;
 			_space.addChild(_main);
 			_main.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_prev.view = 'main';
