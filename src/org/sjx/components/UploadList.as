@@ -238,7 +238,7 @@ package org.sjx.components {
 		public function updateUploads(): void {
 			var size: int = 0, max: int = 0, cur: int = 0, required: int = 0;
 			for (var i: int = 0, n: UploadItem; n = _itmes[i]; i ++) {
-				if (!n.optional) {
+				if (n.optional) {
 					required ++;
 					if (n.value)
 						cur ++;
