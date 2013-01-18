@@ -268,9 +268,9 @@ package {
 				'\n2.修改图片后缀名（如将icon.jpg 的图片直接修改为\n   icon.png），图片格式必须是PS软件直接存储的格式；' +
 				'\n3.网络超时；';
 			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_TITLE, 0, 5);
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 5, 25);
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 25, 29);
-			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 29, _builderErrorLabel.text.length);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 5, 31);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 31, 35);
+			_builderErrorLabel.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 35, _builderErrorLabel.text.length);
 			_builderErrorLabel.x = 42;
 			_builderErrorLabel.y = 24;
 			_builderErrorLabel.width = 316;
