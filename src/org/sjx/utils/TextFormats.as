@@ -23,7 +23,7 @@ package org.sjx.utils {
 		// 主题信息的规范文字样式.
 		public static const THEME_INFO_SPECIFICATION_TITLE: TextFormat = new TextFormat('微软雅黑', 14, 0xee605e, true, false, false, null, null, TextFormatAlign.CENTER, null, null, null, 8);
 		public static const THEME_INFO_SPECIFICATION: TextFormat = new TextFormat('微软雅黑', 13, 0xdd605e, false, false, false, null, null, TextFormatAlign.LEFT, null, null, null, 8);
-		public static const THEME_INFO_SPECIFICATION_LINK: TextFormat = new TextFormat('微软雅黑', 13, 0x78cb3b, false, false, true, "http://designer.mobile.360.cn/platform/info/tutorial", "_blank", TextFormatAlign.LEFT, null, null, null, 8);
+		public static const THEME_INFO_SPECIFICATION_LINK: TextFormat = new TextFormat('微软雅黑', 13, 0x78cb3b, false, false, true, "http://designer.mobile.360.cn//platform/info/standard", "_blank", TextFormatAlign.LEFT, null, null, null, 8);
 		// 打包异常信息文字
 		public static const BUILDER_ERROR_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, true, false, false, null, null, TextFormatAlign.LEFT);
 		// 提示框文字

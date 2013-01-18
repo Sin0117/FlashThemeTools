@@ -77,10 +77,7 @@ package org.sjx.components {
 			_list = list;
 			// if (terminal.type == 'icon')
 			optional = !terminal.optional;
-			if (optional)
-				_leftOffset = 0;
-			else
-				_leftOffset = -50;
+			_leftOffset = 0;
 			
 			_bg = Bitmap(new BG()).bitmapData;
 			_btn = new Sprite();
@@ -244,8 +241,13 @@ package org.sjx.components {
 		private function update(url: String = null): void {
 			_list.update(pack, value = url);
 			if (url) {
-				draw(3);
 				_uploading = false;
+				_leftOffset = -50;
+				_loadAnimate.graphics.clear();
+				_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
+				_loadAnimate.graphics.drawRect(-(WIDTH >> 1), -(HEIGHT >> 1), WIDTH, HEIGHT);
+				_loadAnimate.graphics.endFill();
+				draw(3);
 				_list.updateUploads();
 				// _previewLoader.load(new URLRequest(url));
 			} else {
@@ -287,6 +289,11 @@ package org.sjx.components {
 		public function clear(): void {
 			this.value = null;
 			_clearBg.visible = false;
+			_leftOffset = 0;
+			_loadAnimate.graphics.clear();
+			_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
+			_loadAnimate.graphics.drawRect(-(WIDTH >> 1), -(HEIGHT >> 1), WIDTH, HEIGHT);
+			_loadAnimate.graphics.endFill();
 			draw(0);
 			_list.updateUploads();
 		}
