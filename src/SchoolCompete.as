@@ -413,7 +413,9 @@ trace ('_builderLoader : ' + _builderLoader.data.toString());
 					_builderTimer.reset();
 					_builderTimer.start();
 				} else {
-					_list.alert(strs[1]);
+					// 去掉了提示，改用统一提示。
+					// _list.alert(strs[1]);
+					updateLoading(-1);
 					_builderAnimate.running && _builderAnimate.stop();
 				}
 			});
@@ -473,7 +475,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			
 			_clearConfirm = new Confirm('是否确认清空?', function (): void {
 				_userLoader.load(new URLRequest(Terminal.host + Terminal.clear + '?d=' + new Date().time));
-				_info.clear();
+				// _info.clear();
 				_list.clear();
 				_preview.clear();
 				_data = {};

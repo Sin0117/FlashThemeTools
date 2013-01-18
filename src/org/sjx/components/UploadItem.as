@@ -240,20 +240,24 @@ package org.sjx.components {
 		/** 更新预览图. */
 		private function update(url: String = null): void {
 			_list.update(pack, value = url);
+			_uploading = false;
 			if (url) {
-				_uploading = false;
 				_leftOffset = -50;
 				_loadAnimate.graphics.clear();
 				_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
 				_loadAnimate.graphics.drawRect(-(WIDTH >> 1), -(HEIGHT >> 1), WIDTH, HEIGHT);
 				_loadAnimate.graphics.endFill();
 				draw(3);
-				_list.updateUploads();
 				// _previewLoader.load(new URLRequest(url));
 			} else {
-				_uploading = false;
+				_leftOffset = 0;
+				_loadAnimate.graphics.clear();
+				_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
+				_loadAnimate.graphics.drawRect(-(WIDTH >> 1), -(HEIGHT >> 1), WIDTH, HEIGHT);
+				_loadAnimate.graphics.endFill();
 				draw(0);
 			}
+			_list.updateUploads();
 		}
 		
 		/** 上传成功以后加载新的预览图. */
@@ -272,7 +276,7 @@ package org.sjx.components {
 				update(strs[2] || null);
 			} else {
 				_uploading = false;
-				this._list.alert(strs[3]);
+				_list.alert(strs[3]);
 				draw(0);
 			}
 		}
@@ -289,13 +293,7 @@ package org.sjx.components {
 		public function clear(): void {
 			this.value = null;
 			_clearBg.visible = false;
-			_leftOffset = 0;
-			_loadAnimate.graphics.clear();
-			_loadAnimate.graphics.beginBitmapFill(_bg, new Matrix(1, 0, 0, 1, _leftOffset + -25, -175), false, true);
-			_loadAnimate.graphics.drawRect(-(WIDTH >> 1), -(HEIGHT >> 1), WIDTH, HEIGHT);
-			_loadAnimate.graphics.endFill();
-			draw(0);
-			_list.updateUploads();
+			update('');
 		}
 		
 		/** 界面变更. */

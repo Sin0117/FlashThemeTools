@@ -52,7 +52,7 @@ package org.sjx.components {
 			_themeField.x = 72;
 			_themeField.y = 12;
 			_themeField.setFormat(TextFormats.THEME_INPUT_FORMAT);
-			_themeField.maxChars = 40;
+			_themeField.maxChars = 20;
 			_themeField.restrict = INPUT_RESTRICT;
 			_themeField.border = true;
 			addChild(_themeField);
@@ -81,7 +81,7 @@ package org.sjx.components {
 				_authorField.type = false;
 			}
 			_authorField.setFormat(TextFormats.THEME_INPUT_FORMAT);
-			_authorField.maxChars = 40;
+			_authorField.maxChars = 20;
 			_authorField.restrict = INPUT_RESTRICT;
 			_authorField.border = true;
 			addChild(_authorField);
@@ -135,6 +135,7 @@ package org.sjx.components {
 			_descField.height = 104;
 			_descField.setTextFormat(TextFormats.THEME_TEXTAREA_FORMAT);
 			// _descField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
+			_descField.maxChars = 120;
 			_descField.multiline = true;
 			_descField.wordWrap = true;
 			_descField.border = true;
@@ -204,11 +205,11 @@ package org.sjx.components {
 			specification.width = 268;
 			specification.height = 228;
 			specification.text = '主题制作注意事项：\n1.主题名称、作者名称只能包含：\n   ' +
-				'中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~；\n2.图片格式，请按照主题规范' +
-				'内图片格式与尺\n   寸要求进行上传；\n3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名。';
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 98);
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 98, 102);
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 102, specification.text.length);
+				'中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~\n2.图片格式，请按照主题规范' +
+				'内图片格式与尺\n   寸要求进行上传\n3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名。';
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 97);
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 97, 101);
+			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 101, specification.text.length);
 			_specificationSpace.addChild(specification);
 		}
 		
