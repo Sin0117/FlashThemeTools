@@ -17,7 +17,9 @@ package org.sjx.utils {
 		public static const THEME_INPUT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT, 4, 4);
 		public static const THEME_TEXTAREA_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT, 16, 16, 16, 16);
 		// 操作按钮
-		public static const BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFFFFFF, true, false, false, null, null, TextFormatAlign.CENTER);
+		public static const BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFFFFFF, false, false, false, null, null, TextFormatAlign.CENTER);
+		// 开始制作按钮
+		public static const BUILDER_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 18, 0xFFFFFF, true, false, false, null, null, TextFormatAlign.CENTER);
 		// 清除操作按钮
 		public static const CLEAR_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, false, false, false, null, null, TextFormatAlign.CENTER);
 		// 主题信息的规范文字样式.

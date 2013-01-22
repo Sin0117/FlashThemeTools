@@ -29,12 +29,14 @@ package org.sjx.data {
 				"app_com_android_calculator2":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"计算器"},
 				"app_com_android_music":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"音乐"},
 				"app_com_google_android_apps_maps":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"地图"},
-				"icon_folder":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"文件夹"},
+				"icon_folder":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"图标文件夹"},
+				"widget_quickaccess":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"快速打开"},
 				"icon":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"Logo"},
 				// "icon_home":{'y':704,'z':4,'index':2,'dockbar':true,'parent':'icon','width':76,'height':76,'label':'桌面'},
 				"workspace_bg":{"x":-240,"y":0,"z":0,"parent":"background","width":960,"height":800,"mask":"0x000000","maskAlpha":0.6},
 				"workspace_dockbar_bg":{"x":0,"y":695,"z":1,"parent":"dockbar","width":480,"height":105},
 				"icon_bg":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"背板"},
+				"icon_fg":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"前板"},
 				"icon_mask":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"蒙板"},
 				// "icon_shadow":{"z":4,"rollable":true,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"阴影"},
 				"mask":{"z":3,"y":-800,"parent":"dockbar","width":86,"height":86},
@@ -50,17 +52,6 @@ package org.sjx.data {
 		}
 		// 所有编辑项
 		public static const items: Object = [
-			{pack: 'workspace_bg', name: '壁纸', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg'},
-			{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
-			{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
-			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
-			
-			{pack: 'icon', name: 'Logo', type: 'other', size: 204800, size_lab: '200K以内',max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'cover', name: '主题宣传图', type: 'other', size: 204800, size_lab: '200K以内',max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg'},
-			{pack: 'preview1', name: '预览图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			
 			{pack: 'app_com_android_contacts2', name: '电话', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			{pack: 'app_com_android_mms', name: '短信', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			{pack: 'app_com_android_browser', name: '浏览器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
@@ -76,18 +67,30 @@ package org.sjx.data {
 			{pack: 'app_com_android_music', name: '音乐', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			{pack: 'app_com_android_settings', name: '系统设置', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			{pack: 'app_com_android_calendar', name: '日历', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_folder', name: '文件夹', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_folder', name: '图标文件夹', tip: '<font color="#F00000">图片比实际效果略有出入</font>', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			// {pack: 'icon_home', name: '进入主屏', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'widget_quickaccess', name: '快速打开', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{},
+			
+			{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+			{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
+			{pack: 'icon', name: 'Logo', type: 'other', size: 204800, size_lab: '200K以内',max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{},
+			
+			{pack: 'workspace_bg', name: '壁纸', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg'},
+			{pack: 'cover', name: '主题宣传图', type: 'other', size: 204800, size_lab: '200K以内',max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg'},
+			{pack: 'preview1', name: '预览图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
 			
 			{pack: 'icon_fg', name: '图标前板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+			{pack: 'icon_mask', name: '图标蒙板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			{pack: 'icon_bg', name: '图标背板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
 			// {pack: 'icon_shadow', name: '图标阴影', type: 'other', optional: true, max_width: 151, max_height: 148, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_mask', name: '图标蒙板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			
 			{pack: 'widget_screenlock_widget', name: '一键锁屏', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
 			{pack: 'widget_feedback', name: '意见反馈', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
-			{pack: 'widget_quickaccess', name: '快速打开', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'},
 			{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 1920, max_height: 1920, min_width: 1, min_height: 1, format: 'png'}
 		];
 		

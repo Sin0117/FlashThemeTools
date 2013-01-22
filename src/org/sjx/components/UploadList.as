@@ -54,7 +54,7 @@ package org.sjx.components {
 			_uploadLab.y = uploadLabY + 3;
 			addChild(_uploadLab);
 			
-			_clearBtn = new ClearButton('清空');
+			_clearBtn = new ClearButton('全部清空');
 			_clearBtn.x = 240;
 			_clearBtn.y = uploadLabY;
 			addChild(_clearBtn);
@@ -88,14 +88,17 @@ package org.sjx.components {
 			_lists.addChild(_requiredSpace);
 			for (var i: int = 0, n: Object; n = Terminal.items[i]; i ++) {
 				if (n.optional || (n.dev && !Terminal.dev)) continue;
-				var pack: String = n['pack'], item: UploadItem = new UploadItem(pack, n, this);
-				item.x = beginX + itemIndex % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
-				item.y = beginY;
-				item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
-				item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
-				_lists.addChild(item);
-				_itmes.push(item);
-				_root.update(pack, null);
+				var pack: String = n['pack'];
+				if (pack) {
+					var item: UploadItem = new UploadItem(pack, n, this);
+					item.x = beginX + itemIndex % SchoolCompete.UPLOAD_ITEM_SIZE * (SchoolCompete.UPLOAD_ITEM_PADDING_H + SchoolCompete.UPLOAD_ITEM_WIDTH);
+					item.y = beginY;
+					item.addEventListener(MouseEvent.MOUSE_OVER, doItemOver);
+					item.addEventListener(MouseEvent.MOUSE_OUT, doItemOut);
+					_lists.addChild(item);
+					_itmes.push(item);
+					_root.update(pack, null);
+				}
 				itemIndex ++;
 				var index: int = itemIndex / SchoolCompete.UPLOAD_ITEM_SIZE >> 0;
 				if (rowIndex < index) {

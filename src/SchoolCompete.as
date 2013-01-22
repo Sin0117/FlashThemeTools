@@ -385,6 +385,7 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
+				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -392,6 +393,7 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
+				*/
 			});
 			
 			/** 打包请求. */
@@ -632,6 +634,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_builderBtn.x = _list.x + (UPLOAD_WIDTH - ViewButton.WIDTH - 32 >> 1);
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
+			_builderBtn.text = "提交审核";
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
 				if (_builderBtn.enable)
 					updateLoading(-4);					

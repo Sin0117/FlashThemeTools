@@ -36,13 +36,6 @@ package org.sjx.components {
 			martDef = new Matrix(1, 0, 0, 1, 0, 0);
 			martFocus = new Matrix(1, 0, 0, 1, 0, -HEIGHT);
 			martDown = new Matrix(1, 0, 0, 1, 0, -2 * HEIGHT);
-			
-			_disBtn = draw(new Matrix(1, 0, 0, 1, 0, -225));
-			_disBtn.visible = false;
-			addChild(_disBtn);
-			
-			_btn = new SimpleButton(draw(martDef), draw(martFocus), draw(martDown), draw(martDef));
-			addChild(_btn);
 		}
 		
 		public function set enable(b: Boolean): void {
@@ -53,6 +46,19 @@ package org.sjx.components {
 				_disBtn.visible = false;
 				_btn.visible = true;
 			}
+		}
+		
+		public function set text(txt: String): void {
+			_txt = txt;
+			if (_btn && _btn.parent)
+				removeChild(_btn);
+			_btn = new SimpleButton(draw(martDef), draw(martFocus), draw(martDown), draw(martDef));
+			addChild(_btn);
+			if (_disBtn && _disBtn.parent)
+				removeChild(_disBtn);
+			_disBtn = draw(new Matrix(1, 0, 0, 1, 0, -225));
+			_disBtn.visible = false;
+			addChild(_disBtn);
 		}
 		
 		public function get enable(): Boolean {
@@ -66,17 +72,15 @@ package org.sjx.components {
 			button.graphics.drawRect(0, 0, WIDTH, HEIGHT);
 			button.graphics.endFill();
 			
-			/*
 			var label: TextField = new TextField();
 			label.x = 0;
-			label.y = 1;
+			label.y = 8;
 			label.width = WIDTH;
-			label.height = HEIGHT - 2;
+			label.height = HEIGHT - 16;
 			label.text = _txt;
-			
-			label.setTextFormat(TextFormats.BUTTON_FORMAT);
+			label.setTextFormat(TextFormats.BUILDER_BUTTON_FORMAT);
 			button.addChild(label);
-			*/
+			
 			return button;
 		}
 	}

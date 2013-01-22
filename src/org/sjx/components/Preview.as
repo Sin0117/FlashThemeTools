@@ -67,7 +67,7 @@ package org.sjx.components {
 				_prev.update(Terminal.data);
 			});
 			
-			_main = new ViewButton('主屏预览');
+			_main = new ViewButton('第一屏图标预览');
 			_main.x = SchoolCompete.PEWVIEW_WIDTH - ViewButton.WIDTH * 2 - 32 >> 1;
 			_main.y = SchoolCompete.PREVIEW_BG_HEIGHT + 36;
 			_space.addChild(_main);
@@ -75,7 +75,7 @@ package org.sjx.components {
 				_prev.view = 'main';
 			});
 			
-			_drawer = new ViewButton('图标预览');
+			_drawer = new ViewButton('第二屏图标预览');
 			_drawer.x = SchoolCompete.PEWVIEW_WIDTH - _main.x - ViewButton.WIDTH;
 			_drawer.y = _main.y;
 			_space.addChild(_drawer);
