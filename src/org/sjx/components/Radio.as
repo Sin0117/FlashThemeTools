@@ -25,7 +25,7 @@ package org.sjx.components {
 		
 		private var _val: String;
 		
-		public function Radio(w: int, h: int, lab: String, val: String) {
+		public function Radio(w: int, h: int, lab: String, val: String, disable: Boolean = false) {
 			_w = w;
 			_h = h;
 			_val = val;
@@ -47,25 +47,26 @@ package org.sjx.components {
 			_icon.y = _h - 19 >> 1;
 			addChild(_icon);
 			
-			addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
-				_selected = true;
-				draw(2);
-			});
-			addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
-				if (_selected) {
-					draw(3);
-				} else {
-					draw(1);
-				}
-			});
-			addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
-				if (_selected) {
+			if (!disable) {
+				addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
+					_selected = true;
 					draw(2);
-				} else {
-					draw(0);
-				}
-			});
-			
+				});
+				addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+					if (_selected) {
+						draw(3);
+					} else {
+						draw(1);
+					}
+				});
+				addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+					if (_selected) {
+						draw(2);
+					} else {
+						draw(0);
+					}
+				});
+			}
 			graphics.beginFill(0xFFFFFF, 0.05);
 			graphics.drawRect(0, 0, _w, _h);
 			graphics.endFill();

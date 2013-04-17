@@ -15,13 +15,17 @@ package org.sjx.utils {
 		public static const AGREEMENT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x666666, false, false, false, "http://designer.mobile.360.cn/platform/info/agreement", "_blank", TextFormatAlign.LEFT);
 		// 主题信息输入
 		public static const THEME_INPUT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT, 4, 4);
-		public static const THEME_TEXTAREA_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT, 16, 16, 16, 16);
+		public static const THEME_TEXTAREA_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT, 8, 8, 0, 2);
 		// 操作按钮
 		public static const BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFFFFFF, false, false, false, null, null, TextFormatAlign.CENTER);
 		// 开始制作按钮
 		public static const BUILDER_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 18, 0xFFFFFF, true, false, false, null, null, TextFormatAlign.CENTER);
 		// 清除操作按钮
 		public static const CLEAR_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0xFF3333, false, false, false, null, null, TextFormatAlign.CENTER);
+		// 右边tab的文字样式
+		public static const TAB_BUTTON_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x666666, false, false, false, null, null, TextFormatAlign.CENTER);
+		public static const TAB_BUTTON_DOWN_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, true, false, false, null, null, TextFormatAlign.CENTER);
+		public static const TAB_BUTTON_HOVER_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.CENTER);
 		// 主题信息的规范文字样式.
 		public static const THEME_INFO_SPECIFICATION_TITLE: TextFormat = new TextFormat('微软雅黑', 14, 0xee605e, true, false, false, null, null, TextFormatAlign.CENTER, null, null, null, 8);
 		public static const THEME_INFO_SPECIFICATION: TextFormat = new TextFormat('微软雅黑', 13, 0xdd605e, false, false, false, null, null, TextFormatAlign.LEFT, null, null, null, 8);
@@ -41,5 +45,12 @@ package org.sjx.utils {
 		public static const TEXT_FORMAT: TextFormat = new TextFormat('微软雅黑', 12, 0x333333, false, false, false, null, null, TextFormatAlign.LEFT);
 		// 上传统计文字
 		public static const TEXT_UPLOAD_LABEL: TextFormat = new TextFormat('微软雅黑', 12, 0x8c8c8c, false, false, false, null, null, TextFormatAlign.LEFT);
+		// 创建一个不同url的文本格式。
+		public static function makeUploadAplFormat(url: String): TextFormat {
+			return new TextFormat('微软雅黑', 12, 0x777777, false, false, true, url, "_blank", TextFormatAlign.CENTER);
+		}
+		public static function makeTextFormat(size: int, color: uint): TextFormat {
+			return new TextFormat('微软雅黑', size, color, false, false, false, null, null, TextFormatAlign.LEFT);
+		}
 	}
 }

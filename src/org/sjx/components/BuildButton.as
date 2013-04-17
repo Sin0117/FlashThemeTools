@@ -30,12 +30,13 @@ package org.sjx.components {
 		private var _btn: SimpleButton;
 		private var _disBtn: Sprite;
 		
-		public function BuildButton() {
+		public function BuildButton(txt: String) {
 			this.buttonMode = true;
 			data = Bitmap(new BG()).bitmapData;
 			martDef = new Matrix(1, 0, 0, 1, 0, 0);
 			martFocus = new Matrix(1, 0, 0, 1, 0, -HEIGHT);
 			martDown = new Matrix(1, 0, 0, 1, 0, -2 * HEIGHT);
+			text = txt;
 		}
 		
 		public function set enable(b: Boolean): void {

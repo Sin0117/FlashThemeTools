@@ -3,6 +3,7 @@ package org.sjx.components {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.text.TextField;
@@ -14,6 +15,8 @@ package org.sjx.components {
 		
 		[Embed(source="images/select-btn.png")]
 		public static var BG: Class;
+		
+		public static const EVENT_CLICK: String = 'OptionClickEvent';
 		
 		private var _bg: BitmapData;
 		
@@ -33,7 +36,9 @@ package org.sjx.components {
 		private var _isOpen: Boolean;
 		
 		/** 下拉列表组件, 注： border为1，中线是0.5所以高度和宽度要额外加1。 */
-		public function Select(width: int, height: int, d: Array, color: uint = 0xcccccc, focusColor: uint = 0x333333) {
+		public function Select(width: int, height: int, d: Array, 
+							   color: uint = 0xcccccc, focusColor: uint = 0x333333, 
+							   disable: Boolean = false, defVal: String = null) {
 			_data = d;
 			_w = width;
 			_h = height;
@@ -55,26 +60,30 @@ package org.sjx.components {
 			_icon.x = _w - 15;
 			_icon.y = _h - 5 >> 1;
 			addChild(_icon);
-			addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
-				if (_isOpen) {
-					_list.visible = false;
-					draw(1);
-				} else {
-					_list.visible = true;
-					_isOpen = true;
-					draw(2);
-				}
-			});
-			addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
-				if (!_isOpen) draw(1);
-			});
-			addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
-				if (!_isOpen) draw(0);
-			});
+			if (!disable) {
+				addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
+					if (_isOpen) {
+						_list.visible = false;
+						draw(1);
+					} else {
+						_list.visible = true;
+						_isOpen = true;
+						draw(2);
+					}
+				});
+				addEventListener(MouseEvent.MOUSE_OVER, function (evt: MouseEvent): void {
+					if (!_isOpen) draw(1);
+				});
+				addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
+					if (!_isOpen) draw(0);
+				});
+			}
 			
 			_iptLabel = new TextField();
 			if (_data.length)
 				_iptLabel.text = _data[0];
+			if (defVal)
+				_iptLabel.text = defVal;
 			_iptLabel.setTextFormat(TextFormats.TEXT_FORMAT);
 			_iptLabel.x = 7;
 			_iptLabel.y = _h - 20 >> 1;
@@ -134,6 +143,7 @@ package org.sjx.components {
 			var item: Input = evt.currentTarget as Input;
 			value = item.text;
 			item.border = false;
+			dispatchEvent(new Event(EVENT_CLICK));
 		}
 		
 		private function draw(type: int): void {

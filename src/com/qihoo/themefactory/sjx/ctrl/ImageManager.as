@@ -55,17 +55,22 @@ package com.qihoo.themefactory.sjx.ctrl {
 				callback(_queue[src], time);
 			}
 			
-			/** 图片缓存处理. */
-			function _cache(url: String): String {
-				// 如果有缓存处理, 就先清除掉.
-				var cacheIndex: int = url.indexOf('QIHOO_D_CACHE='), d: uint = new Date().getTime();
+			/** 清除图片的缓存. */
+			function _clearChche(url: String): String {
+				var cacheIndex: int = url.indexOf('QIHOO_D_CACHE=');
 				if (cacheIndex != -1) {
 					var arr: Array = url.split('QIHOO_D_CACHE='), end: int = arr[1].indexOf('&');
 					if (end != -1)
 						arr[1] = arr[1].substring(end + 1);
 					url = arr.join('');
 				}
-				url += (url.indexOf('?') != -1 ? '&QIHOO_D_CACHE=' : '?QIHOO_D_CACHE=') + d;
+				return url;
+			}
+			
+			/** 图片缓存处理. */
+			function _cache(url: String): String {
+				url = _clearChche(url);
+				url += (url.indexOf('?') != -1 ? '&QIHOO_D_CACHE=' : '?QIHOO_D_CACHE=') + (new Date().time);
 				if (Terminal.proxy) {
 					return ExternalInterface.call(Terminal.proxy, url);
 				}

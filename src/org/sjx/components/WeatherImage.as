@@ -21,7 +21,7 @@ package org.sjx.components {
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
-	public class UploadItem extends Sprite {
+	public class WeatherImage extends Sprite {
 		
 		[Embed(source="images/btn.png")]
 		public static var BG: Class;
@@ -71,7 +71,7 @@ package org.sjx.components {
 		// 图标颜色偏移
 		private var _leftOffset: int; 
 		
-		public function UploadItem(p: String, t: Object, list: UploadList) {
+		public function WeatherImage(p: String, t: Object, list: UploadList) {
 			pack = p;
 			terminal = t;
 			_list = list;
@@ -165,10 +165,12 @@ package org.sjx.components {
 				} else {
 					try {
 						var request: URLRequest = new URLRequest(Terminal.host + Terminal.upload + 
-									'?d=' + new Date().time + '&userId=' + Terminal.uuid + '&item=' + pack + 
-									'&f=' + terminal.format + '&dev=' + Terminal.dev + 
-									'&maxw=' + terminal.max_width + '&maxh=' + terminal.max_height +
-									'&minw=' + terminal.min_width + '&minh=' + terminal.min_height);
+							'?d=' + new Date().time + '&userId=' + Terminal.uuid + '&item=' + pack + 
+							'&f=' + terminal.format + '&dev=' + Terminal.dev + 
+							'&maxw=' + (terminal['max_width'] || terminal.width) + 
+							'&maxh=' + (terminal['max_height'] || terminal.height) +
+							'&minw=' + (terminal['min_width'] || terminal.width) + 
+							'&minh=' + (terminal['min_height'] || terminal.height));
 						request.method = URLRequestMethod.POST;
 						_fr.upload(request, 'resource', false);
 						_uploading = true;
@@ -185,8 +187,7 @@ package org.sjx.components {
 			_fr.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, doComplete);
 			
 			_tip = '<span class="item"><b>' + terminal.name + (terminal.optional ? '(可选)' : '(必选)') + '</b>\n' + 
-				'最小尺寸：' + terminal.min_width + 'x' + terminal.min_height + 'px\n' + 
-				'最大尺寸：' + terminal.max_width + 'x' + terminal.max_height + 'px\n' + 
+				'图片尺寸：' + terminal.width + 'x' + terminal.height + 'px\n' + 
 				'图片格式：' + terminal.format + '\n图片大小：' + terminal.size_lab + 
 				(terminal.tip ? '\n' + terminal.tip : '') + '</span>';
 			
@@ -205,12 +206,12 @@ package org.sjx.components {
 				if (!_uploading)
 					_fr.browse(_filter);
 			});
-
+			
 			_previewLoader = new Loader();
 			_previewLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, doPreviewLoaded);
 			draw(0);
 		}
-			
+		
 		private function doSecurityError(evt: SecurityErrorEvent): void {
 			_uploading = false;
 			draw(0);
@@ -242,7 +243,7 @@ package org.sjx.components {
 		}
 		/** 更新预览图. */
 		public function update(url: String = null): void {
-			_list.update(pack, value = url);
+			_list.updateWidget(pack, value = url);
 			_uploading = false;
 			if (url) {
 				_leftOffset = -50;
@@ -260,7 +261,6 @@ package org.sjx.components {
 				_loadAnimate.graphics.endFill();
 				draw(0);
 			}
-			_list.updateUploads();
 		}
 		
 		/** 上传成功以后加载新的预览图. */

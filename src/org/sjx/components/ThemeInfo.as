@@ -1,11 +1,24 @@
 package org.sjx.components {
 	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.events.DataEvent;
+	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.external.ExternalInterface;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.text.Font;
+	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
 	
+	import org.osmf.net.StreamingURLResource;
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
@@ -33,6 +46,13 @@ package org.sjx.components {
 		
 		private var _price: String;
 		private var _root: SchoolCompete;
+		private var _apkBtn: ViewButton;
+		private var _apkLab: TextField;
+		private var _apkUrl: String;
+		private var _fr: FileReference;
+		private var _filter: Array;
+		private var _request: URLRequest;
+		private var _apkUploading: Boolean
 		
 		/** 主题相关信息. */
 		public function ThemeInfo(r: SchoolCompete) {
@@ -51,6 +71,10 @@ package org.sjx.components {
 			_themeField = new Input(294, 38, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
 			_themeField.x = 72;
 			_themeField.y = 12;
+			if (Terminal.themeName)
+				_themeField.text = Terminal.themeName;
+			if (!Terminal.isInfoEdit)
+				_themeField.type = false;
 			_themeField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			_themeField.maxChars = 20;
 			_themeField.restrict = INPUT_RESTRICT;
@@ -76,6 +100,8 @@ package org.sjx.components {
 			_authorField = new Input(294, 38, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
 			_authorField.x = 72;
 			_authorField.y = 68;
+			if (!Terminal.isInfoEdit)
+				_authorField.type = false;
 			if (Terminal.userName) {
 				_authorField.text = Terminal.userName;
 				_authorField.type = false;
@@ -105,16 +131,26 @@ package org.sjx.components {
 			var prices: Array = Terminal.prices.split(",");
 			_priceFields = [];
 			for (var i: int = 0, price: String; price = prices[i]; i ++) {
-				var priceItem: Radio = new Radio(48, 15, price, price);
+				var priceItem: Radio = new Radio(48, 15, price, price, !Terminal.isInfoEdit);
 				priceItem.x = 72 + i * 48;
 				priceItem.y = 120;
 				addChild(priceItem);
-				priceItem.addEventListener(MouseEvent.CLICK, doRadioChanged);
+				if (Terminal.isInfoEdit)
+					priceItem.addEventListener(MouseEvent.CLICK, doRadioChanged);
 				_priceFields.push(priceItem);
 			}
 			if (_priceFields.length) {
 				_priceFields[0].selected = true;
 				_price = _priceFields[0].value;
+			}
+			if (Terminal.price) {
+				for (var j: int = 0, field: Radio; field = _priceFields[j]; j ++) {
+					if (Terminal.price == field.value) {
+						field.selected = true;
+						_price = _priceFields[0].value;
+						break;
+					}
+				}
 			}
 			
 			_descLabel = new TextField();
@@ -131,6 +167,11 @@ package org.sjx.components {
 			_descField = new TextField();
 			_descField.x = 72;
 			_descField.y = 148;
+			_descField.type = TextFieldType.INPUT;
+			if (Terminal.themeDesc)
+				_descField.text = Terminal.themeDesc;
+			//if (!Terminal.isInfoEdit)
+			//	_descField.type = TextFieldType.DYNAMIC;
 			_descField.width = 404;
 			_descField.height = 104;
 			_descField.setTextFormat(TextFormats.THEME_TEXTAREA_FORMAT);
@@ -139,7 +180,6 @@ package org.sjx.components {
 			_descField.multiline = true;
 			_descField.wordWrap = true;
 			_descField.border = true;
-			_descField.type = TextFieldType.INPUT;
 			_descField.borderColor = 0xcccccc;
 			_descField.addEventListener(FocusEvent.FOCUS_IN, doInputFocusIn);
 			_descField.addEventListener(FocusEvent.FOCUS_OUT, doInputFocusOut);
@@ -156,7 +196,7 @@ package org.sjx.components {
 			_ceteLabel.mouseEnabled = false;
 			addChild(_ceteLabel);
 			// 分类的下拉列表
-			_ceteField = new Select(160, 28, Terminal.categorys.split(","), 0xcccccc, 0xa7cf72);
+			_ceteField = new Select(160, 28, Terminal.categorys.split(","), 0xcccccc, 0xa7cf72, !Terminal.isInfoEdit, Terminal.category);
 			_ceteField.x = 72;
 			_ceteField.y = 270;
 			addChild(_ceteField);
@@ -170,10 +210,15 @@ package org.sjx.components {
 			_pkgLabel.height = 20;
 			_pkgLabel.mouseEnabled = false;
 			addChild(_pkgLabel);
-			// 作者输入框
+			// 包名输入框
 			_pkgField = new Input(294, 28, true, 0xffffff, 0xffffff, 0xcccccc, 0xa7cf72);
 			_pkgField.x = 306;
-			_pkgField.y = 270
+			_pkgField.y = 270;
+			if (Terminal.pkg)
+				_pkgField.text = Terminal.pkg;
+			if (!Terminal.isInfoEdit)
+				_pkgField.type = TextFieldType.DYNAMIC;
+			
 			_pkgField.setFormat(TextFormats.THEME_INPUT_FORMAT);
 			// _pkgField.restrict = "A-Za-z0-9\u4e00-\u9fa5";
 			_pkgField.border = true;
@@ -183,9 +228,72 @@ package org.sjx.components {
 					_pkgLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
 				checkValue();
 			});
-			if (!Terminal.pkg) {
+			if (!Terminal.isPkg) {
 				_pkgLabel.visible = false;
 				_pkgField.visible = false;
+			}
+			
+			if (Terminal.apkPath && Terminal.apkPath.length > 0) {
+				_apkBtn = new ViewButton("上传APK");
+				_apkBtn.x = 710;
+				_apkBtn.y = 270;
+				addChild(_apkBtn);
+				_apkBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+					if (!_apkUploading)
+						_fr.browse(_filter);
+				});
+				
+				_apkLab = new TextField();
+				_apkLab.x = 628;
+				_apkLab.y = 274;
+				_apkLab.width = 64;
+				_apkLab.height = 24;
+				_apkLab.text = "下载APK";
+				addChild(_apkLab);
+				_apkLab.visible = false;
+				
+				_filter = [new FileFilter('APK', '*.apk')];
+				_fr = new FileReference();
+				_fr.addEventListener(Event.SELECT, function (evt: Event): void {
+					var filaType: String = _fr.type ? _fr.type : _fr.name;
+					filaType = filaType.substring(filaType.indexOf(".") + 1).toLowerCase();
+					try {
+						var request: URLRequest = new URLRequest(Terminal.host + Terminal.apkPath + 
+							'?d=' + new Date().time + '&userId=' + Terminal.uuid);
+						request.method = URLRequestMethod.POST;
+						_fr.upload(request, 'resource', false);
+						_apkUploading = true;
+					} catch(e: Error) {
+						_apkUploading = false;
+					}
+				});
+				
+				_fr.addEventListener(Event.COMPLETE , function (evt: Event): void {
+					// _apkBtn.text = '重新上传APK';
+				});
+				_fr.addEventListener(IOErrorEvent.IO_ERROR, function (evt: IOErrorEvent): void {
+					_apkUploading = false;
+					_apkBtn.text = '上传APK';
+					_root.console("IO异常，请检查网络。");
+				});
+				_fr.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function (evt: SecurityErrorEvent): void {
+					_apkUploading = false;
+					_apkBtn.text = '上传APK';
+					_root.console("安全沙箱异常，请检查网络。");
+				});
+				_fr.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function doComplete(event: DataEvent): void {
+					var strs: Array = event.data.split('|');
+					if (strs[2]) {
+						_apkBtn.text = '重新上传APK';
+						_apkUrl = strs[2];
+						_apkLab.setTextFormat(TextFormats.makeUploadAplFormat(strs[2]));
+						_apkLab.visible = true;
+					} else {
+						_root.console(strs[3]);
+						_apkBtn.text = '上传APK';
+					}
+					_apkUploading = false;
+				});
 			}
 			
 			_specificationSpace = new Sprite();
@@ -198,19 +306,37 @@ package org.sjx.components {
 			g.endFill();
 			addChild(_specificationSpace);
 			
+			var style: StyleSheet = new StyleSheet();
+			var div: Object = new Object();
+			div.color = "#ee605e";
+			div.fontSize = "13";
+			div.leading = "8";
+			var title: Object = new Object();
+			title.fontSize = "14";
+			title.fontWeight = "bold";
+			var a: Object = new Object();
+			a.color = "#78cb3b";
+			style.setStyle("div", div);
+			style.setStyle("a", a);
+			style.setStyle(".title", title);
+			
 			var specification: TextField = new TextField();
 			specification.x = 16;
 			specification.y = 16;
 			specification.multiline = true;
 			specification.width = 268;
 			specification.height = 228;
-			specification.text = '主题制作注意事项：\n1.主题名称、作者名称只能包含：\n   ' +
-				'中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~\n2.图片格式，请按照主题规范' +
-				'内图片格式与尺\n   寸要求进行上传\n3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名。';
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 0, 97);
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION_LINK, 97, 101);
-			specification.setTextFormat(TextFormats.THEME_INFO_SPECIFICATION, 101, specification.text.length);
+			specification.styleSheet = style;
+			specification.htmlText = '<div><p class="title">主题制作注意事项：</p>' +
+				'<p>1.主题名称、作者名称只能包含：</p>' +
+				'<p>   中文字符、半角环境下英文字符、阿拉伯数\n   字以及如下特殊字符  _  -  —  .  ·  (  )  ~；</p>' +
+				'<p>2.图片格式，请按照<a href="http://designer.mobile.360.cn/platform/info/standard" target="_blank">主题规范</a>内图片格式与尺' +
+				'\n   寸要求进行上传；</p>' +
+				'<p>3.图片格式必须是PS软件直接存储的格式，请\n   不要修改图片后缀名；</p>' +
+				'<p>4.预览效果仅供参考，非手机实际效果。</p></div>'
 			_specificationSpace.addChild(specification);
+			
+			this.addEventListener(Event.ADDED_TO_STAGE, checkValue);
 		}
 		
 		/** 输入框的焦点事件. */
@@ -285,6 +411,9 @@ package org.sjx.components {
 			_descLabel.setTextFormat(TextFormats.THEME_LABEL_FORMAT);
 		}
 		
+		public function get apk(): String {
+			return _apkUrl;
+		}
 		public function get theme(): String {
 			return _themeField.text;
 		}

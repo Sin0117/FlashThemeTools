@@ -6,9 +6,15 @@
  * 原来喜欢不可以伪装，原来快乐不可以假装，原来永远和瞬间一样。
  */
 package {
+	import com.adobe.serialization.json.JSON;
+	import com.adobe.serialization.json.JSONDecoder;
+	import com.adobe.serialization.json.JSONEncoder;
+	import com.qihoo.themefactory.sjx.utils.Utils;
+	
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
+	import flash.display.Loader;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -41,6 +47,7 @@ package {
 	import org.sjx.components.ThemeInfo;
 	import org.sjx.components.UploadList;
 	import org.sjx.components.ViewButton;
+	import org.sjx.components.WeatherWidget;
 	import org.sjx.data.Terminal;
 	import org.sjx.utils.TextFormats;
 	
@@ -83,6 +90,7 @@ package {
 		public static const UPLOAD_ITEM_LABEL_HEIGHT: int = 20;
 		public static const UPLOAD_ITEM_PADDING_V: int = 8;
 		public static const UPLOAD_ITEM_PADDING_H: int = 8;
+		public static const UPLOAD_LABEL_HEIGHT: int = 24;
 		// 提示框的尺寸.
 		public static const TIP_WIDTH: int = 200;
 		public static const TIP_HEIGHT: int = 160;
@@ -112,6 +120,8 @@ package {
 		private var _uploadReady: Boolean;
 		// 内容填写完毕.
 		private var _infoReady: Boolean;
+		// 时钟天气定制完毕.
+		private var _weatherReady: Boolean;
 		// 版权标签
 		private var _copyLab: TextField;
 		// 打包的当前进度.
@@ -122,6 +132,9 @@ package {
 		private var _builderTip: BuilderTip;
 		// 开始制作的提示信息.
 		private var _builderTipTxts: Array;
+		// 时钟天气widget数组
+		private var _weathers: Object;
+		private var _currentWeather: WeatherWidget;
 		
 		// 所有打包数据.
 		private var _data: Object;
@@ -167,6 +180,8 @@ package {
 		private var _loginBtn: ViewButton;
 		// 打包完成后的关闭按钮.
 		private var _builderCloseBtn: ViewButton;
+		// 打包完成后的完成按钮
+		private var _builderFinsihBtn: ViewButton;
 		// 开始制作的确认按钮
 		private var _submitBtn: ViewButton;
 		// 开始做作的取消按钮
@@ -206,8 +221,8 @@ package {
 					Terminal.loginCallback = root.loaderInfo.parameters['doLogin'];
 				if (root.loaderInfo.parameters['dev'])
 					Terminal.dev = root.loaderInfo.parameters['dev'];
-				if (root.loaderInfo.parameters['pkg'])
-					Terminal.pkg = root.loaderInfo.parameters['pkg'];
+				if (root.loaderInfo.parameters['isPkg'])
+					Terminal.isPkg = root.loaderInfo.parameters['isPkg'];
 				if (root.loaderInfo.parameters['source'])
 					Terminal.source = root.loaderInfo.parameters['source'];
 				if (root.loaderInfo.parameters['pid'])
@@ -222,10 +237,51 @@ package {
 					Terminal.worksCk = root.loaderInfo.parameters['worksCk'];
 				if (root.loaderInfo.parameters['userName'])
 					Terminal.userName = root.loaderInfo.parameters['userName'];
+				if (root.loaderInfo.parameters['themeName'])
+					Terminal.themeName = root.loaderInfo.parameters['themeName'];
+				if (root.loaderInfo.parameters['themeDesc'])
+					Terminal.themeDesc = root.loaderInfo.parameters['themeDesc'];
+				if (root.loaderInfo.parameters['price'])
+					Terminal.price = root.loaderInfo.parameters['price'];
+				if (root.loaderInfo.parameters['category'])
+					Terminal.category = root.loaderInfo.parameters['category'];
+				if (root.loaderInfo.parameters['pkg'])
+					Terminal.pkg = root.loaderInfo.parameters['pkg'];
+				
+				if (root.loaderInfo.parameters['enquireUrl'])
+					Terminal.status = root.loaderInfo.parameters['enquireUrl'];
+				if (root.loaderInfo.parameters['builderUrl'])
+					Terminal.builder = root.loaderInfo.parameters['builderUrl'];
+				if (root.loaderInfo.parameters['uploadUrl'])
+					Terminal.upload = root.loaderInfo.parameters['uploadUrl'];
+				if (root.loaderInfo.parameters['uuidUrl'])
+					Terminal.uuidPath = root.loaderInfo.parameters['uuidUrl'];
+				if (root.loaderInfo.parameters['clearUrl'])
+					Terminal.clear = root.loaderInfo.parameters['clearUrl'];
+				if (root.loaderInfo.parameters['downloadUrl'])
+					Terminal.download = root.loaderInfo.parameters['downloadUrl'];
+				
+				if (root.loaderInfo.parameters['versionCode'])
+					Terminal.versionCode = root.loaderInfo.parameters['versionCode'];
+				
+				if (root.loaderInfo.parameters['isInfoDesable'])
+					Terminal.isInfoEdit = root.loaderInfo.parameters['isInfoDesable'] ? false : true;
 				if (root.loaderInfo.parameters['finish'])
 					Terminal.finish = root.loaderInfo.parameters['finish'];
+				if (root.loaderInfo.parameters['finishCk'])
+					Terminal.finishCk = root.loaderInfo.parameters['finishCk'];
 				if (root.loaderInfo.parameters['builderError'])
 					Terminal.builderErrorCallback = root.loaderInfo.parameters['builderError'];
+				if (root.loaderInfo.parameters['apkPath'])
+					Terminal.apkPath = root.loaderInfo.parameters['apkPath'];
+				if (root.loaderInfo.parameters['dataCk'])
+					Terminal.initDataCallback = root.loaderInfo.parameters['dataCk'];
+				if (root.loaderInfo.parameters['widgetInfo']) {
+					Terminal.initWidgetCk = root.loaderInfo.parameters['widgetInfo'];
+					Terminal.widget = new JSONDecoder(ExternalInterface.call(Terminal.initWidgetCk)).getValue();
+					if (root.loaderInfo.parameters['widgetCk'])
+						Terminal.initWidgetCallback = root.loaderInfo.parameters['widgetCk'];
+				}
 			}
 			
 			// 绘制加载效果
@@ -351,7 +407,17 @@ package {
 			});
 			_builderCloseBtn.visible = false;
 			
-			_submitBtn = new ViewButton('提交制作');
+			_builderFinsihBtn = new ViewButton('完成');
+			_builderFinsihBtn.x = 400 - _userInfoBtn.x - ViewButton.WIDTH;
+			_builderFinsihBtn.y = 196;
+			_loading.addChild(_builderFinsihBtn);
+			_builderFinsihBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
+				ExternalInterface.call(Terminal.finishCk);
+				hideLoading();
+			});
+			_builderFinsihBtn.visible = false;
+			
+			_submitBtn = new ViewButton('确认提交');
 			_submitBtn.x = 400 - 36 - ViewButton.WIDTH * 2 >> 1;
 			_submitBtn.y = 196;
 			_loading.addChild(_submitBtn);
@@ -360,7 +426,7 @@ package {
 			});
 			_submitBtn.visible = false;
 			
-			_cancelSubmitBtn = new ViewButton('稍后提交');
+			_cancelSubmitBtn = new ViewButton('取消提交');
 			_cancelSubmitBtn.x = 400 - _userInfoBtn.x - ViewButton.WIDTH;
 			_cancelSubmitBtn.y = 196;
 			_loading.addChild(_cancelSubmitBtn);
@@ -385,7 +451,6 @@ package {
 			_loginBtn.visible = false;
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
-				/*
 trace ('uuid : ' + Terminal.uuid);
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
@@ -393,7 +458,6 @@ trace ('uuid : ' + Terminal.uuid);
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
-				*/
 			});
 			
 			/** 打包请求. */
@@ -432,6 +496,26 @@ trace ('_builderLoader : ' + _builderLoader.data.toString());
 			_preview.x = PADDING_H;
 			_preview.y = PADDING_V * 2 + THEME_INFO_HEIGHT;
 			addChild(_preview);
+			
+			// 时钟天气的相关调整。
+			_weathers = {};
+			var wz: Number = EDITER_WIDTH / Utils._width, 
+				hz: Number = EDITER_HEIGHT / Utils._height,
+				zoom: Number = wz < hz ? wz : hz, weatherIndex: int = 0;
+			for (var weatherMode: String in Terminal.widget) {
+				var weather: WeatherWidget = new WeatherWidget(weatherMode, Terminal.widget[weatherMode], zoom, this);
+				weather.x = (_preview.x + EDITER_X) + 4 * zoom;
+				weather.y = (_preview.y + EDITER_Y) + 64 * zoom;
+				_weathers[weatherMode] = weather;
+				if (!weatherIndex) {
+					weather.visible = true;
+					_currentWeather = weather;
+				} else {
+					weather.visible = false;
+				}
+				weatherIndex ++;
+			}
+			
 			
 			// 打包进度的请求.
 			_builderTimer = new Timer(1000, 1);
@@ -518,6 +602,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_info.enable = true;
 			removeEventListener(Event.ENTER_FRAME, loadAnimation);
 			_builderCloseBtn.visible = false;
+			_builderFinsihBtn.visible = false;
 			_userInfoBtn.visible = false;
 			_myProfitsBtn.visible = false;
 			_myWorksBtn.visible = false;
@@ -539,6 +624,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_myProfitsBtn.visible = false;
 			_myWorksBtn.visible = false;
 			_builderCloseBtn.visible = false;
+			_builderFinsihBtn.visible = false;
 			_submitBtn.visible = false;
 			_cancelSubmitBtn.visible = false;
 			_loginBg.visible = false;
@@ -565,7 +651,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 							_myProfitsBtn.visible = true;
 						}
 						_myWorksBtn.visible = true;
-						_builderCloseBtn.visible = true;
+						_builderFinsihBtn.visible = true;
 					}
 				} else {
 					if (prog == -1) {
@@ -586,9 +672,9 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						_loginBtn.visible = true;
 						_loginBg.visible = true;
 					} else if (prog == -4) {
-						_confirmBg.visible = true;
 						_loadLabel.text = '您的主题提交制作审核后，主题将不能进行修改。';
 						_loadLabel.setTextFormat(TextFormats.ALERT_FORMAT);
+						_confirmBg.visible = true;
 						_submitBtn.visible = true;
 						_cancelSubmitBtn.visible = true;
 					}
@@ -621,7 +707,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 		}
 		
 		private function Init(evt: Event): void {
-			_builderBtn = new BuildButton();
+			_builderBtn = new BuildButton("提交审核");
 			_info = new ThemeInfo(this);
 			_info.x = PADDING_H;
 			_info.y = PADDING_V;
@@ -634,7 +720,6 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_builderBtn.x = _list.x + (UPLOAD_WIDTH - ViewButton.WIDTH - 32 >> 1);
 			_builderBtn.y = btnY;
 			addChild(_builderBtn);
-			_builderBtn.text = "提交审核";
 			_builderBtn.addEventListener(MouseEvent.CLICK, function(evt: MouseEvent): void {
 				if (_builderBtn.enable)
 					updateLoading(-4);					
@@ -681,6 +766,8 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_copyLab.addEventListener(MouseEvent.MOUSE_OUT, function (evt: MouseEvent): void {
 				_copyLab.setTextFormat(TextFormats.COPY_LABEL_FORMAT);
 			});
+			for (var weatherMode: String in _weathers)
+				addChild(_weathers[weatherMode]);
 			addChild(_copyLab);
 			addChild(_info);
 			addChild(_list);
@@ -688,6 +775,62 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			
 			draw();
 			_list.updateUploads();
+			
+			// 初始化数据
+			if (Terminal.initDataCallback) {
+				try {
+					var initData: String = ExternalInterface.call(Terminal.initDataCallback),
+						data: Object = new JSONDecoder(initData).getValue();
+					for (var pack: String in data)
+						_list.setItme(pack, data[pack]);
+				} catch (e: Error) {}
+			}
+			if (Terminal.initWidgetCallback) {
+				try {
+					var widgetData: String = ExternalInterface.call(Terminal.initWidgetCallback),
+						wData: Object = new JSONDecoder(widgetData).getValue();
+					if (wData['theme']) {
+						weatherModeChange(wData['theme']);
+						for (var file: String in wData) {
+							if (file != 'theme') {
+								var widgetItem: Object = wData[file];
+								if (widgetItem['size'])
+									this.updateWeatherSize(file, widgetItem['size']);
+								if (widgetItem['color'])
+									this.updateWeatherColor(file, uint('0x' + widgetItem['color'].replace('#', '')));
+								if (widgetItem['shadow_color'])
+									this.updateWeatherShadowColor(file, uint('0x' + widgetItem['shadow_color'].replace('#', '')));
+								if (widgetItem['shadow_radius'])
+									this.updateWeatherShadowFuzzy(file, widgetItem['shadow_radius']);
+							}
+						}
+						_list.updateWidgetMode(wData['theme'], wData);
+					}
+				} catch (e: Error) {}
+			}
+			
+			// 测试widget编辑
+			/*
+			var wData: Object = Terminal.widgetInit;
+			if (wData['theme']) {
+				weatherModeChange(wData['theme']);
+				for (var file: String in wData) {
+					if (file != 'theme') {
+						var widgetItem: Object = wData[file];
+						if (widgetItem['size'])
+							this.updateWeatherSize(file, widgetItem['size']);
+						if (widgetItem['color'])
+							this.updateWeatherColor(file, uint('0x' + widgetItem['color'].replace('#', '')));
+						if (widgetItem['shadow_color'])
+							this.updateWeatherShadowColor(file, uint('0x' + widgetItem['shadow_color'].replace('#', '')));
+						if (widgetItem['shadow_radius'])
+							this.updateWeatherShadowFuzzy(file, widgetItem['shadow_radius']); 
+					}
+				}
+				_list.updateWidgetMode(wData['theme'], wData);
+			}
+			*/
+			readyBuild();
 		}
 		
 		/** 打包操作. */
@@ -697,13 +840,15 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			variables['source'] = Terminal.source || '';
 			variables['pid'] = Terminal.pid || '';
 			variables['uid'] = Terminal.uuid || '';
+			variables['versionCode'] = Terminal.versionCode || '';
 			variables['name'] = _info.author || '';
 			variables['theme'] = _info.theme || '';
 			variables['desc'] = _info.desc || '';
 			variables['pkg'] = _info.pkg || '';
 			variables['price'] = _info.price || '';
 			variables['cate'] = _info.category || '';
-			variables['data'] = _list.toString() || '';
+			variables['data'] = _list.addToString({'apk': _info.apk}) || '';
+			variables['weatherWidget'] = _currentWeather.toString() || '';
 			variables['dev'] = Terminal.dev;
 			request.method = URLRequestMethod.POST;
 			request.data = variables;
@@ -729,11 +874,13 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 		
 		/** 内容上传完毕，准备打包. */
 		public function readyBuild(): void {
+			if (!_builderBtn)
+				return;
 			if (Terminal.dev) {
 				_builderBtn.buttonMode = _builderBtn.enable = true;
 			} else {
 				_builderTipTxts = [];
-				if (_uploadReady && _infoReady && _checkbox.selected) {
+				if (_uploadReady && _infoReady && _checkbox.selected && _weatherReady) {
 					_builderBtn.buttonMode = _builderBtn.enable = true;
 				}
 				else {
@@ -743,8 +890,10 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						_builderTipTxts.push(' * 必选主题图标项还有未上传的图标');
 					if (!_infoReady)
 						_builderTipTxts.push(' * 主题基本信息不完整（名称、作者、描述都要填写）');
-					if (!_checkbox.selected)
-						_builderTipTxts.push(' * 未接受360主题达人联盟设计师协议');
+					if (_checkbox && !_checkbox.selected)
+						_builderTipTxts.push(' * 未接受360主题达人联盟设计师协议1');
+					if (!_weatherReady)
+						_builderTipTxts.push(' * 还有未定制的工具项');
 				}
 			}
 			// 测试界面用
@@ -760,7 +909,16 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			_infoReady = b;
 			readyBuild();
 		}
-		
+		/** 时钟天气定制完毕. */
+		public function setWeatherReady(b: Boolean, elem: WeatherWidget): void {
+			if (elem != _currentWeather) return;
+			_weatherReady = b;
+			readyBuild();
+		}
+		/** 文字提示框. */
+		public function console(txt: String): void {
+			_list.alert(txt);
+		}
 		/** 显示提示框. */
 		public function alert(view: DisplayObject): void {
 			_alert.update(view);
@@ -777,6 +935,85 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 		public function update(pack: String, url: String): void {
 			_data[pack] = url;
 			_preview.updateAt(pack, url);
+		}
+		/** 更新时钟天气widget的数据. */
+		public function updateWeather(pack: String, url: String, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateAt(pack, url);
+			else
+				_currentWeather.updateAt(pack, url);
+		}
+		public function updateWeatherColor(pack: String, color: uint, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateColor(pack, color);
+			else
+				_currentWeather.updateColor(pack, color);
+		}
+		public function updateWeatherSize(pack: String, size: int, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateSize(pack, size);
+			else
+				_currentWeather.updateSize(pack, size);
+		}
+		public function updateWeatherShadowColor(pack: String, color: uint, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateWeatherShadowColor(pack, color);
+			else
+				_currentWeather.updateWeatherShadowColor(pack, color);
+		}
+		public function updateWeatherShadowFuzzy(pack: String, size: int, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateWeatherShadowFuzzy(pack, size);
+			else
+				_currentWeather.updateWeatherShadowFuzzy(pack, size);
+		}
+		public function updateWeatherShadowAngle(pack: String, angle: int, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateWeatherShadowAngle(pack, angle);
+			else
+				_currentWeather.updateWeatherShadowAngle(pack, angle);
+		}
+		public function updateWeatherShadowDistance(pack: String, distance: int, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateWeatherShadowDistance(pack, distance);
+			else
+				_currentWeather.updateWeatherShadowDistance(pack, distance);
+		}
+		public function changeWeather(pack: String, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].changeWeather(pack);
+			else
+				_currentWeather.changeWeather(pack);
+		}
+		public function updateWeatherText(pack: String, txt: String, mode: String = null): void {
+			if (mode && _weathers[mode])
+				_weathers[mode].updateText(pack, txt);
+			else
+				_currentWeather.updateText(pack, txt);
+		}
+		public function weatherModeChange(mode: String): void {
+			_currentWeather = _weathers[mode];
+			for (var m: String in _weathers)
+				_weathers[m].visible = false;
+			_currentWeather.visible = true;
+			_list.widgetModeChange(mode);
+			setWeatherReady(_currentWeather.check(), _currentWeather);
+		}
+		
+		/** widget加载时的处理. */
+		public function doPreviewLoad(): void {
+			
+		}
+		public function doPreviewLoaded(): void {
+			
+		}
+		
+		public function set view(v: String): void {
+			if (_currentWeather.view == v) {
+				_currentWeather.visible = true;
+			} else {
+				_currentWeather.visible = false;
+			}
 		}
 	}
 }

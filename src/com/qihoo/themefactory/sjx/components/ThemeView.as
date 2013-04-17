@@ -27,14 +27,18 @@ package com.qihoo.themefactory.sjx.components {
 		
 		private var _backgroundKey: String;
 		private var _foregroundKey: String;
+		private var _maskKey: String;
 		
 		private var _backgroundWidth: Number;
 		private var _backgroundHeight: Number;
 		private var _foregroundWidth: Number;
 		private var _foregroundHeight: Number;
+		private var _maskWidth: Number;
+		private var _maskHeight: Number;
 		
 		private var _backgroundArr: Array;
 		private var _foregroundArr: Array;
+		private var _maskArr: Array;
 		private var _sort: Array;
 		
 		private var _zoom: Number;
@@ -44,6 +48,7 @@ package com.qihoo.themefactory.sjx.components {
 			_zoom = z;
 			_items = {};
 			_sort = [];
+			_maskArr = [];
 			_backgroundArr = [];
 			_foregroundArr = [];
 			for (var item: String in data) {
@@ -56,6 +61,10 @@ package com.qihoo.themefactory.sjx.components {
 			if (_foregroundKey && _foregroundKey in data) {
 				_foregroundWidth = data[_foregroundKey].width;
 				_foregroundHeight = data[_foregroundKey].height;
+			}
+			if (_maskKey && _maskKey in data) {
+				_maskWidth = data[_maskKey].width;
+				_maskHeight = data[_maskKey].height;
 			}
 			
 			sort();
@@ -73,6 +82,12 @@ package com.qihoo.themefactory.sjx.components {
 		}
 		public function get backgroundHeight(): Number {
 			return _backgroundHeight;
+		}
+		public function get maskWidth(): Number {
+			return _maskWidth;
+		}
+		public function get maskHeight(): Number {
+			return _maskHeight;
 		}
 		
 		/** 检测该视图中是否存在这个项. */
@@ -96,13 +111,17 @@ package com.qihoo.themefactory.sjx.components {
 				} else {
 					themeItme = new ThemeItem(n, info, _zoom, _appsNum ++);
 				}
-				if ('background' in info) {
+				if ('background' in info && info['background']) {
 					_backgroundKey = info['background'];
 					_backgroundArr.push(themeItme);
 				}
-				if ('foreground' in info) {
+				if ('foreground' in info && info['foreground']) {
 					_foregroundKey = info['foreground'];
 					_foregroundArr.push(themeItme);
+				}
+				if ('icon_mask' in info && info['icon_mask']) {
+					_maskKey = info['icon_mask'];
+					_maskArr.push(themeItme);
 				}
 			}
 			else {
@@ -124,6 +143,9 @@ package com.qihoo.themefactory.sjx.components {
 			}
 			if (key == _foregroundKey) {
 				setGround(_foregroundArr, 'foreground', data);
+			}
+			if (key == _maskKey) {
+				setGround(_maskArr, 'iconMask', data);
 			}
 			if (key in _items) {
 				_items[key].setImage(src, data);

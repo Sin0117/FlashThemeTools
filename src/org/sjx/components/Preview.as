@@ -73,6 +73,7 @@ package org.sjx.components {
 			_space.addChild(_main);
 			_main.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_prev.view = 'main';
+				_root.view = 'main';
 			});
 			
 			_drawer = new ViewButton('第二屏图标预览');
@@ -81,6 +82,7 @@ package org.sjx.components {
 			_space.addChild(_drawer);
 			_drawer.addEventListener(MouseEvent.CLICK, function (evt: MouseEvent): void {
 				_prev.view = 'drawer';
+				_root.view = 'drawer';
 			});
 		}
 		
