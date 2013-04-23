@@ -270,7 +270,7 @@ package org.sjx.components {
 					shadowRadiusField.type = TextFieldType.INPUT;
 					shadowRadiusField.maxChars = 3;
 					shadowRadiusField.border = true;
-					shadowRadiusField.text = 'shadowSize';
+					shadowRadiusField.text = '' + shadowSize;
 					shadowRadiusField.setTextFormat(_makeTextFormat(12, 0x333333));
 					shadowRadiusField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
