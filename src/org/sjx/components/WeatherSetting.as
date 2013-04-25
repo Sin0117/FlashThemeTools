@@ -158,9 +158,7 @@ package org.sjx.components {
 					_group[group].push(labData);
 				} else {
 					var shadowX: int = labData['shadow_dx'],
-						shadowY: int = labData['shadow_dy'],
-						shadowAngle: int = Math.atan2(shadowY, shadowX) * 180 / Math.PI,
-						shadowSize: Number = Math.sqrt(shadowY * shadowY + shadowX * shadowX);
+						shadowY: int = labData['shadow_dy'];
 					var label: TextField = new TextField();
 					label.x = 0;
 					label.y = beginY;
@@ -217,9 +215,16 @@ package org.sjx.components {
 					sizeField.setTextFormat(_makeTextFormat(12, 0x333333));
 					sizeField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
-						group: String = curField.name;
+						group: String = curField.name, val: int = int(curField.text);
+						if (_group[group][0] && _group[group][0]['size_limit']) {
+							var limit:int = _group[group][0]['size_limit'];
+							if (val > limit) {
+								val = limit;
+								curField.text = '' + val;
+							}
+						}
 						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
-							_root.updateWeatherSize(groupName['pack'], Number(curField.text));
+							_root.updateWeatherSize(groupName['pack'], val);
 					});
 					addChild(sizeField);
 					_sizeFields[group] = sizeField;
@@ -252,64 +257,6 @@ package org.sjx.components {
 					});
 					addChild(shadowColorField);
 					_shadowColorFields[group] = shadowColorField;
-					// 阴影距离
-					var shadowRadiusLab: TextField = new TextField();
-					shadowRadiusLab.x = 172;
-					shadowRadiusLab.y = beginY;
-					shadowRadiusLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowRadiusLab.text = '水平偏移:';
-					shadowRadiusLab.setTextFormat(_makeTextFormat(14, 0x333333));
-					addChild(shadowRadiusLab);
-					var shadowRadiusField: TextField = new TextField();
-					shadowRadiusField.x = 236;
-					shadowRadiusField.y = beginY;
-					shadowRadiusField.width = 64;
-					shadowRadiusField.height = 18;
-					shadowRadiusField.name = group;
-					shadowRadiusField.restrict = "0-9";
-					shadowRadiusField.type = TextFieldType.INPUT;
-					shadowRadiusField.maxChars = 3;
-					shadowRadiusField.border = true;
-					shadowRadiusField.text = '' + shadowSize.toFixed(2);
-					shadowRadiusField.setTextFormat(_makeTextFormat(12, 0x333333));
-					shadowRadiusField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
-						var curField: TextField = evt.currentTarget as TextField,
-							group: String = curField.name;
-						if ()
-						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
-							_root.updateWeatherShadowDistance(groupName['pack'], int(Number(curField.text)));
-					});
-					addChild(shadowRadiusField);
-					_shadowRadiusFields[group] = shadowRadiusField;
-					beginY += SchoolCompete.UPLOAD_LABEL_HEIGHT;
-					// 阴影角度
-					var shadowAngleLab: TextField = new TextField();
-					shadowAngleLab.x = 36;
-					shadowAngleLab.y = beginY;
-					shadowAngleLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowAngleLab.text = '垂直偏移:';
-					shadowAngleLab.setTextFormat(_makeTextFormat(14, 0x333333));
-					addChild(shadowAngleLab);
-					var shadowAngleField: TextField = new TextField();
-					shadowAngleField.x = 100;
-					shadowAngleField.y = beginY;
-					shadowAngleField.width = 64;
-					shadowAngleField.height = 18;
-					shadowAngleField.name = group;
-					shadowAngleField.restrict = "0-9";
-					shadowAngleField.type = TextFieldType.INPUT;
-					shadowAngleField.maxChars = 3;
-					shadowAngleField.border = true;
-					shadowAngleField.text = '' + shadowAngle;
-					shadowAngleField.setTextFormat(_makeTextFormat(12, 0x333333));
-					shadowAngleField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
-						var curField: TextField = evt.currentTarget as TextField,
-						group: String = curField.name;
-						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
-							_root.updateWeatherShadowAngle(groupName['pack'], int(curField.text));
-					});
-					addChild(shadowAngleField);
-					_shadowAngleFields[group] = shadowAngleField;
 					// 模糊力度
 					var shadowFuzzyLab: TextField = new TextField();
 					shadowFuzzyLab.x = 172;
@@ -332,12 +279,100 @@ package org.sjx.components {
 					shadowFuzzyField.setTextFormat(_makeTextFormat(12, 0x333333));
 					shadowFuzzyField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
-						group: String = curField.name;
+						group: String = curField.name, val: int = int(curField.text);
+						if (_group[group][0] && _group[group][0]['shadow_radius_limit']) {
+							var limit:int = _group[group][0]['shadow_radius_limit'];
+							if (val > limit) {
+								val = limit;
+								curField.text = '' + val;
+							}
+						}
 						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
-							_root.updateWeatherShadowFuzzy(groupName['pack'], Number(curField.text));
+							_root.updateWeatherShadowFuzzy(groupName['pack'], val);
 					});
 					addChild(shadowFuzzyField);
 					_shadowFuzzyFields[group] = shadowFuzzyField;
+					beginY += SchoolCompete.UPLOAD_LABEL_HEIGHT;
+					// 阴影距离
+					var shadowRadiusLab: TextField = new TextField();
+					shadowRadiusLab.x = 172;
+					shadowRadiusLab.y = beginY;
+					shadowRadiusLab.autoSize = TextFieldAutoSize.LEFT;
+					shadowRadiusLab.text = '水平偏移:';
+					shadowRadiusLab.setTextFormat(_makeTextFormat(14, 0x333333));
+					addChild(shadowRadiusLab);
+					var shadowRadiusField: TextField = new TextField();
+					shadowRadiusField.x = 236;
+					shadowRadiusField.y = beginY;
+					shadowRadiusField.width = 64;
+					shadowRadiusField.height = 18;
+					shadowRadiusField.name = group;
+					shadowRadiusField.restrict = "0-9\\-";
+					shadowRadiusField.type = TextFieldType.INPUT;
+					shadowRadiusField.maxChars = 3;
+					shadowRadiusField.border = true;
+					shadowRadiusField.text = '' + shadowX;
+					shadowRadiusField.setTextFormat(_makeTextFormat(12, 0x333333));
+					shadowRadiusField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
+						var curField: TextField = evt.currentTarget as TextField,
+							group: String = curField.name, val: int = int(curField.text);
+						if (_group[group][0] && _group[group][0]['shadow_dx_limit']) {
+							var limit:int = _group[group][0]['shadow_dx_limit'];
+							if (val > 0) {
+								if (val > limit)
+									val = limit;
+							} else {
+								if (val < -limit)
+									val = -limit;
+							}
+							
+						}
+						curField.text = '' + val;
+						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
+							_root.updateWeatherShadowX(groupName['pack'], val);
+					});
+					addChild(shadowRadiusField);
+					_shadowRadiusFields[group] = shadowRadiusField;
+					// 阴影角度
+					var shadowAngleLab: TextField = new TextField();
+					shadowAngleLab.x = 36;
+					shadowAngleLab.y = beginY;
+					shadowAngleLab.autoSize = TextFieldAutoSize.LEFT;
+					shadowAngleLab.text = '垂直偏移:';
+					shadowAngleLab.setTextFormat(_makeTextFormat(14, 0x333333));
+					addChild(shadowAngleLab);
+					var shadowAngleField: TextField = new TextField();
+					shadowAngleField.x = 100;
+					shadowAngleField.y = beginY;
+					shadowAngleField.width = 64;
+					shadowAngleField.height = 18;
+					shadowAngleField.name = group;
+					shadowAngleField.restrict = "0-9\\-";
+					shadowAngleField.type = TextFieldType.INPUT;
+					shadowAngleField.maxChars = 3;
+					shadowAngleField.border = true;
+					shadowAngleField.text = '' + shadowY;
+					shadowAngleField.setTextFormat(_makeTextFormat(12, 0x333333));
+					shadowAngleField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
+						var curField: TextField = evt.currentTarget as TextField,
+						group: String = curField.name, val: int = int(curField.text);
+						if (_group[group][0] && _group[group][0]['shadow_dy_limit']) {
+							var limit:int = _group[group][0]['shadow_dy_limit'];
+							if (val > 0) {
+								if (val > limit)
+									val = limit;
+							} else {
+								if (val < -limit)
+									val = -limit;
+							}
+						}
+						curField.text = '' + val;
+						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
+							_root.updateWeatherShadowY(groupName['pack'], val);
+					});
+					addChild(shadowAngleField);
+					_shadowAngleFields[group] = shadowAngleField;
+					
 					beginY += SchoolCompete.UPLOAD_LABEL_HEIGHT;
 					_group[group] = [labData];
 				}

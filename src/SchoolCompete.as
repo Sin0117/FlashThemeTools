@@ -969,17 +969,17 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			else
 				_currentWeather.updateWeatherShadowFuzzy(pack, size);
 		}
-		public function updateWeatherShadowAngle(pack: String, angle: int, mode: String = null): void {
+		public function updateWeatherShadowY(pack: String, y: int, mode: String = null): void {
 			if (mode && _weathers[mode])
-				_weathers[mode].updateWeatherShadowAngle(pack, angle);
+				_weathers[mode].updateWeatherShadowY(pack, y);
 			else
-				_currentWeather.updateWeatherShadowAngle(pack, angle);
+				_currentWeather.updateWeatherShadowY(pack, y);
 		}
-		public function updateWeatherShadowDistance(pack: String, distance: Number, mode: String = null): void {
+		public function updateWeatherShadowX(pack: String, x: int, mode: String = null): void {
 			if (mode && _weathers[mode])
-				_weathers[mode].updateWeatherShadowDistance(pack, distance);
+				_weathers[mode].updateWeatherShadowX(pack, x);
 			else
-				_currentWeather.updateWeatherShadowDistance(pack, distance);
+				_currentWeather.updateWeatherShadowX(pack, x);
 		}
 		public function changeWeather(pack: String, mode: String = null): void {
 			if (mode && _weathers[mode])
