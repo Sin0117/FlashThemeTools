@@ -182,14 +182,14 @@ package org.sjx.components {
 			}
 			_root.setWeatherReady(check(), this);
 		}
-		public function updateWeatherShadowDistance(pack: String, size: int): void {
+		public function updateWeatherShadowDistance(pack: String, size: Number): void {
 			if (_labels[pack] && _labelData[pack]) {
 				var labData: Object = _labelData[pack], 
 					dx: Number = labData['shadow_dx'], dy: Number = labData['shadow_dy'],
 					angle: Number = Math.atan2(dy, dx) * 180 / Math.PI,
 					radians: Number = angle * Math.PI / 180;
-				_labelData[pack]['shadow_dy'] = Math.round(Math.sin(radians) * size);
-				_labelData[pack]['shadow_dx'] = Math.round(Math.cos(radians) * size);
+				_labelData[pack]['shadow_dy'] = (Math.sin(radians) * size).toFixed(2);
+				_labelData[pack]['shadow_dx'] = (Math.cos(radians) * size).toFixed(2);
 				updateShadow(pack);
 			}
 			_root.setWeatherReady(check(), this);
@@ -206,8 +206,8 @@ package org.sjx.components {
 				var labData: Object = _labelData[pack], radians: Number = angle * Math.PI / 180,
 					dx: Number = labData['shadow_dx'], dy: Number = labData['shadow_dy'],
 					distance: Number = Math.sqrt(dy * dy + dx * dx);
-				_labelData[pack]['shadow_dy'] = Math.round(Math.sin(radians) * distance);
-				_labelData[pack]['shadow_dx'] = Math.round(Math.cos(radians) * distance);
+				_labelData[pack]['shadow_dy'] = (Math.sin(radians) * distance).toFixed(2);
+				_labelData[pack]['shadow_dx'] = (Math.cos(radians) * distance).toFixed(2);
 				updateShadow(pack);
 			}
 			_root.setWeatherReady(check(), this);

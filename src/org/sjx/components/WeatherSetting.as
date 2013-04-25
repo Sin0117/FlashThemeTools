@@ -160,7 +160,7 @@ package org.sjx.components {
 					var shadowX: int = labData['shadow_dx'],
 						shadowY: int = labData['shadow_dy'],
 						shadowAngle: int = Math.atan2(shadowY, shadowX) * 180 / Math.PI,
-						shadowSize: int = Math.sqrt(shadowY * shadowY + shadowX * shadowX);
+						shadowSize: Number = Math.sqrt(shadowY * shadowY + shadowX * shadowX);
 					var label: TextField = new TextField();
 					label.x = 0;
 					label.y = beginY;
@@ -257,7 +257,7 @@ package org.sjx.components {
 					shadowRadiusLab.x = 172;
 					shadowRadiusLab.y = beginY;
 					shadowRadiusLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowRadiusLab.text = '阴影距离:';
+					shadowRadiusLab.text = '水平偏移:';
 					shadowRadiusLab.setTextFormat(_makeTextFormat(14, 0x333333));
 					addChild(shadowRadiusLab);
 					var shadowRadiusField: TextField = new TextField();
@@ -270,13 +270,14 @@ package org.sjx.components {
 					shadowRadiusField.type = TextFieldType.INPUT;
 					shadowRadiusField.maxChars = 3;
 					shadowRadiusField.border = true;
-					shadowRadiusField.text = '' + shadowSize;
+					shadowRadiusField.text = '' + shadowSize.toFixed(2);
 					shadowRadiusField.setTextFormat(_makeTextFormat(12, 0x333333));
 					shadowRadiusField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
 							group: String = curField.name;
+						if ()
 						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
-							_root.updateWeatherShadowDistance(groupName['pack'], int(curField.text));
+							_root.updateWeatherShadowDistance(groupName['pack'], int(Number(curField.text)));
 					});
 					addChild(shadowRadiusField);
 					_shadowRadiusFields[group] = shadowRadiusField;
@@ -286,7 +287,7 @@ package org.sjx.components {
 					shadowAngleLab.x = 36;
 					shadowAngleLab.y = beginY;
 					shadowAngleLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowAngleLab.text = '阴影角度:';
+					shadowAngleLab.text = '垂直偏移:';
 					shadowAngleLab.setTextFormat(_makeTextFormat(14, 0x333333));
 					addChild(shadowAngleLab);
 					var shadowAngleField: TextField = new TextField();

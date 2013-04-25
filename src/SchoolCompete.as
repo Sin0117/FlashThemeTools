@@ -452,12 +452,14 @@ package {
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
 trace ('uuid : ' + Terminal.uuid);
+/*
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
 				} else {
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
+ */
 			});
 			
 			/** 打包请求. */
@@ -973,7 +975,7 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 			else
 				_currentWeather.updateWeatherShadowAngle(pack, angle);
 		}
-		public function updateWeatherShadowDistance(pack: String, distance: int, mode: String = null): void {
+		public function updateWeatherShadowDistance(pack: String, distance: Number, mode: String = null): void {
 			if (mode && _weathers[mode])
 				_weathers[mode].updateWeatherShadowDistance(pack, distance);
 			else
