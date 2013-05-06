@@ -90,8 +90,8 @@ package org.sjx.components {
 					cavnas.visible = false;
 				_images[key] = cavnas;
 				_imageData[key] = imgData;
+// ExternalInterface.call('console.log', imgData['name'] + ' 规格尺寸 : ' + imgData['width'] + ' * ' + imgData['height'] + '(' + imgData['format'] + ')');				
 			}
-			
 			
 			for (var i: int = 0, labData: Object; labData = labelsData[i]; i++) {
 				var label: TextField = new TextField(), vZoom: Number = labData['zoom'] || 1;

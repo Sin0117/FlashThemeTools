@@ -30,8 +30,8 @@ package org.sjx.components {
 		private var _colorFields: Object;
 		private var _sizeFields: Object;
 		private var _shadowColorFields: Object;
-		private var _shadowRadiusFields: Object;
-		private var _shadowAngleFields: Object;
+		private var _shadowXFields: Object;
+		private var _shadowYFields: Object;
 		private var _shadowFuzzyFields: Object;
 		
 		private var _current: String;
@@ -50,8 +50,8 @@ package org.sjx.components {
 			_colorFields = {};
 			_sizeFields = {};
 			_shadowColorFields = {};
-			_shadowRadiusFields = {};
-			_shadowAngleFields = {};
+			_shadowXFields = {};
+			_shadowYFields = {};
 			_shadowFuzzyFields = {};
 			_packs = {};
 			_weathers = {};
@@ -294,26 +294,26 @@ package org.sjx.components {
 					_shadowFuzzyFields[group] = shadowFuzzyField;
 					beginY += SchoolCompete.UPLOAD_LABEL_HEIGHT;
 					// 阴影距离
-					var shadowRadiusLab: TextField = new TextField();
-					shadowRadiusLab.x = 172;
-					shadowRadiusLab.y = beginY;
-					shadowRadiusLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowRadiusLab.text = '水平偏移:';
-					shadowRadiusLab.setTextFormat(_makeTextFormat(14, 0x333333));
-					addChild(shadowRadiusLab);
-					var shadowRadiusField: TextField = new TextField();
-					shadowRadiusField.x = 236;
-					shadowRadiusField.y = beginY;
-					shadowRadiusField.width = 64;
-					shadowRadiusField.height = 18;
-					shadowRadiusField.name = group;
-					shadowRadiusField.restrict = "0-9\\-";
-					shadowRadiusField.type = TextFieldType.INPUT;
-					shadowRadiusField.maxChars = 3;
-					shadowRadiusField.border = true;
-					shadowRadiusField.text = '' + shadowX;
-					shadowRadiusField.setTextFormat(_makeTextFormat(12, 0x333333));
-					shadowRadiusField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
+					var shadowXLab: TextField = new TextField();
+					shadowXLab.x = 172;
+					shadowXLab.y = beginY;
+					shadowXLab.autoSize = TextFieldAutoSize.LEFT;
+					shadowXLab.text = '水平偏移:';
+					shadowXLab.setTextFormat(_makeTextFormat(14, 0x333333));
+					addChild(shadowXLab);
+					var shadowXField: TextField = new TextField();
+					shadowXField.x = 236;
+					shadowXField.y = beginY;
+					shadowXField.width = 64;
+					shadowXField.height = 18;
+					shadowXField.name = group;
+					shadowXField.restrict = "0-9\\-";
+					shadowXField.type = TextFieldType.INPUT;
+					shadowXField.maxChars = 3;
+					shadowXField.border = true;
+					shadowXField.text = '' + shadowX;
+					shadowXField.setTextFormat(_makeTextFormat(12, 0x333333));
+					shadowXField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
 							group: String = curField.name, val: int = int(curField.text);
 						if (_group[group][0] && _group[group][0]['shadow_dx_limit']) {
@@ -331,29 +331,29 @@ package org.sjx.components {
 						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
 							_root.updateWeatherShadowX(groupName['pack'], val);
 					});
-					addChild(shadowRadiusField);
-					_shadowRadiusFields[group] = shadowRadiusField;
+					addChild(shadowXField);
+					_shadowXFields[group] = shadowXField;
 					// 阴影角度
-					var shadowAngleLab: TextField = new TextField();
-					shadowAngleLab.x = 36;
-					shadowAngleLab.y = beginY;
-					shadowAngleLab.autoSize = TextFieldAutoSize.LEFT;
-					shadowAngleLab.text = '垂直偏移:';
-					shadowAngleLab.setTextFormat(_makeTextFormat(14, 0x333333));
-					addChild(shadowAngleLab);
-					var shadowAngleField: TextField = new TextField();
-					shadowAngleField.x = 100;
-					shadowAngleField.y = beginY;
-					shadowAngleField.width = 64;
-					shadowAngleField.height = 18;
-					shadowAngleField.name = group;
-					shadowAngleField.restrict = "0-9\\-";
-					shadowAngleField.type = TextFieldType.INPUT;
-					shadowAngleField.maxChars = 3;
-					shadowAngleField.border = true;
-					shadowAngleField.text = '' + shadowY;
-					shadowAngleField.setTextFormat(_makeTextFormat(12, 0x333333));
-					shadowAngleField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
+					var shadowYLab: TextField = new TextField();
+					shadowYLab.x = 36;
+					shadowYLab.y = beginY;
+					shadowYLab.autoSize = TextFieldAutoSize.LEFT;
+					shadowYLab.text = '垂直偏移:';
+					shadowYLab.setTextFormat(_makeTextFormat(14, 0x333333));
+					addChild(shadowYLab);
+					var shadowYField: TextField = new TextField();
+					shadowYField.x = 100;
+					shadowYField.y = beginY;
+					shadowYField.width = 64;
+					shadowYField.height = 18;
+					shadowYField.name = group;
+					shadowYField.restrict = "0-9\\-";
+					shadowYField.type = TextFieldType.INPUT;
+					shadowYField.maxChars = 3;
+					shadowYField.border = true;
+					shadowYField.text = '' + shadowY;
+					shadowYField.setTextFormat(_makeTextFormat(12, 0x333333));
+					shadowYField.addEventListener(FocusEvent.FOCUS_OUT, function (evt: FocusEvent): void {
 						var curField: TextField = evt.currentTarget as TextField,
 						group: String = curField.name, val: int = int(curField.text);
 						if (_group[group][0] && _group[group][0]['shadow_dy_limit']) {
@@ -370,8 +370,8 @@ package org.sjx.components {
 						for (var l: int = 0, groupName: Object; groupName = _group[group][l]; l ++)
 							_root.updateWeatherShadowY(groupName['pack'], val);
 					});
-					addChild(shadowAngleField);
-					_shadowAngleFields[group] = shadowAngleField;
+					addChild(shadowYField);
+					_shadowYFields[group] = shadowYField;
 					
 					beginY += SchoolCompete.UPLOAD_LABEL_HEIGHT;
 					_group[group] = [labData];
@@ -448,9 +448,21 @@ package org.sjx.components {
 					field.setTextFormat(format);
 				}
 				if (itemData['shadow_radius']) {
-					field = _shadowRadiusFields[group];
+					field = _shadowFuzzyFields[group];
 					format = field.getTextFormat();
 					field.text = itemData['shadow_radius'];
+					field.setTextFormat(format);
+				}
+				if (itemData['shadow_dx']) {
+					field = _shadowXFields[group];
+					format = field.getTextFormat();
+					field.text = itemData['shadow_dx'];
+					field.setTextFormat(format);
+				}
+				if (itemData['shadow_dy']) {
+					field = _shadowYFields[group];
+					format = field.getTextFormat();
+					field.text = itemData['shadow_dy'];
 					field.setTextFormat(format);
 				}
 			}

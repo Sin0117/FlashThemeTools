@@ -1,7 +1,7 @@
 package org.sjx.data {
 	public class Terminal {
 		// 界面原数据
-		public static const terminal: Object = {
+		public static var terminal: Object = {
 			"main":{
 				"status_bar":{"z":9,"x":0,"y":0,"widget":true,"parent":"icon","width":480,"height":36},
 				"app_com_android_email":{"z":6,"x":0,"y":480,"background":"","parent":"icon","width":86,"height":86,"v_width":72,"v_height":72,"label":"邮件"},
@@ -103,7 +103,52 @@ package org.sjx.data {
 			}
 		};
 		
-		public static var widgetInit: Object = {"theme":"clockweather_default","img_clockweather_w16":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w16_resources_177521649_1365581309740.png"},"img_clockweather_bg":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_bg_resources_177521649_1365581285541.png"},"img_clockweather_w3":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w3_resources_177521649_1365581304160.png"},"img_clockweather_w2_night":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w2_night_resources_177521649_1365581302291.png"},"img_clockweather_w1":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w1_resources_177521649_1365581293954.png"},"img_clockweather_w_nodata_3_0":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w_nodata_3_0_resources_177521649_1365581292174.png"},"preview":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/preview_resources_177521649_1365581290409.jpg"},"img_clockweather_w17":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w17_resources_177521649_1365581311809.png"},"img_clockweather_w2":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w2_resources_177521649_1365581297356.png"},"img_clockweather_w5":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w5_resources_177521649_1365581306155.png"},"img_clockweather_w1_night":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w1_night_resources_177521649_1365581295525.png"},"img_clockweather_city_bg":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_city_bg_resources_177521649_1365581287219.png"},"img_clockweather_w12":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w12_resources_177521649_1365581308073.png"},"img_clockweather_changecity_arrow":{"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_changecity_arrow_resources_177521649_1365581288763.png"},"txt_lunar":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_pm":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_weather_description":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_clock":{"size":"120","color":"#fff000ff","shadow_color":"#fffff000","shadow_radius":"4"},"txt_city":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_temperature":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_date":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"},"txt_week":{"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4"}};
+		public static var widgetInit: Object = {
+			"theme":"clockweather_default",
+			"img_clockweather_w16":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w16_resources_177521649_1365581309740.png"},
+			"img_clockweather_bg":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_bg_resources_177521649_1365581285541.png"},
+			"img_clockweather_w3":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w3_resources_177521649_1365581304160.png"},
+			"img_clockweather_w2_night":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w2_night_resources_177521649_1365581302291.png"},
+			"img_clockweather_w1":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w1_resources_177521649_1365581293954.png"},
+			"img_clockweather_w_nodata_3_0":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w_nodata_3_0_resources_177521649_1365581292174.png"},
+			"preview":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/preview_resources_177521649_1365581290409.jpg"},
+			"img_clockweather_w17":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w17_resources_177521649_1365581311809.png"},
+			"img_clockweather_w2":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w2_resources_177521649_1365581297356.png"},
+			"img_clockweather_w5":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w5_resources_177521649_1365581306155.png"},
+			"img_clockweather_w1_night":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w1_night_resources_177521649_1365581295525.png"},
+			"img_clockweather_city_bg":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_city_bg_resources_177521649_1365581287219.png"},
+			"img_clockweather_w12":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_w12_resources_177521649_1365581308073.png"},
+			"img_clockweather_changecity_arrow":{
+				"url":"http://img1.mobile.360.cn/XT_Test0_NoAuth/baibian/themes/images/origin/img_clockweather_changecity_arrow_resources_177521649_1365581288763.png"},
+			"txt_lunar":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_pm":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_weather_description":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_clock":{
+				"size":"120","color":"#fff000ff","shadow_color":"#fffff000","shadow_radius":"10", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_city":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_temperature":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_date":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"},
+			"txt_week":{
+				"size":"35","color":"#ffff0000","shadow_color":"#fffffafa","shadow_radius":"4", "shadow_dx": "3", "shadow_dy": "4"}};
 		
 		public static const data: Object = {
 			/*
@@ -117,50 +162,52 @@ package org.sjx.data {
 			
 		}
 		// 所有编辑项
-		public static const items: Object = [
-			{pack: 'app_com_android_contacts2', name: '电话', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_mms', name: '短信', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_contacts', name: '联系人', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_browser', name: '浏览器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_camera', name: '相机', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_vending', name: '应用市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_cooliris_media', name: '图库', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_music', name: '音乐', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_deskclock', name: '时钟', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_calendar', name: '日历', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_calculator2', name: '计算器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_google_android_apps_maps', name: '地图', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_settings', name: '系统设置', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_com_android_email', name: '电子邮件', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'app_net_qihoo_launcher_theme', name: '主题市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_folder', name: '图标文件夹', tip: '<font color="#F00000">图片比实际效果略有出入</font>', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			// {pack: 'icon_home', name: '进入主屏', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'widget_quickaccess', name: '快速打开', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{},
-			
-			{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
-			{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
-			{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
-			{pack: 'icon', name: 'Logo', type: 'other', size: 204800, size_lab: '200K以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{},
-			
-			{pack: 'workspace_bg', name: '壁纸', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg'},
-			{pack: 'cover', name: '主题宣传图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg'},
-			{pack: 'cover2', name: '主题宣传图2', tip: '<font color="#F00000">主题宣传图2是用于在站酷网做宣传。</font>', type: 'other', size: 204800, size_lab: '200K以内',max_width: 250, max_height: 188, min_width: 250, min_height: 188, format: 'jpg'},
-			{pack: 'preview1', name: '预览图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
-			
-			{pack: 'icon_fg', name: '图标前板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_mask', name: '图标蒙版', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'icon_bg', name: '图标背板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			// {pack: 'icon_shadow', name: '图标阴影', type: 'other', optional: true, max_width: 151, max_height: 148, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'widget_screenlock_widget', name: '一键锁屏', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			{pack: 'widget_feedback', name: '意见反馈', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
-			// dev模式：{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'}
-			{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'}
-		];
+		public static var items: Object = {
+			editer: [
+				{pack: 'app_com_android_contacts2', name: '电话', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_mms', name: '短信', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_contacts', name: '联系人', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_browser', name: '浏览器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_camera', name: '相机', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_vending', name: '应用市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_cooliris_media', name: '图库', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_music', name: '音乐', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_deskclock', name: '时钟', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_calendar', name: '日历', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_calculator2', name: '计算器', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_google_android_apps_maps', name: '地图', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_settings', name: '系统设置', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_com_android_email', name: '电子邮件', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'app_net_qihoo_launcher_theme', name: '主题市场', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'icon_folder', name: '图标文件夹', tip: '<font color="#F00000">图片比实际效果略有出入</font>', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				// {pack: 'icon_home', name: '进入主屏', type: 'icon', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'widget_quickaccess', name: '快速打开', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{},
+				
+				{pack: 'icon_drawer', name: '进入抽屉', type: 'icon', size: 2097152, size_lab: '2M以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'workspace_indicator', name: '标记点(未选状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+				{pack: 'workspace_indicator_current', name: '标记点(选中状态)', tip: '<font color="#F00000">预览有拉伸，非最终效果</font>', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 52, max_height: 38, min_width: 1, min_height: 38, format: 'png'},
+				{pack: 'workspace_dockbar_bg', name: '托盘', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 720, max_height: 221, min_width: 720, min_height: 220, format: 'png'},
+				{pack: 'icon', name: 'Logo', type: 'other', size: 204800, size_lab: '200K以内', max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{},
+				
+				{pack: 'workspace_bg', name: '壁纸', type: 'other', size: 2097152, size_lab: '2M以内', max_width: 1440, max_height: 1280, min_width: 1440, min_height: 1280, format: 'jpg'},
+				{pack: 'cover', name: '主题宣传图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 350, max_height: 370, min_width: 350, min_height: 370, format: 'jpg'},
+				{pack: 'cover2', name: '主题宣传图2', tip: '<font color="#F00000">主题宣传图2是用于在站酷网做宣传。</font>', type: 'other', size: 204800, size_lab: '200K以内',max_width: 250, max_height: 188, min_width: 250, min_height: 188, format: 'jpg'},
+				{pack: 'preview1', name: '预览图1', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+				{pack: 'tpreview1', name: '预览图2(有抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+				{pack: 'spreview1', name: '预览图3(无抽屉)', type: 'other', size: 204800, size_lab: '200K以内',max_width: 720, max_height: 1280, min_width: 480, min_height: 800, format: 'jpg'},
+				
+				{pack: 'icon_fg', name: '图标前板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'icon_mask', name: '图标蒙版', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'icon_bg', name: '图标背板', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				// {pack: 'icon_shadow', name: '图标阴影', type: 'other', optional: true, max_width: 151, max_height: 148, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'widget_screenlock_widget', name: '一键锁屏', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				{pack: 'widget_feedback', name: '意见反馈', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'},
+				// dev模式：{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, dev: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'}
+				{pack: 'widget_quicksettings', name: '快速设置', type: 'other', size: 2097152, size_lab: '2M以内', optional: true, max_width: 120, max_height: 120, min_width: 120, min_height: 120, format: 'png'}
+			]
+		};
 		
 		// 分类
 		public static var categorys: String = '卡通动漫,帅哥美女,风景独特,未来元素,美丽风景,动物宠物,酷炫动漫,时尚生活,电玩游戏,金属机械';
@@ -206,6 +253,10 @@ package org.sjx.data {
 		public static var userInfoCk: String = "";
 		// 我的收益回调
 		public static var profitsCk: String = "";
+		// 主题默认数据加载接口.
+		public static var themeTerminalCk: String = "";
+		// 主题编辑项的列表数据加载接口。
+		public static var themeEditerCk: String = "";
 		// 我的作品回调
 		public static var worksCk: String = "";
 		// 制作完成的回调

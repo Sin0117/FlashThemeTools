@@ -96,7 +96,8 @@ package org.sjx.components {
 				});
 			}
 			
-			var uploadLabY: int = (Terminal.dev ? SchoolCompete.DEV_UPLOAD_HEIGHT : SchoolCompete.UPLOAD_HEIGHT) - TAB_HEIGHT;
+			var uploadLabY: int = (Terminal.dev ? SchoolCompete.DEV_UPLOAD_HEIGHT : SchoolCompete.UPLOAD_HEIGHT) - TAB_HEIGHT
+									+ SchoolCompete.UPLOAD_ITEM_PADDING_V + SchoolCompete.UPLOAD_ITEM_HEIGHT;
 			_iconSpace.graphics.beginFill(0xececec, 1);
 			_iconSpace.graphics.drawRect(20, uploadLabY, 220, 27);
 			_iconSpace.graphics.endFill();
@@ -165,7 +166,7 @@ package org.sjx.components {
 					rowIndex = index;
 				}
 			}
-			beginY += (itemHeight >> 1);
+			beginY += itemHeight;
 			
 			_optionalSpace = new Sprite();
 			_drawLine('可选上传项：', _optionalSpace);

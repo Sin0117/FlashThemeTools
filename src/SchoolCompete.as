@@ -81,7 +81,7 @@ package {
 		// 上传区域宽度
 		public static const UPLOAD_WIDTH: int = 390;
 		public static const UPLOAD_HEIGHT: int = 640;
-		public static const DEV_UPLOAD_HEIGHT: int = 680;
+		public static const DEV_UPLOAD_HEIGHT: int = 720;
 		// 上传显示列数.
 		public static const UPLOAD_ITEM_SIZE: int = 6;
 		// 上传项的参数
@@ -282,6 +282,18 @@ package {
 					if (root.loaderInfo.parameters['widgetCk'])
 						Terminal.initWidgetCallback = root.loaderInfo.parameters['widgetCk'];
 				}
+				// 加载主题的terminal。
+				if (root.loaderInfo.parameters['themeCk']) {
+					Terminal.themeTerminalCk = root.loaderInfo.parameters['themeCk'];
+					Terminal.terminal = new JSONDecoder(ExternalInterface.call(Terminal.themeTerminalCk)).getValue();
+				}
+				
+				// 加载主题编辑项的配置信息。
+				if (root.loaderInfo.parameters['themeEditerCk']) {
+					Terminal.themeEditerCk = root.loaderInfo.parameters['themeEditerCk'];
+					Terminal.items = new JSONDecoder(ExternalInterface.call(Terminal.themeEditerCk)).getValue();
+				}
+				Terminal.items = Terminal.items.editer;
 			}
 			
 			// 绘制加载效果
@@ -452,14 +464,12 @@ package {
 			// 用户信息初始化
 			addEventListener(Event.ADDED_TO_STAGE, function (): void {
 trace ('uuid : ' + Terminal.uuid);
-/*
 				if (Terminal.uuid == null || Terminal.uuid == '') {
 					updateLoading(-3);
 				} else {
 					_loginBtn.visible = false;
 					_loginBg.visible = false;
 				}
- */
 			});
 			
 			/** 打包请求. */
@@ -804,6 +814,10 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 									this.updateWeatherShadowColor(file, uint('0x' + widgetItem['shadow_color'].replace('#', '')));
 								if (widgetItem['shadow_radius'])
 									this.updateWeatherShadowFuzzy(file, widgetItem['shadow_radius']);
+								if (widgetItem['shadow_dx'])
+									this.updateWeatherShadowX(file, widgetItem['shadow_dx']);
+								if (widgetItem['shadow_dy'])
+									this.updateWeatherShadowY(file, widgetItem['shadow_dy']);
 							}
 						}
 						_list.updateWidgetMode(wData['theme'], wData);
@@ -826,7 +840,11 @@ trace ('_builderStatLoader : ' + _builderStatLoader.data.toString());
 						if (widgetItem['shadow_color'])
 							this.updateWeatherShadowColor(file, uint('0x' + widgetItem['shadow_color'].replace('#', '')));
 						if (widgetItem['shadow_radius'])
-							this.updateWeatherShadowFuzzy(file, widgetItem['shadow_radius']); 
+							this.updateWeatherShadowFuzzy(file, widgetItem['shadow_radius']);
+						if (widgetItem['shadow_dx'])
+							this.updateWeatherShadowX(file, widgetItem['shadow_dx']);
+						if (widgetItem['shadow_dy'])
+							this.updateWeatherShadowY(file, widgetItem['shadow_dy']);
 					}
 				}
 				_list.updateWidgetMode(wData['theme'], wData);
